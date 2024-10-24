@@ -30,6 +30,14 @@ struct RawBar: RawRepresentableDefaultedPrefKey {
     let defaultValue: T = .one
 }
 
+let foo = Foo()
+let bar = Bar()
+let rawFoo = RawFoo()
+let rawbar = RawBar()
+
 @Test func basic() async throws {
-    // empty
+    _ = foo.getValue()
+    _ = bar.getValueDefaulted()
+    _ = rawFoo.getValue()
+    _ = rawbar.getValueDefaulted()
 }

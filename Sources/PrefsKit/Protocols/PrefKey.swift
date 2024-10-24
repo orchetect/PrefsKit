@@ -30,34 +30,34 @@ extension PrefKey {
 
 extension PrefKey {
     public func getValue() -> StorageValue? where StorageValue == Int {
-        UserDefaults.standard.getValue(forKey: key)
+        UserDefaults.standard.integerOptional(forKey: key)
     }
     
     public func getValue() -> StorageValue? where StorageValue == String {
-        UserDefaults.standard.getValue(forKey: key)
+        UserDefaults.standard.string(forKey: key)
     }
     
     public func getValue() -> StorageValue? where StorageValue == Bool {
-        UserDefaults.standard.getValue(forKey: key)
+        UserDefaults.standard.boolOptional(forKey: key)
     }
     
     public func getValue() -> StorageValue? where StorageValue == Double {
-        UserDefaults.standard.getValue(forKey: key)
+        UserDefaults.standard.doubleOptional(forKey: key)
     }
     
     public func getValue() -> StorageValue? where StorageValue == Float {
-        UserDefaults.standard.getValue(forKey: key)
+        UserDefaults.standard.floatOptional(forKey: key)
     }
     
     public func getValue() -> StorageValue? where StorageValue == Data {
-        UserDefaults.standard.getValue(forKey: key)
+        UserDefaults.standard.data(forKey: key)
     }
     
     public func getValue() -> StorageValue? where StorageValue == [Any] {
-        UserDefaults.standard.getValue(forKey: key)
+        UserDefaults.standard.array(forKey: key)
     }
     
     public func getValue() -> StorageValue? where StorageValue == [String: Any] {
-        UserDefaults.standard.getValue(forKey: key)
+        UserDefaults.standard.dictionary(forKey: key)
     }
 }
