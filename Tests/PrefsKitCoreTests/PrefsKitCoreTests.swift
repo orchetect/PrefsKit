@@ -1,5 +1,5 @@
 import Testing
-@testable import PrefsKit
+@testable import PrefsKitCore
 
 // MARK: Mock Types
 

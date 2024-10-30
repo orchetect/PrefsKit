@@ -5,11 +5,13 @@ import PackageDescription
 let package = Package(
     name: "PrefsKit",
     products: [
-        .library(name: "PrefsKit", targets: ["PrefsKit"])
+        .library(name: "PrefsKit", targets: ["PrefsKitCore", "PrefsKitUI"]),
+        .library(name: "PrefsKitCore", targets: ["PrefsKitCore"]),
+        .library(name: "PrefsKitUI", targets: ["PrefsKitUI"])
     ],
     targets: [
-        .target(name: "PrefsKit"),
-        .target(name: "PrefsKitUI", dependencies: ["PrefsKit"]),
-        .testTarget(name: "PrefsKitTests", dependencies: ["PrefsKit"])
+        .target(name: "PrefsKitCore"),
+        .target(name: "PrefsKitUI", dependencies: ["PrefsKitCore"]),
+        .testTarget(name: "PrefsKitCoreTests", dependencies: ["PrefsKitCore"])
     ]
 )
