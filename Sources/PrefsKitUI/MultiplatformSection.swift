@@ -13,13 +13,16 @@ import SwiftUI
 /// - On iOS, the footer content is attached below the form content.
 @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
 public struct MultiplatformSection<Content: View, Footer: View>: View {
+    public let header: LocalizedStringKey?
     public let content: () -> Content
     public let footer: () -> Footer
     
     public init(
+        _ header: LocalizedStringKey? = nil,
         @ViewBuilder content: @escaping () -> Content,
         @ViewBuilder footer: @escaping () -> Footer
     ) {
+        self.header = header
         self.content = content
         self.footer = footer
     }
@@ -33,6 +36,12 @@ public struct MultiplatformSection<Content: View, Footer: View>: View {
                     footer()
                 }
                 .foregroundColor(.secondary)
+            }
+        } header: {
+            if let header {
+                Text(header)
+            } else {
+                EmptyView()
             }
         }
         #else
