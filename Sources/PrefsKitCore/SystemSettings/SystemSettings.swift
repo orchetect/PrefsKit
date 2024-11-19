@@ -7,7 +7,12 @@
 
 import Foundation
 
+#if !os(macOS)
+import UIKit
+#endif
+
 public enum SystemSettings {
+    #if os(macOS)
     /// Launches System Settings, optionally opening the specified panel.
     public static func launch(panel: Panel? = nil) {
         let command = launchCommand(panel: panel)
@@ -20,6 +25,7 @@ public enum SystemSettings {
         do { try p.run() }
         catch { print(error.localizedDescription) }
     }
+    
     
     static func launchCommand(panel: Panel? = nil) -> String {
         // see: https://gist.github.com/rmcdongit/f66ff91e0dad78d4d6346a75ded4b751
@@ -38,4 +44,13 @@ public enum SystemSettings {
             return #"open "x-apple.systempreferences""#
         }
     }
+    
+    #else
+    
+    @MainActor public static func launch() {
+        guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
+        UIApplication.shared.open(url)
+    }
+    
+    #endif
 }
