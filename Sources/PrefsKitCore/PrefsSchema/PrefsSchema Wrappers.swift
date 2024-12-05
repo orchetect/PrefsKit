@@ -25,7 +25,7 @@ import Observation
     /// Returns value.
     public var value: Key.Value? {
         get {
-            let v = key.getValue(in: storage)
+            let v = key.getValue(in: storage) // TODO: add option flag to only get once and use cache on subsequent accesses
             if cachedValue != v { cachedValue = v }
             return cachedValue
         }
@@ -55,7 +55,7 @@ import Observation
     /// Returns value, or default value if key is missing.
     public var value: Key.Value {
         get {
-            let v = key.getDefaultedValue(in: storage)
+            let v = key.getDefaultedValue(in: storage) // TODO: add option flag to only get once and use cache on subsequent accesses
             if cachedValue != v { cachedValue = v }
             return cachedValue
         }
