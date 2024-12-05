@@ -7,8 +7,9 @@
 import Foundation
 
 /// A prefs key that encodes and decodes its raw storage value to a separate type.
-public protocol RawRepresentablePrefKey<Value, StorageValue>: PrefKey
-where Value: RawRepresentable, Value.RawValue == StorageValue { }
+public protocol RawRepresentablePrefKey: PrefKey
+where Value: RawRepresentable,
+      Value.RawValue == StorageValue { }
 
 extension RawRepresentablePrefKey {
     public func getValue(in storage: PrefsStorage) -> Value? {

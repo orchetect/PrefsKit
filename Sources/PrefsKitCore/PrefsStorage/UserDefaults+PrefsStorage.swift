@@ -11,10 +11,14 @@ extension UserDefaults: PrefsStorage {
     // MARK: - Set
     
     public func setValue<Key: PrefKey>(to value: Key.StorageValue?, forKey key: Key) {
-        set(value, forKey: key.key)
+        set(value?.prefStorageValue, forKey: key.key)
     }
     
     // MARK: - Get
+    
+    public func value<Key: PrefKey>(forKey key: Key) -> Key.StorageValue? {
+        value(forKey: key.key) as? Key.StorageValue
+    }
     
     public func value<Key: PrefKey>(forKey key: Key) -> Key.StorageValue? where Key.StorageValue == Int {
         integerOptional(forKey: key.key)
@@ -42,51 +46,61 @@ extension UserDefaults: PrefsStorage {
     
     public func value<Key: PrefKey>(forKey key: Key) -> Key.StorageValue? where Key.StorageValue == [any PrefStorageValue] {
         guard let rawArray = array(forKey: key.key) else { return nil }
-        let typedArray: [any PrefStorageValue] = rawArray.convertToPrefArray()
-        assert(typedArray.count == rawArray.count)
-        return typedArray
+        let typedArray = rawArray.convertToAnyPrefArray()
+        return typedArray.content.map(\.value)
     }
     
     public func value<Key: PrefKey>(forKey key: Key) -> Key.StorageValue? where Key.StorageValue == [String: any PrefStorageValue] {
         guard let rawDict = dictionary(forKey: key.key) else { return nil }
-        let typedDict: [String: any PrefStorageValue] = rawDict.convertToPrefDict()
+        let typedDict = rawDict.convertToAnyPrefDict()
+        return typedDict.content.mapValues(\.value)
+    }
+    
+    public func value<Key: PrefKey, Element: PrefStorageValue>(forKey key: Key) -> Key.StorageValue? where Key.StorageValue == [Element] {
+        guard let rawArray = array(forKey: key.key) else { return nil }
+        let typedArray = rawArray.compactMap { $0 as? Element }
+        assert(typedArray.count == rawArray.count)
+        return typedArray
+    }
+    
+    public func value<Key: PrefKey, Element: PrefStorageValue>(forKey key: Key) -> Key.StorageValue? where Key.StorageValue == [String: Element] {
+        guard let rawDict = dictionary(forKey: key.key) else { return nil }
+        let typedDict = rawDict.compactMapValues { $0 as? Element }
         assert(typedDict.count == rawDict.count)
+        return typedDict
+    }
+    
+    public func value<Key: PrefKey>(forKey key: Key) -> Key.StorageValue? where Key.StorageValue == AnyPrefArray {
+        guard let rawArray = array(forKey: key.key) else { return nil }
+        let typedArray = rawArray.convertToAnyPrefArray()
+        assert(typedArray.content.count == rawArray.count)
+        return typedArray
+    }
+    
+    public func value<Key: PrefKey>(forKey key: Key) -> Key.StorageValue? where Key.StorageValue == AnyPrefDictionary {
+        guard let rawDict = dictionary(forKey: key.key) else { return nil }
+        let typedDict = rawDict.convertToAnyPrefDict()
+        assert(typedDict.content.count == rawDict.count)
         return typedDict
     }
 }
 
 // MARK: - Utilities
 
-/// Convert a raw value from UserDefaults to a type that conforms to ``PrefStorageValue``.
-fileprivate func convertToPrefValue(_ value: Any) -> (any PrefStorageValue)? {
-    // Note that underlying number format of NSNumber can't easily be determined
-    // so the cleanest solution is to make NSNumber `PrefStorageValue` and allow
-    // the user to conditionally cast it as the number type they desire.
-    
-    switch value {
-    case let value as NSString: return value as String
-    case let value as Bool where "\(type(of: value))" == "__NSCFBoolean": return value
-    case let value as NSNumber: return value
-    case let value as NSData: return value as Data
-    case let value as [Any]: return value.convertToPrefArray()
-    case let value as [String: Any]: return value.convertToPrefDict()
-    case let value as PrefStorageValue: return value
-    default:
-        print("Unhandled pref storage value type: \(type(of: value))")
-        return nil
-    }
-}
-
 /// Convert a raw array from UserDefaults to a one that conforms to ``PrefStorageValue``.
 extension [Any] {
-    fileprivate func convertToPrefArray() -> [any PrefStorageValue] {
-        compactMap { convertToPrefValue($0) }
+    func convertToAnyPrefArray() -> AnyPrefArray {
+        let converted = compactMap { AnyPrefStorageValue(userDefaultsValue: $0) }
+        assert(converted.count == count)
+        return AnyPrefArray(converted)
     }
 }
 
 /// Convert a raw dictionary from UserDefaults to a one that conforms to ``PrefStorageValue``.
 extension [String: Any] {
-    fileprivate func convertToPrefDict() -> [String: any PrefStorageValue] {
-        compactMapValues { convertToPrefValue($0) }
+    func convertToAnyPrefDict() -> AnyPrefDictionary {
+        let converted = compactMapValues { AnyPrefStorageValue(userDefaultsValue: $0) }
+        assert(converted.count == count)
+        return AnyPrefDictionary(converted)
     }
 }

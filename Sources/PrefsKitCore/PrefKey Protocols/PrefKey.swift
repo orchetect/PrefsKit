@@ -43,6 +43,10 @@ extension PrefKey where Value == StorageValue {
 }
 
 extension PrefKey {
+    public func getStorageValue(in storage: PrefsStorage) -> StorageValue? {
+        storage.value(forKey: self)
+    }
+    
     public func getStorageValue(in storage: PrefsStorage) -> StorageValue? where StorageValue == Int {
         storage.value(forKey: self)
     }
@@ -72,6 +76,22 @@ extension PrefKey {
     }
     
     public func getStorageValue(in storage: PrefsStorage) -> StorageValue? where StorageValue == [String: any PrefStorageValue] {
+        storage.value(forKey: self)
+    }
+    
+    public func getStorageValue<Element: PrefStorageValue>(in storage: PrefsStorage) -> StorageValue? where StorageValue == [Element] {
+        storage.value(forKey: self)
+    }
+    
+    public func getStorageValue<Element: PrefStorageValue>(in storage: PrefsStorage) -> StorageValue? where StorageValue == [String: Element] {
+        storage.value(forKey: self)
+    }
+    
+    public func getStorageValue(in storage: PrefsStorage) -> StorageValue? where StorageValue == AnyPrefArray {
+        storage.value(forKey: self)
+    }
+    
+    public func getStorageValue(in storage: PrefsStorage) -> StorageValue? where StorageValue == AnyPrefDictionary {
         storage.value(forKey: self)
     }
 }

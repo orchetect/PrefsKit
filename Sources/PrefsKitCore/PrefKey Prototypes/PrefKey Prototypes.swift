@@ -69,9 +69,19 @@ public struct DataPrefKey: BasicPrefKey {
 }
 
 /// Pref key with `Array` value.
-public struct ArrayPrefKey: BasicPrefKey {
+public struct AnyArrayPrefKey: BasicPrefKey {
     public let key: String
-    public typealias Value = [any PrefStorageValue]
+    public typealias Value = AnyPrefArray
+    
+    public init(key: String) {
+        self.key = key
+    }
+}
+
+/// Pref key with `Array` value.
+public struct ArrayPrefKey<Element: PrefStorageValue>: BasicPrefKey {
+    public let key: String
+    public typealias Value = [Element]
     
     public init(key: String) {
         self.key = key
@@ -79,9 +89,33 @@ public struct ArrayPrefKey: BasicPrefKey {
 }
 
 /// Pref key with `Dictionary` value.
-public struct DictionaryPrefKey: BasicPrefKey {
+public struct AnyDictionaryPrefKey: BasicPrefKey {
     public let key: String
-    public typealias Value = [String: any PrefStorageValue]
+    public typealias Value = AnyPrefDictionary
+    
+    public init(key: String) {
+        self.key = key
+    }
+}
+
+/// Pref key with `Dictionary` value.
+public struct DictionaryPrefKey<Element: PrefStorageValue>: BasicPrefKey {
+    public let key: String
+    public typealias Value = [String: Element]
+    
+    public init(key: String) {
+        self.key = key
+    }
+}
+
+/// Pref key with `Dictionary` value.
+public struct AnyRawRepresentablePrefKey<
+    Value: RawRepresentable,
+    StorageValue: PrefStorageValue
+>: RawRepresentablePrefKey where Value.RawValue == StorageValue {
+    public let key: String
+    public typealias Value = Value
+    public typealias StorageValue = StorageValue
     
     public init(key: String) {
         self.key = key
@@ -163,9 +197,21 @@ public struct DefaultedDataPrefKey: BasicDefaultedPrefKey {
 }
 
 /// Pref key with `Array` value.
-public struct DefaultedArrayPrefKey: BasicDefaultedPrefKey {
+public struct DefaultedAnyArrayPrefKey: BasicDefaultedPrefKey {
     public let key: String
-    public typealias Value = [any PrefStorageValue]
+    public typealias Value = AnyPrefArray
+    public let defaultValue: Value
+    
+    public init(key: String, defaultValue: Value) {
+        self.key = key
+        self.defaultValue = defaultValue
+    }
+}
+
+/// Pref key with `Array` value.
+public struct DefaultedArrayPrefKey<Element: PrefStorageValue>: BasicDefaultedPrefKey {
+    public let key: String
+    public typealias Value = [Element]
     public let defaultValue: Value
     
     public init(key: String, defaultValue: Value) {
@@ -175,9 +221,37 @@ public struct DefaultedArrayPrefKey: BasicDefaultedPrefKey {
 }
 
 /// Pref key with `Dictionary` value.
-public struct DefaultedDictionaryPrefKey: BasicDefaultedPrefKey {
+public struct DefaultedAnyDictionaryPrefKey: BasicDefaultedPrefKey {
     public let key: String
-    public typealias Value = [String: any PrefStorageValue]
+    public typealias Value = AnyPrefDictionary
+    public let defaultValue: Value
+    
+    public init(key: String, defaultValue: Value) {
+        self.key = key
+        self.defaultValue = defaultValue
+    }
+}
+
+/// Pref key with `Dictionary` value.
+public struct DefaultedDictionaryPrefKey<Element: PrefStorageValue>: BasicDefaultedPrefKey {
+    public let key: String
+    public typealias Value = [String: Element]
+    public let defaultValue: Value
+    
+    public init(key: String, defaultValue: Value) {
+        self.key = key
+        self.defaultValue = defaultValue
+    }
+}
+
+/// Pref key with `Dictionary` value.
+public struct DefaultedAnyRawRepresentablePrefKey<
+    Value: RawRepresentable,
+    StorageValue: PrefStorageValue
+>: DefaultedRawRepresentablePrefKey where Value: Sendable, Value.RawValue == StorageValue {
+    public let key: String
+    public typealias Value = Value
+    public typealias StorageValue = StorageValue
     public let defaultValue: Value
     
     public init(key: String, defaultValue: Value) {
