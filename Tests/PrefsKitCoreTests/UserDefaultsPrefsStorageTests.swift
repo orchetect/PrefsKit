@@ -13,7 +13,9 @@ struct UserDefaultsPrefsStorageTests {
     let testSuite: UserDefaults
     
     init() {
-        testSuite = UserDefaults(suiteName: "com.orchetect.PrefsKit.testSuite")!
+        let domain = "com.orchetect.PrefsKit.\(type(of: self))"
+        UserDefaults.standard.removePersistentDomain(forName: domain)
+        testSuite = UserDefaults(suiteName: domain)!
     }
     
     enum RawEnum: String, RawRepresentable {
