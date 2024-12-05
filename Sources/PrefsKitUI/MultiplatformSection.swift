@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-/// `Section` SwiftUI view wrapper that incorporates footer content idiomatically foe each platform.
+/// `Section` SwiftUI view wrapper that incorporates footer content idiomatically for each platform.
 ///
 /// - On macOS, the footer content is combined into the form content.
 /// - On iOS, the footer content is attached below the form content.

@@ -16,5 +16,5 @@ extension Bool: PrefStorageValue { }
 extension Double: PrefStorageValue { }
 extension Float: PrefStorageValue { }
 extension Data: PrefStorageValue { }
-extension [Any]: PrefStorageValue { }
-extension [String: Any]: PrefStorageValue { }
+extension [PrefStorageValue]: PrefStorageValue { }
+extension [String: PrefStorageValue]: PrefStorageValue { }

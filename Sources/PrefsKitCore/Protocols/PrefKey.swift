@@ -7,57 +7,78 @@
 
 import Foundation
 
-public protocol PrefKey<StorageValue>: Sendable where StorageValue: PrefStorageValue {
+/// The foundational pref key protocol all other pref key protocols conform to.
+/// Provides the core implementation requirements for read and write access of a key's value.
+/// The underlying storage data type may be the same or different than the type vended by the main `getValue` and `setValue` methods.
+public protocol PrefKey<Value, StorageValue>: Sendable
+where Self: Hashable, StorageValue: PrefStorageValue {
+    associatedtype Value
     associatedtype StorageValue: Hashable
     
-    /// UserDefaults key name.
+    /// Unique preference key name.
     var key: String { get }
     
-    /// Returns the current value stored in UserDefaults.
-    /// Returns nil if the key does not exist.
-    func getValue() -> StorageValue?
+    /// Returns the current stored value.
+    /// Returns `nil` if the key does not exist.
+    func getValue(in storage: PrefsStorage) -> Value?
+    
+    /// Stores a new value for the key.
+    func setValue(to newValue: Value?, in storage: PrefsStorage)
+    
+    /// Returns the current raw storage value.
+    /// Returns `nil` if the key does not exist.
+    func getStorageValue(in storage: PrefsStorage) -> StorageValue?
+    
+    /// Stores a new raw storage value for the key.
+    func setStorageValue(to newValue: StorageValue?, in storage: PrefsStorage)
 }
 
-// MARK: - Set
-
-extension PrefKey {
-    public func set(value: StorageValue?) {
-        UserDefaults.standard.set(value, forKey: key)
+extension PrefKey where Value == StorageValue {
+    public func getValue(in storage: PrefsStorage) -> Value? {
+        getStorageValue(in: storage)
+    }
+    
+    public func setValue(to newValue: Value?, in storage: PrefsStorage) {
+        setStorageValue(to: newValue, in: storage)
     }
 }
 
-// MARK: - Get
+extension PrefKey {
+    public func getStorageValue(in storage: PrefsStorage) -> StorageValue? where StorageValue == Int {
+        storage.value(forKey: self)
+    }
+    
+    public func getStorageValue(in storage: PrefsStorage) -> StorageValue? where StorageValue == String {
+        storage.value(forKey: self)
+    }
+    
+    public func getStorageValue(in storage: PrefsStorage) -> StorageValue? where StorageValue == Bool {
+        storage.value(forKey: self)
+    }
+    
+    public func getStorageValue(in storage: PrefsStorage) -> StorageValue? where StorageValue == Double {
+        storage.value(forKey: self)
+    }
+    
+    public func getStorageValue(in storage: PrefsStorage) -> StorageValue? where StorageValue == Float {
+        storage.value(forKey: self)
+    }
+    
+    public func getStorageValue(in storage: PrefsStorage) -> StorageValue? where StorageValue == Data {
+        storage.value(forKey: self)
+    }
+    
+    public func getStorageValue(in storage: PrefsStorage) -> StorageValue? where StorageValue == [any PrefStorageValue] {
+        storage.value(forKey: self)
+    }
+    
+    public func getStorageValue(in storage: PrefsStorage) -> StorageValue? where StorageValue == [String: any PrefStorageValue] {
+        storage.value(forKey: self)
+    }
+}
 
 extension PrefKey {
-    public func getValue() -> StorageValue? where StorageValue == Int {
-        UserDefaults.standard.integerOptional(forKey: key)
-    }
-    
-    public func getValue() -> StorageValue? where StorageValue == String {
-        UserDefaults.standard.string(forKey: key)
-    }
-    
-    public func getValue() -> StorageValue? where StorageValue == Bool {
-        UserDefaults.standard.boolOptional(forKey: key)
-    }
-    
-    public func getValue() -> StorageValue? where StorageValue == Double {
-        UserDefaults.standard.doubleOptional(forKey: key)
-    }
-    
-    public func getValue() -> StorageValue? where StorageValue == Float {
-        UserDefaults.standard.floatOptional(forKey: key)
-    }
-    
-    public func getValue() -> StorageValue? where StorageValue == Data {
-        UserDefaults.standard.data(forKey: key)
-    }
-    
-    public func getValue() -> StorageValue? where StorageValue == [Any] {
-        UserDefaults.standard.array(forKey: key)
-    }
-    
-    public func getValue() -> StorageValue? where StorageValue == [String: Any] {
-        UserDefaults.standard.dictionary(forKey: key)
+    public func setStorageValue(to newValue: StorageValue?, in storage: PrefsStorage) {
+        storage.setValue(to: newValue, forKey: self)
     }
 }
