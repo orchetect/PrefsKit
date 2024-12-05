@@ -1,8 +1,7 @@
 //
 //  SystemSettings.swift
-//  PrefsKit
-//
-//  Created by Steffan Andrews on 2024-11-12.
+//  PrefsKit • https://github.com/orchetect/PrefsKit
+//  © 2024 Steffan Andrews • Licensed under MIT License
 //
 
 import Foundation
@@ -26,7 +25,6 @@ public enum SystemSettings {
         catch { print(error.localizedDescription) }
     }
     
-    
     static func launchCommand(panel: Panel? = nil) -> String {
         // see: https://gist.github.com/rmcdongit/f66ff91e0dad78d4d6346a75ded4b751
         // two methods to launch System Settings:
@@ -36,18 +34,19 @@ public enum SystemSettings {
         // prefer bundle ID over bundle name where possible, since bundle ID allows sub-panel selection
         if let panel {
             if let bundleID = panel.bundleID {
-                return "open \"x-apple.systempreferences:\(bundleID)\""
+                "open \"x-apple.systempreferences:\(bundleID)\""
             } else {
-                return "open -b com.apple.systempreferences \(panel.bundleName)"
+                "open -b com.apple.systempreferences \(panel.bundleName)"
             }
         } else {
-            return #"open "x-apple.systempreferences""#
+            #"open "x-apple.systempreferences""#
         }
     }
     
     #else
     
-    @MainActor public static func launch() {
+    @MainActor
+    public static func launch() {
         guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
         UIApplication.shared.open(url)
     }

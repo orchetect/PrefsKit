@@ -1,8 +1,7 @@
 //
 //  SystemSettings Panel.swift
-//  PrefsKit
-//
-//  Created by Steffan Andrews on 2024-11-12.
+//  PrefsKit • https://github.com/orchetect/PrefsKit
+//  © 2024 Steffan Andrews • Licensed under MIT License
 //
 
 extension SystemSettings {
@@ -92,8 +91,8 @@ extension SystemSettings {
             case .printAndScan: "PrintAndScan.prefPane"
             case .profiles: "Profiles.prefPane"
             case .screenTime: "ScreenTime.prefPane"
-            case .privacyAndSecurity(_): "Security.prefPane"
-            case .sharing(_): "SharingPref.prefPane"
+            case .privacyAndSecurity: "Security.prefPane"
+            case .sharing: "SharingPref.prefPane"
             case .softwareUpdate: "SoftwareUpdate.prefPane"
             case .sound: "Sound.prefPane"
             case .appleIntelligenceAndSiriOrLegacySpeech: "Speech.prefPane"
@@ -102,7 +101,7 @@ extension SystemSettings {
             case .timeMachine: "TimeMachine.prefPane"
             case .touchID: "TouchID.prefPane"
             case .trackpad: "Trackpad.prefPane"
-            case .accessibility(_): "UniversalAccessPref.prefPane"
+            case .accessibility: "UniversalAccessPref.prefPane"
             case .wallet: "Wallet.prefPane"
             }
         }

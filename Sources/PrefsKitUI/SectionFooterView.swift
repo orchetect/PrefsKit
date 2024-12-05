@@ -1,8 +1,7 @@
 //
 //  SectionFooterView.swift
-//  PrefsKit
-//
-//  Created by Steffan Andrews on 2024-10-29.
+//  PrefsKit • https://github.com/orchetect/PrefsKit
+//  © 2024 Steffan Andrews • Licensed under MIT License
 //
 
 import SwiftUI

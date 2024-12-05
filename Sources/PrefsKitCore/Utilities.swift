@@ -1,8 +1,7 @@
 //
 //  Utilities.swift
-//  PrefsKit
-//
-//  Created by Steffan Andrews on 2024-10-24.
+//  PrefsKit • https://github.com/orchetect/PrefsKit
+//  © 2024 Steffan Andrews • Licensed under MIT License
 //
 
 /// ----------------------------------------------
@@ -52,7 +51,8 @@ extension UserDefaults {
     
     /// Returns `true` if the key exists.
     ///
-    /// This method is only useful when you don't care about extracting a value from the key and merely want to check for the key's existence.
+    /// This method is only useful when you don't care about extracting a value from the key and merely want to check for the key's
+    /// existence.
     @_disfavoredOverload
     func exists(key: String) -> Bool {
         object(forKey: key) != nil

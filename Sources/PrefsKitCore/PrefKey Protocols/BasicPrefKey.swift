@@ -1,8 +1,7 @@
 //
 //  BasicPrefKey.swift
-//  PrefsKit
-//
-//  Created by Steffan Andrews on 2024-12-04.
+//  PrefsKit • https://github.com/orchetect/PrefsKit
+//  © 2024 Steffan Andrews • Licensed under MIT License
 //
 
 /// A basic prefs key that stores a standard value.
