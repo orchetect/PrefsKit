@@ -7,7 +7,7 @@
 import Foundation
 
 /// Protocol adopted by value types that are valid for storage in UserDefaults.
-public protocol PrefStorageValue { }
+public protocol PrefStorageValue where Self: Sendable { }
 
 extension Int: PrefStorageValue { }
 extension String: PrefStorageValue { }
@@ -15,5 +15,5 @@ extension Bool: PrefStorageValue { }
 extension Double: PrefStorageValue { }
 extension Float: PrefStorageValue { }
 extension Data: PrefStorageValue { }
-extension [PrefStorageValue]: PrefStorageValue { }
-extension [String: PrefStorageValue]: PrefStorageValue { }
+extension [any PrefStorageValue]: PrefStorageValue { }
+extension [String: any PrefStorageValue]: PrefStorageValue { }
