@@ -55,8 +55,10 @@ extension UserDefaults: PrefsStorage {
     }
 }
 
+// MARK: - Utilities
+
 /// Convert a raw value from UserDefaults to a type that conforms to ``PrefStorageValue``.
-fileprivate func convertToPref(_ value: Any) -> (any PrefStorageValue)? {
+fileprivate func convertToPrefValue(_ value: Any) -> (any PrefStorageValue)? {
     // Note that underlying number format of NSNumber can't easily be determined
     // so the cleanest solution is to make NSNumber `PrefStorageValue` and allow
     // the user to conditionally cast it as the number type they desire.
@@ -78,13 +80,13 @@ fileprivate func convertToPref(_ value: Any) -> (any PrefStorageValue)? {
 /// Convert a raw array from UserDefaults to a one that conforms to ``PrefStorageValue``.
 extension [Any] {
     fileprivate func convertToPrefArray() -> [any PrefStorageValue] {
-        compactMap { convertToPref($0) }
+        compactMap { convertToPrefValue($0) }
     }
 }
 
 /// Convert a raw dictionary from UserDefaults to a one that conforms to ``PrefStorageValue``.
 extension [String: Any] {
     fileprivate func convertToPrefDict() -> [String: any PrefStorageValue] {
-        compactMapValues { convertToPref($0) }
+        compactMapValues { convertToPrefValue($0) }
     }
 }
