@@ -41,10 +41,50 @@ extension UserDefaults: PrefsStorage {
     }
     
     public func value<Key: PrefKey>(forKey key: Key) -> Key.StorageValue? where Key.StorageValue == [any PrefStorageValue] {
-        array(forKey: key.key) as? [any PrefStorageValue]
+        guard let rawArray = array(forKey: key.key) else { return nil }
+        let typedArray: [any PrefStorageValue] = rawArray.convertToPrefArray()
+        assert(typedArray.count == rawArray.count)
+        return typedArray
     }
     
     public func value<Key: PrefKey>(forKey key: Key) -> Key.StorageValue? where Key.StorageValue == [String: any PrefStorageValue] {
-        dictionary(forKey: key.key) as? [String: any PrefStorageValue]
+        guard let rawDict = dictionary(forKey: key.key) else { return nil }
+        let typedDict: [String: any PrefStorageValue] = rawDict.convertToPrefDict()
+        assert(typedDict.count == rawDict.count)
+        return typedDict
+    }
+}
+
+/// Convert a raw value from UserDefaults to a type that conforms to ``PrefStorageValue``.
+fileprivate func convertToPref(_ value: Any) -> (any PrefStorageValue)? {
+    // Note that underlying number format of NSNumber can't easily be determined
+    // so the cleanest solution is to make NSNumber `PrefStorageValue` and allow
+    // the user to conditionally cast it as the number type they desire.
+    
+    switch value {
+    case let value as NSString: return value as String
+    case let value as Bool where "\(type(of: value))" == "__NSCFBoolean": return value
+    case let value as NSNumber: return value
+    case let value as NSData: return value as Data
+    case let value as [Any]: return value.convertToPrefArray()
+    case let value as [String: Any]: return value.convertToPrefDict()
+    case let value as PrefStorageValue: return value
+    default:
+        print("Unhandled pref storage value type: \(type(of: value))")
+        return nil
+    }
+}
+
+/// Convert a raw array from UserDefaults to a one that conforms to ``PrefStorageValue``.
+extension [Any] {
+    fileprivate func convertToPrefArray() -> [any PrefStorageValue] {
+        compactMap { convertToPref($0) }
+    }
+}
+
+/// Convert a raw dictionary from UserDefaults to a one that conforms to ``PrefStorageValue``.
+extension [String: Any] {
+    fileprivate func convertToPrefDict() -> [String: any PrefStorageValue] {
+        compactMapValues { convertToPref($0) }
     }
 }
