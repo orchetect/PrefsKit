@@ -5,4 +5,5 @@
 //
 
 /// A basic prefs key that stores a standard value.
-public protocol BasicPrefKey: PrefKey where Value == StorageValue { }
+public protocol BasicPrefKey: PrefKey
+where Value == StorageValue { }

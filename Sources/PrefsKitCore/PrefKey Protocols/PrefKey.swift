@@ -10,9 +10,9 @@ import Foundation
 /// Provides the core implementation requirements for read and write access of a key's value.
 /// The underlying storage data type may be the same or different than the type vended by the main `getValue` and `setValue` methods.
 public protocol PrefKey<Value, StorageValue>: Sendable
-where Self: Hashable, StorageValue: PrefStorageValue {
+where StorageValue: PrefStorageValue {
     associatedtype Value
-    associatedtype StorageValue: Hashable
+    associatedtype StorageValue
     
     /// Unique preference key name.
     var key: String { get }
