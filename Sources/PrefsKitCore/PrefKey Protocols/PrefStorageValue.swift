@@ -17,3 +17,5 @@ extension Float: PrefStorageValue { }
 extension Data: PrefStorageValue { }
 extension [any PrefStorageValue]: PrefStorageValue { }
 extension [String: any PrefStorageValue]: PrefStorageValue { }
+
+extension NSNumber: PrefStorageValue { }
