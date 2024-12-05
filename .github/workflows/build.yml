@@ -1,0 +1,42 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - '**/*.md'       # .md files anywhere in the repo
+      - '**/LICENSE'    # LICENSE files anywhere in the repo
+      - '**/.gitignore' # .gitignore files anywhere in the repo
+      - '**/*.png'      # .png image files anywhere in the repo
+      - '**/*.pdf'      # .pdf files anywhere in the repo
+      
+  pull_request:
+    branches: [main]
+    paths-ignore:
+      - '**/*.md'       # .md files anywhere in the repo
+      - '**/LICENSE'    # LICENSE files anywhere in the repo
+      - '**/.gitignore' # .gitignore files anywhere in the repo
+      - '**/*.png'      # .png image files anywhere in the repo
+      - '**/*.pdf'      # .pdf files anywhere in the repo
+      
+  workflow_dispatch:
+    
+  schedule:
+    - cron: '15 13 * * *'   # once a day @ 2:15am UTC (7:15am PST)
+
+env:
+  SCHEME: "PrefsKit-CI"
+
+jobs:
+  macOS:
+    name: macOS 15
+    runs-on: macos-15
+    steps:
+    - uses: actions/checkout@main
+    - uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: latest-stable
+    - name: Build
+      run: xcodebuild build -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "$SCHEME" -destination "generic/platform=macOS,name=Any Mac" | xcpretty && exit ${PIPESTATUS[0]}
+    - name: Unit Tests
+      run: xcodebuild test -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "$SCHEME" -destination "platform=macOS" | xcpretty && exit ${PIPESTATUS[0]}
