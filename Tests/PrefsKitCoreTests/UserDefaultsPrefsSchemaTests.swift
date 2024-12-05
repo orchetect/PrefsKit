@@ -34,7 +34,7 @@ struct UserDefaultsPrefsSchemaTests {
     struct Bar: BasicDefaultedPrefKey {
         typealias Value = Bool
         let key: String = "bar"
-        let defaultValue: StorageValue = true
+        let defaultValue: Value = true
     }
     
     struct RawFoo: RawRepresentablePrefKey {
