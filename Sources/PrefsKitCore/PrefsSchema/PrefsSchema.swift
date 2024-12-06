@@ -17,7 +17,6 @@ public protocol PrefsSchema where Self: Sendable {
 @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
 extension PrefsSchema {
     /// Wrap a pref key instance. Used in ``PrefsSchema``.
-    @_disfavoredOverload
     public func pref<Key: PrefKey>(_ key: Key) -> ObservablePref<Key> {
         ObservablePref(key: key, storage: storage)
     }
