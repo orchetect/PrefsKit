@@ -8,7 +8,7 @@ import Foundation
 
 /// Protocol for prefs schema.
 @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
-public protocol PrefsSchema {
+public protocol PrefsSchema where Self: Sendable {
     associatedtype Key: RawRepresentable where Key.RawValue == String, Key: CaseIterable
     
     var storage: any PrefsStorage { get }

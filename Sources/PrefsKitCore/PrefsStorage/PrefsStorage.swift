@@ -8,7 +8,7 @@ import Foundation
 
 /// Conform a type to enable it to be used for prefs storage.
 /// The type must be a reference type (class).
-public protocol PrefsStorage: AnyObject {
+public protocol PrefsStorage: AnyObject where Self: Sendable {
     func setValue<Key: PrefKey>(to value: Key.StorageValue?, forKey key: Key)
     
     func value<Key: PrefKey>(forKey key: Key) -> Key.StorageValue?
