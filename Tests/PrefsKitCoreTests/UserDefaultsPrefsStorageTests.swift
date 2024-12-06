@@ -10,12 +10,17 @@ import Testing
 
 @Suite(.serialized)
 struct UserDefaultsPrefsStorageTests {
-    let testSuite: UserDefaults
+    static let domain = { "com.orchetect.PrefsKit.\(type(of: Self.self))" }()
+    
+    static func testSuite() -> UserDefaults {
+        UserDefaults(suiteName: domain)!
+    }
+    
+    let storage: UserDefaultsPrefsStorage
     
     init() {
-        let domain = "com.orchetect.PrefsKit.\(type(of: self))"
-        UserDefaults.standard.removePersistentDomain(forName: domain)
-        testSuite = UserDefaults(suiteName: domain)!
+        UserDefaults.standard.removePersistentDomain(forName: Self.domain)
+        storage = UserDefaultsPrefsStorage(suite: Self.testSuite())
     }
     
     enum RawEnum: String, RawRepresentable {
@@ -52,62 +57,62 @@ struct UserDefaultsPrefsStorageTests {
     let rawBar = RawBar()
     
     @Test func basicPrefKey() async throws {
-        #expect(foo.getValue(in: testSuite) == nil)
+        #expect(foo.getValue(in: storage) == nil)
         
-        foo.setValue(to: false, in: testSuite)
-        #expect(foo.getValue(in: testSuite) == false)
+        foo.setValue(to: false, in: storage)
+        #expect(foo.getValue(in: storage) == false)
         
-        foo.setValue(to: true, in: testSuite)
-        #expect(foo.getValue(in: testSuite) == true)
+        foo.setValue(to: true, in: storage)
+        #expect(foo.getValue(in: storage) == true)
         
-        foo.setValue(to: nil, in: testSuite)
-        #expect(foo.getValue(in: testSuite) == nil)
+        foo.setValue(to: nil, in: storage)
+        #expect(foo.getValue(in: storage) == nil)
     }
     
     @Test func basicDefaultedPrefKey() async throws {
-        #expect(bar.getValue(in: testSuite) == nil)
-        #expect(bar.getDefaultedValue(in: testSuite) == true)
+        #expect(bar.getValue(in: storage) == nil)
+        #expect(bar.getDefaultedValue(in: storage) == true)
         
-        bar.setValue(to: false, in: testSuite)
-        #expect(bar.getValue(in: testSuite) == false)
-        #expect(bar.getDefaultedValue(in: testSuite) == false)
+        bar.setValue(to: false, in: storage)
+        #expect(bar.getValue(in: storage) == false)
+        #expect(bar.getDefaultedValue(in: storage) == false)
         
-        bar.setValue(to: true, in: testSuite)
-        #expect(bar.getValue(in: testSuite) == true)
-        #expect(bar.getDefaultedValue(in: testSuite) == true)
+        bar.setValue(to: true, in: storage)
+        #expect(bar.getValue(in: storage) == true)
+        #expect(bar.getDefaultedValue(in: storage) == true)
         
-        bar.setValue(to: nil, in: testSuite)
-        #expect(bar.getValue(in: testSuite) == nil)
-        #expect(bar.getDefaultedValue(in: testSuite) == true)
+        bar.setValue(to: nil, in: storage)
+        #expect(bar.getValue(in: storage) == nil)
+        #expect(bar.getDefaultedValue(in: storage) == true)
     }
     
     @Test func rawRepresentablePrefKey() async throws {
-        #expect(rawFoo.getValue(in: testSuite) == nil)
+        #expect(rawFoo.getValue(in: storage) == nil)
         
-        rawFoo.setValue(to: .one, in: testSuite)
-        #expect(rawFoo.getValue(in: testSuite) == .one)
+        rawFoo.setValue(to: .one, in: storage)
+        #expect(rawFoo.getValue(in: storage) == .one)
         
-        rawFoo.setValue(to: .two, in: testSuite)
-        #expect(rawFoo.getValue(in: testSuite) == .two)
+        rawFoo.setValue(to: .two, in: storage)
+        #expect(rawFoo.getValue(in: storage) == .two)
         
-        rawFoo.setValue(to: nil, in: testSuite)
-        #expect(rawFoo.getValue(in: testSuite) == nil)
+        rawFoo.setValue(to: nil, in: storage)
+        #expect(rawFoo.getValue(in: storage) == nil)
     }
     
     @Test func defaultedRawRepresentablePrefKey() async throws {
-        #expect(rawBar.getValue(in: testSuite) == nil)
-        #expect(rawBar.getDefaultedValue(in: testSuite) == .one)
+        #expect(rawBar.getValue(in: storage) == nil)
+        #expect(rawBar.getDefaultedValue(in: storage) == .one)
         
-        rawBar.setValue(to: .one, in: testSuite)
-        #expect(rawBar.getValue(in: testSuite) ==  .one)
-        #expect(rawBar.getDefaultedValue(in: testSuite) ==  .one)
+        rawBar.setValue(to: .one, in: storage)
+        #expect(rawBar.getValue(in: storage) ==  .one)
+        #expect(rawBar.getDefaultedValue(in: storage) ==  .one)
         
-        rawBar.setValue(to: .two, in: testSuite)
-        #expect(rawBar.getValue(in: testSuite) == .two)
-        #expect(rawBar.getDefaultedValue(in: testSuite) == .two)
+        rawBar.setValue(to: .two, in: storage)
+        #expect(rawBar.getValue(in: storage) == .two)
+        #expect(rawBar.getDefaultedValue(in: storage) == .two)
         
-        rawBar.setValue(to: nil, in: testSuite)
-        #expect(rawBar.getValue(in: testSuite) == nil)
-        #expect(rawBar.getDefaultedValue(in: testSuite) == .one)
+        rawBar.setValue(to: nil, in: storage)
+        #expect(rawBar.getValue(in: storage) == nil)
+        #expect(rawBar.getDefaultedValue(in: storage) == .one)
     }
 }
