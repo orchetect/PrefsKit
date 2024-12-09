@@ -4,6 +4,6 @@
 //  © 2024 Steffan Andrews • Licensed under MIT License
 //
 
-/// A basic prefs key that stores a standard value.
+/// A basic prefs key that stores a standard value type.
 public protocol BasicPrefKey: PrefKey
 where Value == StorageValue { }

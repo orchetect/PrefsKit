@@ -4,6 +4,7 @@
 //  © 2024 Steffan Andrews • Licensed under MIT License
 //
 
+/// A type that wraps a dictionary of type-erased values for use in prefs storage.
 public struct AnyPrefDictionary {
     public var content: [String: AnyPrefStorageValue]
     

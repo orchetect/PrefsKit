@@ -6,6 +6,7 @@
 
 import Foundation
 
+/// Type-erased box for prefs storage values.
 public enum AnyPrefStorageValue {
     case number(NSNumber)
     case string(String)
