@@ -13,6 +13,7 @@ public final class DictionaryPrefsStorage {
     
     public var root: [String: any PrefStorageValue] {
         get { storage }
+        _modify { yield &storage }
         set { storage = newValue }
     }
     
