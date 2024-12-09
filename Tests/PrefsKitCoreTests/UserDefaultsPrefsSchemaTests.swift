@@ -57,19 +57,19 @@ struct UserDefaultsPrefsSchemaTests {
             self.storage = storage
         }
         
-        enum Key: String, CaseIterable {
-            case rawFoo
-            case rawBar
+        enum Key {
+            static let rawFoo = "rawFoo"
+            static let rawBar = "rawBar"
             
-            case int
-            case string
-            case bool
-            case double
-            case float
-            case data
-            case anyArray
-            case stringArray
-            case anyDict
+            static let int = "int"
+            static let string = "string"
+            static let bool = "bool"
+            static let double = "double"
+            static let float = "float"
+            static let data = "data"
+            static let anyArray = "anyArray"
+            static let stringArray = "stringArray"
+            static let anyDict = "anyDict"
         }
         
         lazy var basic = pref(MockBasicPrefKey())
@@ -78,30 +78,30 @@ struct UserDefaultsPrefsSchemaTests {
         lazy var rawRep = pref(MockRawRepresentablePrefKey())
         lazy var rawRepDefaulted = pref(MockDefaultedRawRepresentablePrefKey())
         
-        lazy var rawRep2 = pref(.rawFoo, of: RawEnum.self)
-        lazy var rawRepDefaulted2 = pref(.rawBar, of: RawEnum.self, default: .one)
+        lazy var rawRep2 = pref(Key.rawFoo, of: RawEnum.self)
+        lazy var rawRepDefaulted2 = pref(Key.rawBar, of: RawEnum.self, default: .one)
         
-        lazy var int = pref(int: .int)
-        lazy var string = pref(string: .string)
-        lazy var bool = pref(bool: .bool)
-        lazy var double = pref(double: .double)
-        lazy var float = pref(float: .float)
-        lazy var data = pref(data: .data)
-        lazy var anyArray = pref(array: .anyArray)
-        lazy var stringArray = pref(array: .anyArray, of: String.self)
-        lazy var anyDict = pref(dictionary: .anyDict)
-        lazy var stringDict = pref(dictionary: .anyDict, of: String.self)
+        lazy var int = pref(int: Key.int)
+        lazy var string = pref(string: Key.string)
+        lazy var bool = pref(bool: Key.bool)
+        lazy var double = pref(double: Key.double)
+        lazy var float = pref(float: Key.float)
+        lazy var data = pref(data: Key.data)
+        lazy var anyArray = pref(array: Key.anyArray)
+        lazy var stringArray = pref(array: Key.anyArray, of: String.self)
+        lazy var anyDict = pref(dictionary: Key.anyDict)
+        lazy var stringDict = pref(dictionary: Key.anyDict, of: String.self)
         
-        lazy var intDefaulted = pref(int: .int, default: 1)
-        lazy var stringDefaulted = pref(string: .string, default: "a string")
-        lazy var boolDefaulted = pref(bool: .bool, default: true)
-        lazy var doubleDefaulted = pref(double: .double, default: 1.5)
-        lazy var floatDefaulted = pref(float: .float, default: 2.5)
-        lazy var dataDefaulted = pref(data: .data, default: Data([0x01, 0x02]))
-        lazy var anyArrayDefaulted = pref(array: .anyArray, default: [123, "a string"])
-        lazy var stringArrayDefaulted = pref(array: .stringArray, of: String.self, default: ["a", "b"])
-        lazy var anyDictDefaulted = pref(dictionary: .anyDict, default: ["foo": 123, "bar": "a string"])
-        lazy var stringDictDefaulted = pref(dictionary: .anyDict, of: String.self, default: ["a": "123", "b": "456"])
+        lazy var intDefaulted = pref(int: Key.int, default: 1)
+        lazy var stringDefaulted = pref(string: Key.string, default: "a string")
+        lazy var boolDefaulted = pref(bool: Key.bool, default: true)
+        lazy var doubleDefaulted = pref(double: Key.double, default: 1.5)
+        lazy var floatDefaulted = pref(float: Key.float, default: 2.5)
+        lazy var dataDefaulted = pref(data: Key.data, default: Data([0x01, 0x02]))
+        lazy var anyArrayDefaulted = pref(array: Key.anyArray, default: [123, "a string"])
+        lazy var stringArrayDefaulted = pref(array: Key.stringArray, of: String.self, default: ["a", "b"])
+        lazy var anyDictDefaulted = pref(dictionary: Key.anyDict, default: ["foo": 123, "bar": "a string"])
+        lazy var stringDictDefaulted = pref(dictionary: Key.anyDict, of: String.self, default: ["a": "123", "b": "456"])
     }
     
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
