@@ -148,7 +148,7 @@ public struct AnyDefaultedCodablePrefKey<
 
 // MARK: - JSON Codable
 
-/// Generic concrete pref key with a `Codable` value type.
+/// Generic concrete pref key with a `Codable` value type using JSON encoding.
 public struct AnyJSONCodablePrefKey<Value: Codable>: JSONCodablePrefKey where Value: Sendable {
     public let key: String
     
@@ -159,7 +159,7 @@ public struct AnyJSONCodablePrefKey<Value: Codable>: JSONCodablePrefKey where Va
     }
 }
 
-/// Generic concrete pref key with a `Codable` value type and a default value.
+/// Generic concrete pref key with a `Codable` value type using JSON encoding and a default value.
 public struct AnyDefaultedJSONCodablePrefKey<Value: Codable>: DefaultedJSONCodablePrefKey where Value: Sendable {
     public let key: String
     

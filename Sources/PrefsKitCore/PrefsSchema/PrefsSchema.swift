@@ -232,7 +232,7 @@ extension PrefsSchema {
     /// Synthesize a pref key with an `Codable` value.
     @_disfavoredOverload
     public func pref<Value: Codable, StorageValue: PrefStorageValue, Encoder: TopLevelEncoder, Decoder: TopLevelDecoder>(
-        codable key: String,
+        _ key: String,
         of elementType: Value.Type,
         encoder: @escaping @Sendable () -> Encoder,
         decoder: @escaping @Sendable () -> Decoder
@@ -248,7 +248,7 @@ extension PrefsSchema {
     /// Synthesize a pref key with an `Codable` value with a default value.
     @_disfavoredOverload
     public func pref<Value: Codable, StorageValue: PrefStorageValue, Encoder: TopLevelEncoder, Decoder: TopLevelDecoder>(
-        codable key: String,
+        _ key: String,
         of elementType: Value.Type,
         default defaultValue: Value,
         encoder: @escaping @Sendable () -> Encoder,
@@ -265,10 +265,10 @@ extension PrefsSchema {
     
     // MARK: - JSON Codable
     
-    /// Synthesize a pref key with an `Codable` value.
+    /// Synthesize a pref key with an `Codable` value using JSON encoding.
     @_disfavoredOverload
     public func pref<Value: Codable>(
-        jsonCodable key: String,
+        _ key: String,
         of elementType: Value.Type
     ) -> ObservablePref<AnyJSONCodablePrefKey<Value>> {
         let keyInstance = AnyJSONCodablePrefKey<Value>(
@@ -277,10 +277,10 @@ extension PrefsSchema {
         return pref(keyInstance)
     }
     
-    /// Synthesize a pref key with an `Codable` value with a default value.
+    /// Synthesize a pref key with an `Codable` value using JSON encoding with a default value.
     @_disfavoredOverload
     public func pref<Value: Codable>(
-        jsonCodable key: String,
+        _ key: String,
         of elementType: Value.Type,
         default defaultValue: Value
     ) -> ObservableDefaultedPref<AnyDefaultedJSONCodablePrefKey<Value>> {
