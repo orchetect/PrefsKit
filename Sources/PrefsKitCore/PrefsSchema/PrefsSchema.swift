@@ -234,13 +234,13 @@ extension PrefsSchema {
     public func pref<Value: Codable, StorageValue: PrefStorageValue, Encoder: TopLevelEncoder, Decoder: TopLevelDecoder>(
         _ key: String,
         of elementType: Value.Type,
-        encoder: @escaping @Sendable () -> Encoder,
-        decoder: @escaping @Sendable () -> Decoder
+        encoder: @escaping @Sendable @autoclosure () -> Encoder,
+        decoder: @escaping @Sendable @autoclosure () -> Decoder
     ) -> ObservablePref<AnyCodablePrefKey<Value, StorageValue, Encoder, Decoder>> {
         let keyInstance = AnyCodablePrefKey<Value, StorageValue, Encoder, Decoder>(
             key: key,
-            encoder: encoder,
-            decoder: decoder
+            encoder: encoder(),
+            decoder: decoder()
         )
         return pref(keyInstance)
     }
@@ -251,14 +251,14 @@ extension PrefsSchema {
         _ key: String,
         of elementType: Value.Type,
         default defaultValue: Value,
-        encoder: @escaping @Sendable () -> Encoder,
-        decoder: @escaping @Sendable () -> Decoder
+        encoder: @escaping @Sendable @autoclosure () -> Encoder,
+        decoder: @escaping @Sendable @autoclosure () -> Decoder
     ) -> ObservableDefaultedPref<AnyDefaultedCodablePrefKey<Value, StorageValue, Encoder, Decoder>> {
         let keyInstance = AnyDefaultedCodablePrefKey<Value, StorageValue, Encoder, Decoder>(
             key: key,
             defaultValue: defaultValue,
-            encoder: encoder,
-            decoder: decoder
+            encoder: encoder(),
+            decoder: decoder()
         )
         return pref(keyInstance)
     }

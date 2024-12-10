@@ -95,8 +95,8 @@ public struct AnyCodablePrefKey<
     
     public init(
         key: String,
-        encoder: @escaping @Sendable () -> Encoder,
-        decoder: @escaping @Sendable () -> Decoder
+        encoder: @escaping @Sendable @autoclosure () -> Encoder,
+        decoder: @escaping @Sendable @autoclosure () -> Decoder
     ) {
         self.key = key
         self._encoder = encoder
@@ -133,8 +133,8 @@ public struct AnyDefaultedCodablePrefKey<
     public init(
         key: String,
         defaultValue: Value,
-        encoder: @escaping @Sendable () -> Encoder,
-        decoder: @escaping @Sendable () -> Decoder
+        encoder: @escaping @Sendable @autoclosure () -> Encoder,
+        decoder: @escaping @Sendable @autoclosure () -> Decoder
     ) {
         self.key = key
         self.defaultValue = defaultValue
