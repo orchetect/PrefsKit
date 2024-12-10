@@ -8,6 +8,9 @@ import Foundation
 @testable import PrefsKitCore
 import Testing
 
+/// Test `PrefKey` implementation that uses custom `getValue(in:)` and `setValue(to:in:)` method overrides to convert
+/// to/from raw prefs storage data without using any of the included abstraction protocols such as
+/// `RawRepresentablePrefKey` or `CodablePrefKey`.
 @Suite
 struct CustomEncodingTests {
     struct NonCodableNonRawRepresentable: Equatable {
@@ -60,7 +63,8 @@ struct CustomEncodingTests {
     }
     
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
-    @Test func customValueEncoding() {
+    @Test
+    func customValueEncoding() {
         let schema = TestSchema()
         
         #expect(schema.customKey.value?.value == nil)
