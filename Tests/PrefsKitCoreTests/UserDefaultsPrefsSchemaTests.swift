@@ -38,13 +38,15 @@ struct UserDefaultsPrefsSchemaTests {
         let defaultValue: Value = true
     }
     
-    struct MockRawRepresentablePrefKey: RawRepresentablePrefKey {
+    struct MockRawRepresentablePrefKey: PrefKey { // RawRepresentable
         typealias Value = RawEnum
+        typealias StorageValue = RawEnum.RawValue
         let key: String = "rawFoo"
     }
     
-    struct MockDefaultedRawRepresentablePrefKey: DefaultedRawRepresentablePrefKey {
+    struct MockDefaultedRawRepresentablePrefKey: DefaultedPrefKey { // RawRepresentable
         typealias Value = RawEnum
+        typealias StorageValue = RawEnum.RawValue
         let key: String = "rawBar"
         let defaultValue: Value = .one
     }

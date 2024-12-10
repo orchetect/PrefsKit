@@ -50,13 +50,15 @@ struct UserDefaultsPrefsStorageTests {
         let defaultValue: Value = true
     }
     
-    struct RawFoo: RawRepresentablePrefKey {
+    struct RawFoo: PrefKey { // RawRepresentable
         typealias Value = RawEnum
+        typealias StorageValue = RawEnum.RawValue
         let key: String = "rawFoo"
     }
     
-    struct RawBar: DefaultedRawRepresentablePrefKey {
+    struct RawBar: DefaultedPrefKey { // RawRepresentable
         typealias Value = RawEnum
+        typealias StorageValue = RawEnum.RawValue
         let key: String = "rawBar"
         let defaultValue: Value = .one
     }
