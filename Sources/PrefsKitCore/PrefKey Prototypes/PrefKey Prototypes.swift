@@ -7,6 +7,8 @@
 import Combine
 import Foundation
 
+// MARK: - Atomic
+
 /// Generic concrete pref key with an atomic value type.
 public struct AnyAtomicPrefKey<Value>: AtomicPrefKey where Value: Sendable, Value: PrefStorageValue {
     public let key: String
@@ -33,6 +35,8 @@ public struct AnyDefaultedAtomicPrefKey<Value>: AtomicDefaultedPrefKey where Val
     }
 }
 
+// MARK: - RawRepresentable
+
 /// Generic concrete pref key with a `RawRepresentable` value type.
 public struct AnyRawRepresentablePrefKey<
     Value: RawRepresentable,
@@ -57,6 +61,109 @@ public struct AnyDefaultedRawRepresentablePrefKey<
     
     public typealias Value = Value
     public typealias StorageValue = StorageValue
+    public let defaultValue: Value
+    
+    public init(key: String, defaultValue: Value) {
+        self.key = key
+        self.defaultValue = defaultValue
+    }
+}
+
+// MARK: - Codable
+
+/// Generic concrete pref key with a `Codable` value type.
+public struct AnyCodablePrefKey<
+    Value: Codable,
+    StorageValue: PrefStorageValue,
+    Encoder: TopLevelEncoder,
+    Decoder: TopLevelDecoder
+>: CodablePrefKey where Value: Sendable,
+                        StorageValue == Encoder.Output,
+                        Encoder.Output: PrefStorageValue,
+                        Decoder.Input: PrefStorageValue,
+                        Encoder.Output == Decoder.Input
+{
+    public let key: String
+    
+    public typealias Value = Value
+    public typealias StorageValue = StorageValue
+    
+    public typealias Encoder = Encoder
+    public typealias Decoder = Decoder
+    private let _encoder: @Sendable () -> Encoder
+    private let _decoder: @Sendable () -> Decoder
+    
+    public init(
+        key: String,
+        encoder: @escaping @Sendable () -> Encoder,
+        decoder: @escaping @Sendable () -> Decoder
+    ) {
+        self.key = key
+        self._encoder = encoder
+        self._decoder = decoder
+    }
+    
+    public func prefEncoder() -> Encoder { _encoder() }
+    public func prefDecoder() -> Decoder { _decoder() }
+}
+
+/// Generic concrete pref key with a `Codable` value type and a default value.
+public struct AnyDefaultedCodablePrefKey<
+    Value: Codable,
+    StorageValue: PrefStorageValue,
+    Encoder: TopLevelEncoder,
+    Decoder: TopLevelDecoder
+>: DefaultedCodablePrefKey where Value: Sendable,
+                                 StorageValue == Encoder.Output,
+                                 Encoder.Output: PrefStorageValue,
+                                 Decoder.Input: PrefStorageValue,
+                                 Encoder.Output == Decoder.Input
+{
+    public let key: String
+    
+    public typealias Value = Value
+    public typealias StorageValue = StorageValue
+    public let defaultValue: Value
+    
+    public typealias Encoder = Encoder
+    public typealias Decoder = Decoder
+    private let _encoder: @Sendable () -> Encoder
+    private let _decoder: @Sendable () -> Decoder
+    
+    public init(
+        key: String,
+        defaultValue: Value,
+        encoder: @escaping @Sendable () -> Encoder,
+        decoder: @escaping @Sendable () -> Decoder
+    ) {
+        self.key = key
+        self.defaultValue = defaultValue
+        self._encoder = encoder
+        self._decoder = decoder
+    }
+    
+    public func prefEncoder() -> Encoder { _encoder() }
+    public func prefDecoder() -> Decoder { _decoder() }
+}
+
+// MARK: - JSON Codable
+
+/// Generic concrete pref key with a `Codable` value type.
+public struct AnyJSONCodablePrefKey<Value: Codable>: JSONCodablePrefKey where Value: Sendable {
+    public let key: String
+    
+    public typealias Value = Value
+    
+    public init(key: String) {
+        self.key = key
+    }
+}
+
+/// Generic concrete pref key with a `Codable` value type and a default value.
+public struct AnyDefaultedJSONCodablePrefKey<Value: Codable>: DefaultedJSONCodablePrefKey where Value: Sendable {
+    public let key: String
+    
+    public typealias Value = Value
     public let defaultValue: Value
     
     public init(key: String, defaultValue: Value) {

@@ -7,9 +7,9 @@
 import Combine
 import Foundation
 
-/// A prefs key that encodes and decodes a `Codable` type to/from raw storage using JSON encoding.
+/// A prefs key that encodes and decodes a `Codable` type to/from raw `Data` storage using JSON encoding.
 public protocol JSONCodablePrefKey: CodablePrefKey
-where Encoder == JSONEncoder, Decoder == JSONDecoder { }
+where Encoder == JSONEncoder, Decoder == JSONDecoder, StorageValue == Data { }
 
 extension JSONCodablePrefKey {
     public func prefEncoder() -> Encoder {

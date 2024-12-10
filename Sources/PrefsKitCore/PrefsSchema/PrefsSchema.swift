@@ -226,4 +226,68 @@ extension PrefsSchema {
         let keyInstance = AnyDefaultedRawRepresentablePrefKey<Value, StorageValue>(key: key, defaultValue: defaultValue)
         return pref(keyInstance)
     }
+    
+    // MARK: - Codable
+    
+    /// Synthesize a pref key with an `Codable` value.
+    @_disfavoredOverload
+    public func pref<Value: Codable, StorageValue: PrefStorageValue, Encoder: TopLevelEncoder, Decoder: TopLevelDecoder>(
+        codable key: String,
+        of elementType: Value.Type,
+        encoder: @escaping @Sendable () -> Encoder,
+        decoder: @escaping @Sendable () -> Decoder
+    ) -> ObservablePref<AnyCodablePrefKey<Value, StorageValue, Encoder, Decoder>> {
+        let keyInstance = AnyCodablePrefKey<Value, StorageValue, Encoder, Decoder>(
+            key: key,
+            encoder: encoder,
+            decoder: decoder
+        )
+        return pref(keyInstance)
+    }
+    
+    /// Synthesize a pref key with an `Codable` value with a default value.
+    @_disfavoredOverload
+    public func pref<Value: Codable, StorageValue: PrefStorageValue, Encoder: TopLevelEncoder, Decoder: TopLevelDecoder>(
+        codable key: String,
+        of elementType: Value.Type,
+        default defaultValue: Value,
+        encoder: @escaping @Sendable () -> Encoder,
+        decoder: @escaping @Sendable () -> Decoder
+    ) -> ObservableDefaultedPref<AnyDefaultedCodablePrefKey<Value, StorageValue, Encoder, Decoder>> {
+        let keyInstance = AnyDefaultedCodablePrefKey<Value, StorageValue, Encoder, Decoder>(
+            key: key,
+            defaultValue: defaultValue,
+            encoder: encoder,
+            decoder: decoder
+        )
+        return pref(keyInstance)
+    }
+    
+    // MARK: - JSON Codable
+    
+    /// Synthesize a pref key with an `Codable` value.
+    @_disfavoredOverload
+    public func pref<Value: Codable>(
+        jsonCodable key: String,
+        of elementType: Value.Type
+    ) -> ObservablePref<AnyJSONCodablePrefKey<Value>> {
+        let keyInstance = AnyJSONCodablePrefKey<Value>(
+            key: key
+        )
+        return pref(keyInstance)
+    }
+    
+    /// Synthesize a pref key with an `Codable` value with a default value.
+    @_disfavoredOverload
+    public func pref<Value: Codable>(
+        jsonCodable key: String,
+        of elementType: Value.Type,
+        default defaultValue: Value
+    ) -> ObservableDefaultedPref<AnyDefaultedJSONCodablePrefKey<Value>> {
+        let keyInstance = AnyDefaultedJSONCodablePrefKey<Value>(
+            key: key,
+            defaultValue: defaultValue
+        )
+        return pref(keyInstance)
+    }
 }
