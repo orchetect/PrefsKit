@@ -10,7 +10,15 @@ import Foundation
 /// Protocol for prefs schema.
 @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
 public protocol PrefsSchema where Self: Sendable {
+    /// Storage provider for prefs.
     var storage: any PrefsStorage { get }
+    
+    /// Enable or disable internal cache of prefs values.
+    ///
+    /// This is safe (and more performant) to enable when you know that the prefs storage provider (``storage``) will
+    /// either:
+    /// - never change externally, or
+    /// - may change externally but external changes are safe to discard/overwrite with local cached values.
     var isCacheEnabled: Bool { get }
 }
 
@@ -232,7 +240,12 @@ extension PrefsSchema {
     
     /// Synthesize a pref key with an `Codable` value.
     @_disfavoredOverload
-    public func pref<Value: Codable, StorageValue: PrefStorageValue, Encoder: TopLevelEncoder, Decoder: TopLevelDecoder>(
+    public func pref<
+        Value: Codable,
+        StorageValue: PrefStorageValue,
+        Encoder: TopLevelEncoder,
+        Decoder: TopLevelDecoder
+    >(
         _ key: String,
         of elementType: Value.Type,
         encoder: @escaping @Sendable @autoclosure () -> Encoder,
@@ -248,7 +261,12 @@ extension PrefsSchema {
     
     /// Synthesize a pref key with an `Codable` value with a default value.
     @_disfavoredOverload
-    public func pref<Value: Codable, StorageValue: PrefStorageValue, Encoder: TopLevelEncoder, Decoder: TopLevelDecoder>(
+    public func pref<
+        Value: Codable,
+        StorageValue: PrefStorageValue,
+        Encoder: TopLevelEncoder,
+        Decoder: TopLevelDecoder
+    >(
         _ key: String,
         of elementType: Value.Type,
         default defaultValue: Value,
