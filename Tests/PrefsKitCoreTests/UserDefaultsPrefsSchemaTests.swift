@@ -102,9 +102,11 @@ struct UserDefaultsPrefsSchemaTests {
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
     final class TestSchema: PrefsSchema, @unchecked Sendable {
         let storage: any PrefsStorage
+        let isCacheEnabled: Bool
         
-        init(storage: any PrefsStorage) {
+        init(storage: any PrefsStorage, isCacheEnabled: Bool) {
             self.storage = storage
+            self.isCacheEnabled = isCacheEnabled
         }
         
         enum Key {
@@ -185,8 +187,10 @@ struct UserDefaultsPrefsSchemaTests {
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
     static var schemas: [TestSchema] {
         [
-            TestSchema(storage: UserDefaultsPrefsStorage(suite: testSuite())),
-            TestSchema(storage: DictionaryPrefsStorage())
+            TestSchema(storage: UserDefaultsPrefsStorage(suite: testSuite()), isCacheEnabled: true),
+            TestSchema(storage: UserDefaultsPrefsStorage(suite: testSuite()), isCacheEnabled: false),
+            TestSchema(storage: DictionaryPrefsStorage(), isCacheEnabled: true),
+            TestSchema(storage: DictionaryPrefsStorage(), isCacheEnabled: false)
         ]
     }
     
