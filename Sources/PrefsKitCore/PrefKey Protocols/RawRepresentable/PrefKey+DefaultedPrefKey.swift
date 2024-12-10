@@ -7,7 +7,7 @@
 import Foundation
 
 extension PrefKey where Value: RawRepresentable,
-                        Value.RawValue == StorageValue {
+Value.RawValue == StorageValue {
     public func getValue(in storage: PrefsStorage) -> Value? {
         guard let rawValue = getStorageValue(in: storage) else { return nil }
         return Value(rawValue: rawValue)

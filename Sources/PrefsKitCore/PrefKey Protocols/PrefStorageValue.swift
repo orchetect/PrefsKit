@@ -15,34 +15,43 @@ public protocol PrefStorageValue where Self: Equatable, Self: Sendable {
 extension Int: PrefStorageValue {
     public var prefStorageValue: Self { self }
 }
+
 extension String: PrefStorageValue {
     public var prefStorageValue: Self { self }
 }
+
 extension Bool: PrefStorageValue {
     public var prefStorageValue: Self { self }
 }
+
 extension Double: PrefStorageValue {
     public var prefStorageValue: Self { self }
 }
+
 extension Float: PrefStorageValue {
     public var prefStorageValue: Self { self }
 }
+
 extension Data: PrefStorageValue {
     public var prefStorageValue: Self { self }
 }
+
 extension AnyPrefArray: PrefStorageValue {
     public var prefStorageValue: [Any] {
         content.map { $0.value.prefStorageValue }
     }
 }
+
 extension AnyPrefDictionary: PrefStorageValue {
     public var prefStorageValue: [String: Any] {
         content.mapValues { $0.value.prefStorageValue }
     }
 }
+
 extension Array: PrefStorageValue where Element: PrefStorageValue {
     public var prefStorageValue: Self { self }
 }
+
 extension Dictionary: PrefStorageValue where Key == String, Value: PrefStorageValue {
     public var prefStorageValue: Self { self }
 }

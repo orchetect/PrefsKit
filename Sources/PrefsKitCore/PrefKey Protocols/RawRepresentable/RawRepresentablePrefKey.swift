@@ -5,6 +5,6 @@
 //
 
 public protocol RawRepresentablePrefKey: PrefKey
-where Value: RawRepresentable,
-      Value.RawValue == StorageValue
+    where Value: RawRepresentable,
+    Value.RawValue == StorageValue
 { }

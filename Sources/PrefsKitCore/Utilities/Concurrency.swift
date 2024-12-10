@@ -12,7 +12,7 @@ public struct SynchronizedLock<Value>: @unchecked Sendable {
     private var lock = NSLock()
     
     public init(wrappedValue: Value) {
-        self._value = wrappedValue
+        _value = wrappedValue
     }
     
     public var wrappedValue: Value {

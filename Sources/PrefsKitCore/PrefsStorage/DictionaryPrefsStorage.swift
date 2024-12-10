@@ -18,7 +18,7 @@ public final class DictionaryPrefsStorage {
     }
     
     public init(root: [String: any PrefStorageValue] = [:]) {
-        self.storage = root
+        storage = root
     }
 }
 
@@ -65,11 +65,13 @@ extension DictionaryPrefsStorage: PrefsStorage {
         root[key.key] as? [String: any PrefStorageValue]
     }
     
-    public func value<Key, Element>(forKey key: Key) -> Key.StorageValue? where Key: PrefKey, Element: PrefStorageValue, Key.StorageValue == [Element] {
+    public func value<Key, Element>(forKey key: Key) -> Key.StorageValue? where Key: PrefKey, Element: PrefStorageValue,
+    Key.StorageValue == [Element] {
         root[key.key] as? [Element]
     }
     
-    public func value<Key, Element>(forKey key: Key) -> Key.StorageValue? where Key: PrefKey, Element: PrefStorageValue, Key.StorageValue == [String: Element] {
+    public func value<Key, Element>(forKey key: Key) -> Key.StorageValue? where Key: PrefKey, Element: PrefStorageValue,
+    Key.StorageValue == [String: Element] {
         root[key.key] as? [String: Element]
     }
     

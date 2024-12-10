@@ -86,7 +86,8 @@ extension PrefKey {
         storage.value(forKey: self)
     }
     
-    public func getStorageValue<Element: PrefStorageValue>(in storage: PrefsStorage) -> StorageValue? where StorageValue == [String: Element] {
+    public func getStorageValue<Element: PrefStorageValue>(in storage: PrefsStorage) -> StorageValue?
+    where StorageValue == [String: Element] {
         storage.value(forKey: self)
     }
     

@@ -72,7 +72,8 @@ extension UserDefaultsPrefsStorage: PrefsStorage {
         return typedArray
     }
     
-    public func value<Key: PrefKey, Element: PrefStorageValue>(forKey key: Key) -> Key.StorageValue? where Key.StorageValue == [String: Element] {
+    public func value<Key: PrefKey, Element: PrefStorageValue>(forKey key: Key) -> Key.StorageValue?
+    where Key.StorageValue == [String: Element] {
         guard let rawDict = suite.dictionary(forKey: key.key) else { return nil }
         let typedDict = rawDict.compactMapValues { $0 as? Element }
         assert(typedDict.count == rawDict.count)

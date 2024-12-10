@@ -79,17 +79,17 @@ public enum AnyPrefStorageValue {
     
     public var value: any PrefStorageValue {
         switch self {
-        case .number(let nsNumber):
+        case let .number(nsNumber):
             nsNumber
-        case .string(let string):
+        case let .string(string):
             string
-        case .bool(let bool):
+        case let .bool(bool):
             bool
-        case .data(let data):
+        case let .data(data):
             data
-        case .array(let anyPrefArray):
+        case let .array(anyPrefArray):
             anyPrefArray
-        case .dictionary(let anyPrefDictionary):
+        case let .dictionary(anyPrefDictionary):
             anyPrefDictionary
         }
     }

@@ -78,10 +78,10 @@ public struct AnyCodablePrefKey<
     Encoder: TopLevelEncoder,
     Decoder: TopLevelDecoder
 >: CodablePrefKey where Value: Sendable,
-                        StorageValue == Encoder.Output,
-                        Encoder.Output: PrefStorageValue,
-                        Decoder.Input: PrefStorageValue,
-                        Encoder.Output == Decoder.Input
+    StorageValue == Encoder.Output,
+    Encoder.Output: PrefStorageValue,
+    Decoder.Input: PrefStorageValue,
+    Encoder.Output == Decoder.Input
 {
     public let key: String
     
@@ -99,8 +99,8 @@ public struct AnyCodablePrefKey<
         decoder: @escaping @Sendable @autoclosure () -> Decoder
     ) {
         self.key = key
-        self._encoder = encoder
-        self._decoder = decoder
+        _encoder = encoder
+        _decoder = decoder
     }
     
     public func prefEncoder() -> Encoder { _encoder() }
@@ -114,10 +114,10 @@ public struct AnyDefaultedCodablePrefKey<
     Encoder: TopLevelEncoder,
     Decoder: TopLevelDecoder
 >: DefaultedCodablePrefKey where Value: Sendable,
-                                 StorageValue == Encoder.Output,
-                                 Encoder.Output: PrefStorageValue,
-                                 Decoder.Input: PrefStorageValue,
-                                 Encoder.Output == Decoder.Input
+    StorageValue == Encoder.Output,
+    Encoder.Output: PrefStorageValue,
+    Decoder.Input: PrefStorageValue,
+    Encoder.Output == Decoder.Input
 {
     public let key: String
     
@@ -138,8 +138,8 @@ public struct AnyDefaultedCodablePrefKey<
     ) {
         self.key = key
         self.defaultValue = defaultValue
-        self._encoder = encoder
-        self._decoder = decoder
+        _encoder = encoder
+        _decoder = decoder
     }
     
     public func prefEncoder() -> Encoder { _encoder() }

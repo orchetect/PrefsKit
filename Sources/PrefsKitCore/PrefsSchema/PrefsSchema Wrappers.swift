@@ -27,7 +27,7 @@ import Observation
         get {
             // let v = key.getValue(in: storage)
             // if cachedValue != v { cachedValue = v }
-            return cachedValue
+            cachedValue
         }
         set {
             key.setValue(to: newValue, in: storage)
@@ -57,7 +57,7 @@ import Observation
         get {
             // let v = key.getDefaultedValue(in: storage)
             // if cachedValue != v { cachedValue = v }
-            return cachedValue
+            cachedValue
         }
         set {
             key.setValue(to: newValue, in: storage)
