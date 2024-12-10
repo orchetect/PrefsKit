@@ -16,17 +16,27 @@ struct UserDefaultsPrefsSchemaTests {
         UserDefaults(suiteName: domain)!
     }
     
+    // MARK: - Init
+    
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
     init() {
         UserDefaults.standard.removePersistentDomain(forName: Self.domain)
     }
+    
+    // MARK: - Mock Types
     
     enum RawEnum: String, RawRepresentable {
         case one
         case two
     }
     
+    enum CodableEnum: String, Codable {
+        case one
+        case two
+    }
+    
     // MARK: - Protocol Adoptions
+    
     struct MockAtomicPrefKey: AtomicPrefKey {
         let key: String = "foo"
         
@@ -55,6 +65,40 @@ struct UserDefaultsPrefsSchemaTests {
         let defaultValue: Value = .one
     }
     
+    struct MockCodablePrefKey: CodablePrefKey {
+        let key: String = "codableFoo"
+        
+        typealias Value = CodableEnum
+        // typealias StorageValue // inferred from encoder/decoder
+        
+        func prefEncoder() -> JSONEncoder { JSONEncoder() }
+        func prefDecoder() -> JSONDecoder { JSONDecoder() }
+    }
+    
+    struct MockDefaultedCodablePrefKey: DefaultedCodablePrefKey {
+        let key: String = "codableBar"
+        
+        typealias Value = CodableEnum
+        // typealias StorageValue // inferred from encoder/decoder
+        let defaultValue: Value = .one
+        
+        func prefEncoder() -> JSONEncoder { JSONEncoder() }
+        func prefDecoder() -> JSONDecoder { JSONDecoder() }
+    }
+    
+    struct MockJSONCodablePrefKey: JSONCodablePrefKey {
+        let key: String = "jsonCodableFoo"
+        
+        typealias Value = CodableEnum
+    }
+    
+    struct MockDefaultedJSONCodablePrefKey: DefaultedJSONCodablePrefKey {
+        let key: String = "jsonCodableBar"
+        
+        typealias Value = CodableEnum
+        let defaultValue: Value = .one
+    }
+    
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
     final class TestSchema: PrefsSchema, @unchecked Sendable {
         let storage: any PrefsStorage
@@ -66,6 +110,10 @@ struct UserDefaultsPrefsSchemaTests {
         enum Key {
             static let rawFoo = "rawFoo"
             static let rawBar = "rawBar"
+            static let codableFoo = "codableFoo"
+            static let codableBar = "codableBar"
+            static let jsonCodableFoo = "jsonCodableFoo"
+            static let jsonCodableBar = "jsonCodableBar"
             
             static let int = "int"
             static let string = "string"
@@ -78,6 +126,8 @@ struct UserDefaultsPrefsSchemaTests {
             static let anyDict = "anyDict"
         }
         
+        // Defined Key Implementations
+        
         lazy var atomic = pref(MockAtomicPrefKey())
         lazy var atomicDefaulted = pref(MockAtomicDefaultedPrefKey())
         
@@ -87,6 +137,21 @@ struct UserDefaultsPrefsSchemaTests {
         lazy var rawRep2 = pref(Key.rawFoo, of: RawEnum.self)
         lazy var rawRepDefaulted2 = pref(Key.rawBar, of: RawEnum.self, default: .one)
         
+        lazy var codable = pref(MockCodablePrefKey())
+        lazy var codableDefaulted = pref(MockDefaultedCodablePrefKey())
+        
+        lazy var codable2 = pref(Key.codableFoo, of: CodableEnum.self, encoder: JSONEncoder(), decoder: JSONDecoder())
+        lazy var codableDefaulted2 = pref(Key.codableBar, of: CodableEnum.self, default: .one, encoder: JSONEncoder(), decoder: JSONDecoder())
+        
+        lazy var jsonCodable = pref(MockJSONCodablePrefKey())
+        lazy var jsonCodableDefaulted = pref(MockDefaultedJSONCodablePrefKey())
+        
+        lazy var jsonCodable2 = pref(Key.codableFoo, of: CodableEnum.self)
+        lazy var jsonCodableDefaulted2 = pref(Key.codableFoo, of: CodableEnum.self, default: .one)
+        
+        // Synthesized Key Implementations
+        
+        // Atomic
         lazy var int = pref(int: Key.int)
         lazy var string = pref(string: Key.string)
         lazy var bool = pref(bool: Key.bool)
@@ -98,6 +163,7 @@ struct UserDefaultsPrefsSchemaTests {
         lazy var anyDict = pref(dictionary: Key.anyDict)
         lazy var stringDict = pref(dictionary: Key.anyDict, of: String.self)
         
+        // Atomic (Defaulted)
         lazy var intDefaulted = pref(int: Key.int, default: 1)
         lazy var stringDefaulted = pref(string: Key.string, default: "a string")
         lazy var boolDefaulted = pref(bool: Key.bool, default: true)
@@ -117,6 +183,8 @@ struct UserDefaultsPrefsSchemaTests {
             TestSchema(storage: DictionaryPrefsStorage())
         ]
     }
+    
+    // MARK: - Defined Key Implementations
     
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
     @Test(arguments: schemas) func atomicPrefKey(schema: TestSchema) async throws {
@@ -163,11 +231,11 @@ struct UserDefaultsPrefsSchemaTests {
     }
     
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
-    @Test(arguments: schemas) func defaultedRawRepresentablePrefKey(schema: TestSchema) async throws {
+    @Test(arguments: schemas) func rawRepresentableDefaultedPrefKey(schema: TestSchema) async throws {
         #expect(schema.rawRepDefaulted.value == .one)
         
         schema.rawRepDefaulted.value = .one
-        #expect(schema.rawRepDefaulted.value ==  .one)
+        #expect(schema.rawRepDefaulted.value == .one)
         
         schema.rawRepDefaulted.value = .two
         #expect(schema.rawRepDefaulted.value == .two)
@@ -190,11 +258,11 @@ struct UserDefaultsPrefsSchemaTests {
     }
     
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
-    @Test(arguments: schemas) func defaultedRawRepresentable2PrefKey(schema: TestSchema) async throws {
+    @Test(arguments: schemas) func rawRepresentableDefaulted2PrefKey(schema: TestSchema) async throws {
         #expect(schema.rawRepDefaulted2.value == .one)
         
         schema.rawRepDefaulted2.value = .one
-        #expect(schema.rawRepDefaulted2.value ==  .one)
+        #expect(schema.rawRepDefaulted2.value == .one)
         
         schema.rawRepDefaulted2.value = .two
         #expect(schema.rawRepDefaulted2.value == .two)
@@ -202,7 +270,115 @@ struct UserDefaultsPrefsSchemaTests {
         // can't set nil
     }
     
-    // MARK: - Non-Defaulted (Atomic)
+    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
+    @Test(arguments: schemas) func codablePrefKey(schema: TestSchema) async throws {
+        #expect(schema.codable.value == nil)
+        
+        schema.codable.value = .one
+        #expect(schema.codable.value == .one)
+        
+        schema.codable.value = .two
+        #expect(schema.codable.value == .two)
+        
+        schema.codable.value = nil
+        #expect(schema.codable.value == nil)
+    }
+    
+    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
+    @Test(arguments: schemas) func codableDefaultedPrefKey(schema: TestSchema) async throws {
+        #expect(schema.codableDefaulted.value == .one)
+        
+        schema.codableDefaulted.value = .one
+        #expect(schema.codableDefaulted.value == .one)
+        
+        schema.codableDefaulted.value = .two
+        #expect(schema.codableDefaulted.value == .two)
+        
+        // can't set nil
+    }
+    
+    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
+    @Test(arguments: schemas) func codable2PrefKey(schema: TestSchema) async throws {
+        #expect(schema.codable2.value == nil)
+        
+        schema.codable2.value = .one
+        #expect(schema.codable2.value == .one)
+        
+        schema.codable2.value = .two
+        #expect(schema.codable2.value == .two)
+        
+        schema.codable2.value = nil
+        #expect(schema.codable2.value == nil)
+    }
+    
+    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
+    @Test(arguments: schemas) func codableDefaulted2PrefKey(schema: TestSchema) async throws {
+        #expect(schema.codableDefaulted2.value == .one)
+        
+        schema.codableDefaulted2.value = .one
+        #expect(schema.codableDefaulted2.value == .one)
+        
+        schema.codableDefaulted2.value = .two
+        #expect(schema.codableDefaulted2.value == .two)
+        
+        // can't set nil
+    }
+    
+    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
+    @Test(arguments: schemas) func jsonCodablePrefKey(schema: TestSchema) async throws {
+        #expect(schema.jsonCodable.value == nil)
+        
+        schema.jsonCodable.value = .one
+        #expect(schema.jsonCodable.value == .one)
+        
+        schema.jsonCodable.value = .two
+        #expect(schema.jsonCodable.value == .two)
+        
+        schema.jsonCodable.value = nil
+        #expect(schema.jsonCodable.value == nil)
+    }
+    
+    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
+    @Test(arguments: schemas) func jsonCodableDefaultedPrefKey(schema: TestSchema) async throws {
+        #expect(schema.jsonCodableDefaulted.value == .one)
+        
+        schema.jsonCodableDefaulted.value = .one
+        #expect(schema.jsonCodableDefaulted.value == .one)
+        
+        schema.jsonCodableDefaulted.value = .two
+        #expect(schema.jsonCodableDefaulted.value == .two)
+        
+        // can't set nil
+    }
+    
+    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
+    @Test(arguments: schemas) func jsonCodable2PrefKey(schema: TestSchema) async throws {
+        #expect(schema.jsonCodable2.value == nil)
+        
+        schema.jsonCodable2.value = .one
+        #expect(schema.jsonCodable2.value == .one)
+        
+        schema.jsonCodable2.value = .two
+        #expect(schema.jsonCodable2.value == .two)
+        
+        schema.jsonCodable2.value = nil
+        #expect(schema.jsonCodable2.value == nil)
+    }
+    
+    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
+    @Test(arguments: schemas) func jsonCodableDefaulted2PrefKey(schema: TestSchema) async throws {
+        #expect(schema.jsonCodableDefaulted2.value == .one)
+        
+        schema.jsonCodableDefaulted2.value = .one
+        #expect(schema.jsonCodableDefaulted2.value == .one)
+        
+        schema.jsonCodableDefaulted2.value = .two
+        #expect(schema.jsonCodableDefaulted2.value == .two)
+        
+        // can't set nil
+    }
+    
+    // MARK: - Synthesized Key Implementations: Non-Defaulted (Atomic)
     
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
     @Test(arguments: schemas) func intPrefKey(schema: TestSchema) async throws {
@@ -422,7 +598,7 @@ struct UserDefaultsPrefsSchemaTests {
         #expect(schema.stringDict.value == nil)
     }
     
-    // MARK: - Defaulted (Atomic)
+    // MARK: - Synthesized Key Implementations: Defaulted (Atomic)
     
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
     @Test(arguments: schemas) func intDefaultedPrefKey(schema: TestSchema) async throws {
