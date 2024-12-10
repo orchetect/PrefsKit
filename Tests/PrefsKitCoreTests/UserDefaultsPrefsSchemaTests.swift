@@ -99,33 +99,33 @@ struct UserDefaultsPrefsSchemaTests {
         let defaultValue: Value = .one
     }
     
+    enum Key {
+        static let rawFoo = "rawFoo"
+        static let rawBar = "rawBar"
+        static let codableFoo = "codableFoo"
+        static let codableBar = "codableBar"
+        static let jsonCodableFoo = "jsonCodableFoo"
+        static let jsonCodableBar = "jsonCodableBar"
+        
+        static let int = "int"
+        static let string = "string"
+        static let bool = "bool"
+        static let double = "double"
+        static let float = "float"
+        static let data = "data"
+        static let anyArray = "anyArray"
+        static let stringArray = "stringArray"
+        static let anyDict = "anyDict"
+    }
+    
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
-    final class TestSchema: PrefsSchema, @unchecked Sendable {
-        let storage: any PrefsStorage
+    final class TestSchema: AnyPrefsSchema, @unchecked Sendable {
+        let storage: AnyPrefsStorage
         let isCacheEnabled: Bool
         
         init(storage: any PrefsStorage, isCacheEnabled: Bool) {
-            self.storage = storage
+            self.storage = AnyPrefsStorage(storage)
             self.isCacheEnabled = isCacheEnabled
-        }
-        
-        enum Key {
-            static let rawFoo = "rawFoo"
-            static let rawBar = "rawBar"
-            static let codableFoo = "codableFoo"
-            static let codableBar = "codableBar"
-            static let jsonCodableFoo = "jsonCodableFoo"
-            static let jsonCodableBar = "jsonCodableBar"
-            
-            static let int = "int"
-            static let string = "string"
-            static let bool = "bool"
-            static let double = "double"
-            static let float = "float"
-            static let data = "data"
-            static let anyArray = "anyArray"
-            static let stringArray = "stringArray"
-            static let anyDict = "anyDict"
         }
         
         // Defined Key Implementations
