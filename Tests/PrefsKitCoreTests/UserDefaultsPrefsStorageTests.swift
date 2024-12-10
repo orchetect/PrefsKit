@@ -40,37 +40,64 @@ struct UserDefaultsPrefsStorageTests {
     // MARK: - Protocol Adoptions
     
     struct Foo: AtomicPrefKey {
-        typealias Value = Bool
         let key: String = "foo"
+        
+        typealias Value = Bool
     }
     
     struct Bar: AtomicDefaultedPrefKey {
-        typealias Value = Bool
         let key: String = "bar"
+        
+        typealias Value = Bool
         let defaultValue: Value = true
     }
     
     struct RawFoo: RawRepresentablePrefKey {
+        let key: String = "rawFoo"
+        
         typealias Value = RawEnum
         // typealias StorageValue = RawEnum.RawValue // inferred
-        let key: String = "rawFoo"
     }
     
     struct RawBar: DefaultedRawRepresentablePrefKey {
+        let key: String = "rawBar"
+        
         typealias Value = RawEnum
         // typealias StorageValue = RawEnum.RawValue // inferred
-        let key: String = "rawBar"
         let defaultValue: Value = .one
     }
     
-    struct CodableFoo: JSONCodablePrefKey {
-        typealias Value = CodableEnum
+    struct CodableFoo: CodablePrefKey {
         let key: String = "codableFoo"
+        
+        typealias Value = CodableEnum
+        // typealias StorageValue // inferred from encoder/decoder
+        
+        func prefEncoder() -> JSONEncoder { JSONEncoder() }
+        func prefDecoder() -> JSONDecoder { JSONDecoder() }
     }
     
-    struct CodableBar: DefaultedJSONCodablePrefKey {
-        typealias Value = CodableEnum
+    struct CodableBar: DefaultedCodablePrefKey {
         let key: String = "codableBar"
+        
+        typealias Value = CodableEnum
+        // typealias StorageValue // inferred from encoder/decoder
+        let defaultValue: Value = .one
+        
+        func prefEncoder() -> JSONEncoder { JSONEncoder() }
+        func prefDecoder() -> JSONDecoder { JSONDecoder() }
+    }
+    
+    struct JSONCodableFoo: JSONCodablePrefKey {
+        let key: String = "jsonCodableFoo"
+        
+        typealias Value = CodableEnum
+    }
+    
+    struct JSONCodableBar: DefaultedJSONCodablePrefKey {
+        let key: String = "jsonCodableBar"
+        
+        typealias Value = CodableEnum
         let defaultValue: Value = .one
     }
     
@@ -80,6 +107,8 @@ struct UserDefaultsPrefsStorageTests {
     let rawBar = RawBar()
     let codableFoo = CodableFoo()
     let codableBar = CodableBar()
+    let jsonCodableFoo = JSONCodableFoo()
+    let jsonCodableBar = JSONCodableBar()
     
     // MARK: - Tests
     
@@ -171,5 +200,35 @@ struct UserDefaultsPrefsStorageTests {
         codableBar.setValue(to: nil, in: storage)
         #expect(codableBar.getValue(in: storage) == nil)
         #expect(codableBar.getDefaultedValue(in: storage) == .one)
+    }
+    
+    @Test func jsonCodablePrefKey() async throws {
+        #expect(jsonCodableFoo.getValue(in: storage) == nil)
+        
+        jsonCodableFoo.setValue(to: .one, in: storage)
+        #expect(jsonCodableFoo.getValue(in: storage) == .one)
+        
+        jsonCodableFoo.setValue(to: .two, in: storage)
+        #expect(jsonCodableFoo.getValue(in: storage) == .two)
+        
+        jsonCodableFoo.setValue(to: nil, in: storage)
+        #expect(jsonCodableFoo.getValue(in: storage) == nil)
+    }
+    
+    @Test func defaultedJSONCodablePrefKey() async throws {
+        #expect(jsonCodableBar.getValue(in: storage) == nil)
+        #expect(jsonCodableBar.getDefaultedValue(in: storage) == .one)
+        
+        jsonCodableBar.setValue(to: .one, in: storage)
+        #expect(jsonCodableBar.getValue(in: storage) ==  .one)
+        #expect(jsonCodableBar.getDefaultedValue(in: storage) ==  .one)
+        
+        jsonCodableBar.setValue(to: .two, in: storage)
+        #expect(jsonCodableBar.getValue(in: storage) == .two)
+        #expect(jsonCodableBar.getDefaultedValue(in: storage) == .two)
+        
+        jsonCodableBar.setValue(to: nil, in: storage)
+        #expect(jsonCodableBar.getValue(in: storage) == nil)
+        #expect(jsonCodableBar.getDefaultedValue(in: storage) == .one)
     }
 }

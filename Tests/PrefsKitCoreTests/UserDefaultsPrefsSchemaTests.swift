@@ -28,26 +28,30 @@ struct UserDefaultsPrefsSchemaTests {
     
     // MARK: - Protocol Adoptions
     struct MockAtomicPrefKey: AtomicPrefKey {
-        typealias Value = Bool
         let key: String = "foo"
+        
+        typealias Value = Bool
     }
     
     struct MockAtomicDefaultedPrefKey: AtomicDefaultedPrefKey {
-        typealias Value = Bool
         let key: String = "bar"
+        
+        typealias Value = Bool
         let defaultValue: Value = true
     }
     
     struct MockRawRepresentablePrefKey: RawRepresentablePrefKey {
+        let key: String = "rawFoo"
+        
         typealias Value = RawEnum
         // typealias StorageValue = RawEnum.RawValue // inferred
-        let key: String = "rawFoo"
     }
     
     struct MockDefaultedRawRepresentablePrefKey: DefaultedRawRepresentablePrefKey {
+        let key: String = "rawBar"
+        
         typealias Value = RawEnum
         // typealias StorageValue = RawEnum.RawValue // inferred
-        let key: String = "rawBar"
         let defaultValue: Value = .one
     }
     

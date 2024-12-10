@@ -33,10 +33,10 @@ struct CustomEncodingTests {
     }
     
     struct CustomPrefKey: PrefKey {
+        var key: String = "customKey"
+        
         typealias Value = NonCodableNonRawRepresentable
         typealias StorageValue = String
-        
-        var key: String = "customKey"
         
         func getValue(in storage: any PrefsStorage) -> NonCodableNonRawRepresentable? {
             guard let rawValue = storage.value(forKey: self),
@@ -63,8 +63,7 @@ struct CustomEncodingTests {
     }
     
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
-    @Test
-    func customValueEncoding() {
+    @Test func customValueEncoding() {
         let schema = TestSchema()
         
         #expect(schema.customKey.value?.value == nil)
