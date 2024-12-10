@@ -4,6 +4,7 @@
 //  © 2024 Steffan Andrews • Licensed under MIT License
 //
 
+import Combine
 import Foundation
 
 /// Protocol for prefs schema.
@@ -32,56 +33,56 @@ extension PrefsSchema {
     /// Synthesize a pref key with an `Int` value.
     public func pref(
         int key: String
-    ) -> ObservablePref<IntPrefKey> {
-        let keyInstance = IntPrefKey(key: key)
+    ) -> ObservablePref<AnyAtomicPrefKey<Int>> {
+        let keyInstance = AnyAtomicPrefKey<Int>(key: key)
         return pref(keyInstance)
     }
     
     /// Synthesize a pref key with an `String` value.
     public func pref(
         string key: String
-    ) -> ObservablePref<StringPrefKey> {
-        let keyInstance = StringPrefKey(key: key)
+    ) -> ObservablePref<AnyAtomicPrefKey<String>> {
+        let keyInstance = AnyAtomicPrefKey<String>(key: key)
         return pref(keyInstance)
     }
     
     /// Synthesize a pref key with a `Bool` value.
     public func pref(
         bool key: String
-    ) -> ObservablePref<BoolPrefKey> {
-        let keyInstance = BoolPrefKey(key: key)
+    ) -> ObservablePref<AnyAtomicPrefKey<Bool>> {
+        let keyInstance = AnyAtomicPrefKey<Bool>(key: key)
         return pref(keyInstance)
     }
     
     /// Synthesize a pref key with a `Double` value.
     public func pref(
         double key: String
-    ) -> ObservablePref<DoublePrefKey> {
-        let keyInstance = DoublePrefKey(key: key)
+    ) -> ObservablePref<AnyAtomicPrefKey<Double>> {
+        let keyInstance = AnyAtomicPrefKey<Double>(key: key)
         return pref(keyInstance)
     }
     
     /// Synthesize a pref key with a `Float` value.
     public func pref(
         float key: String
-    ) -> ObservablePref<FloatPrefKey> {
-        let keyInstance = FloatPrefKey(key: key)
+    ) -> ObservablePref<AnyAtomicPrefKey<Float>> {
+        let keyInstance = AnyAtomicPrefKey<Float>(key: key)
         return pref(keyInstance)
     }
     
     /// Synthesize a pref key with a `Data` value.
     public func pref(
         data key: String
-    ) -> ObservablePref<DataPrefKey> {
-        let keyInstance = DataPrefKey(key: key)
+    ) -> ObservablePref<AnyAtomicPrefKey<Data>> {
+        let keyInstance = AnyAtomicPrefKey<Data>(key: key)
         return pref(keyInstance)
     }
     
     /// Synthesize a pref key with an `Array` value.
     public func pref(
         array key: String
-    ) -> ObservablePref<AnyArrayPrefKey> {
-        let keyInstance = AnyArrayPrefKey(key: key)
+    ) -> ObservablePref<AnyAtomicPrefKey<AnyPrefArray>> {
+        let keyInstance = AnyAtomicPrefKey<AnyPrefArray>(key: key)
         return pref(keyInstance)
     }
     
@@ -89,8 +90,8 @@ extension PrefsSchema {
     public func pref<Element: PrefStorageValue>(
         array key: String,
         of elementType: Element.Type
-    ) -> ObservablePref<ArrayPrefKey<Element>> {
-        let keyInstance = ArrayPrefKey<Element>(key: key)
+    ) -> ObservablePref<AnyAtomicPrefKey<[Element]>> {
+        let keyInstance = AnyAtomicPrefKey<[Element]>(key: key)
         return pref(keyInstance)
     }
     
@@ -98,16 +99,16 @@ extension PrefsSchema {
     public func pref<Element: PrefStorageValue>(
         dictionary key: String,
         of elementType: Element.Type
-    ) -> ObservablePref<DictionaryPrefKey<Element>> {
-        let keyInstance = DictionaryPrefKey<Element>(key: key)
+    ) -> ObservablePref<AnyAtomicPrefKey<[String: Element]>> {
+        let keyInstance = AnyAtomicPrefKey<[String: Element]>(key: key)
         return pref(keyInstance)
     }
     
     /// Synthesize a pref key with a `Dictionary` value.
     public func pref(
         dictionary key: String
-    ) -> ObservablePref<AnyDictionaryPrefKey> {
-        let keyInstance = AnyDictionaryPrefKey(key: key)
+    ) -> ObservablePref<AnyAtomicPrefKey<AnyPrefDictionary>> {
+        let keyInstance = AnyAtomicPrefKey<AnyPrefDictionary>(key: key)
         return pref(keyInstance)
     }
     
@@ -117,8 +118,8 @@ extension PrefsSchema {
     public func pref(
         int key: String,
         default defaultValue: Int
-    ) -> ObservableDefaultedPref<DefaultedIntPrefKey> {
-        let keyInstance = DefaultedIntPrefKey(key: key, defaultValue: defaultValue)
+    ) -> ObservableDefaultedPref<AnyDefaultedAtomicPrefKey<Int>> {
+        let keyInstance = AnyDefaultedAtomicPrefKey<Int>(key: key, defaultValue: defaultValue)
         return pref(keyInstance)
     }
     
@@ -126,8 +127,8 @@ extension PrefsSchema {
     public func pref(
         string key: String,
         default defaultValue: String
-    ) -> ObservableDefaultedPref<DefaultedStringPrefKey> {
-        let keyInstance = DefaultedStringPrefKey(key: key, defaultValue: defaultValue)
+    ) -> ObservableDefaultedPref<AnyDefaultedAtomicPrefKey<String>> {
+        let keyInstance = AnyDefaultedAtomicPrefKey<String>(key: key, defaultValue: defaultValue)
         return pref(keyInstance)
     }
     
@@ -135,8 +136,8 @@ extension PrefsSchema {
     public func pref(
         bool key: String,
         default defaultValue: Bool
-    ) -> ObservableDefaultedPref<DefaultedBoolPrefKey> {
-        let keyInstance = DefaultedBoolPrefKey(key: key, defaultValue: defaultValue)
+    ) -> ObservableDefaultedPref<AnyDefaultedAtomicPrefKey<Bool>> {
+        let keyInstance = AnyDefaultedAtomicPrefKey<Bool>(key: key, defaultValue: defaultValue)
         return pref(keyInstance)
     }
     
@@ -144,8 +145,8 @@ extension PrefsSchema {
     public func pref(
         double key: String,
         default defaultValue: Double
-    ) -> ObservableDefaultedPref<DefaultedDoublePrefKey> {
-        let keyInstance = DefaultedDoublePrefKey(key: key, defaultValue: defaultValue)
+    ) -> ObservableDefaultedPref<AnyDefaultedAtomicPrefKey<Double>> {
+        let keyInstance = AnyDefaultedAtomicPrefKey<Double>(key: key, defaultValue: defaultValue)
         return pref(keyInstance)
     }
     
@@ -153,8 +154,8 @@ extension PrefsSchema {
     public func pref(
         float key: String,
         default defaultValue: Float
-    ) -> ObservableDefaultedPref<DefaultedFloatPrefKey> {
-        let keyInstance = DefaultedFloatPrefKey(key: key, defaultValue: defaultValue)
+    ) -> ObservableDefaultedPref<AnyDefaultedAtomicPrefKey<Float>> {
+        let keyInstance = AnyDefaultedAtomicPrefKey<Float>(key: key, defaultValue: defaultValue)
         return pref(keyInstance)
     }
     
@@ -162,8 +163,8 @@ extension PrefsSchema {
     public func pref(
         data key: String,
         default defaultValue: Data
-    ) -> ObservableDefaultedPref<DefaultedDataPrefKey> {
-        let keyInstance = DefaultedDataPrefKey(key: key, defaultValue: defaultValue)
+    ) -> ObservableDefaultedPref<AnyDefaultedAtomicPrefKey<Data>> {
+        let keyInstance = AnyDefaultedAtomicPrefKey<Data>(key: key, defaultValue: defaultValue)
         return pref(keyInstance)
     }
     
@@ -171,8 +172,8 @@ extension PrefsSchema {
     public func pref(
         array key: String,
         default defaultValue: AnyPrefArray
-    ) -> ObservableDefaultedPref<DefaultedAnyArrayPrefKey> {
-        let keyInstance = DefaultedAnyArrayPrefKey(key: key, defaultValue: defaultValue)
+    ) -> ObservableDefaultedPref<AnyDefaultedAtomicPrefKey<AnyPrefArray>> {
+        let keyInstance = AnyDefaultedAtomicPrefKey<AnyPrefArray>(key: key, defaultValue: defaultValue)
         return pref(keyInstance)
     }
     
@@ -181,8 +182,8 @@ extension PrefsSchema {
         array key: String,
         of elementType: Element.Type,
         default defaultValue: [Element]
-    ) -> ObservableDefaultedPref<DefaultedArrayPrefKey<Element>> {
-        let keyInstance = DefaultedArrayPrefKey(key: key, defaultValue: defaultValue)
+    ) -> ObservableDefaultedPref<AnyDefaultedAtomicPrefKey<[Element]>> {
+        let keyInstance = AnyDefaultedAtomicPrefKey<[Element]>(key: key, defaultValue: defaultValue)
         return pref(keyInstance)
     }
     
@@ -190,8 +191,8 @@ extension PrefsSchema {
     public func pref(
         dictionary key: String,
         default defaultValue: AnyPrefDictionary
-    ) -> ObservableDefaultedPref<DefaultedAnyDictionaryPrefKey> {
-        let keyInstance = DefaultedAnyDictionaryPrefKey(key: key, defaultValue: defaultValue)
+    ) -> ObservableDefaultedPref<AnyDefaultedAtomicPrefKey<AnyPrefDictionary>> {
+        let keyInstance = AnyDefaultedAtomicPrefKey<AnyPrefDictionary>(key: key, defaultValue: defaultValue)
         return pref(keyInstance)
     }
     
@@ -200,8 +201,8 @@ extension PrefsSchema {
         dictionary key: String,
         of elementType: Element.Type,
         default defaultValue: [String: Element]
-    ) -> ObservableDefaultedPref<DefaultedDictionaryPrefKey<Element>> {
-        let keyInstance = DefaultedDictionaryPrefKey(key: key, defaultValue: defaultValue)
+    ) -> ObservableDefaultedPref<AnyDefaultedAtomicPrefKey<[String: Element]>> {
+        let keyInstance = AnyDefaultedAtomicPrefKey<[String: Element]>(key: key, defaultValue: defaultValue)
         return pref(keyInstance)
     }
     
@@ -221,8 +222,8 @@ extension PrefsSchema {
         _ key: String,
         of elementType: Value.Type,
         default defaultValue: Value
-    ) -> ObservableDefaultedPref<DefaultedAnyRawRepresentablePrefKey<Value, StorageValue>> {
-        let keyInstance = DefaultedAnyRawRepresentablePrefKey<Value, StorageValue>(key: key, defaultValue: defaultValue)
+    ) -> ObservableDefaultedPref<AnyDefaultedRawRepresentablePrefKey<Value, StorageValue>> {
+        let keyInstance = AnyDefaultedRawRepresentablePrefKey<Value, StorageValue>(key: key, defaultValue: defaultValue)
         return pref(keyInstance)
     }
 }
