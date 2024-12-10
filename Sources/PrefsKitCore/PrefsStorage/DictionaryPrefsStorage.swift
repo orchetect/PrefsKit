@@ -7,7 +7,7 @@
 import Foundation
 
 /// Dictionary-backed ``PrefsStorage`` with internally-synchronized dictionary access.
-public final class DictionaryPrefsStorage {
+open class DictionaryPrefsStorage {
     @SynchronizedLock
     var storage: [String: any PrefStorageValue]
     
