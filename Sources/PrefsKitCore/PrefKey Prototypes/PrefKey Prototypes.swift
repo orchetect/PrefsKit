@@ -112,7 +112,7 @@ public struct DictionaryPrefKey<Element: PrefStorageValue>: BasicPrefKey {
 public struct AnyRawRepresentablePrefKey<
     Value: RawRepresentable,
     StorageValue: PrefStorageValue
->: RawRepresentablePrefKey where Value: Sendable, Value.RawValue == StorageValue {
+>: PrefKey where Value: Sendable, Value.RawValue == StorageValue {
     public let key: String
     public typealias Value = Value
     public typealias StorageValue = StorageValue
@@ -248,7 +248,7 @@ public struct DefaultedDictionaryPrefKey<Element: PrefStorageValue>: BasicDefaul
 public struct DefaultedAnyRawRepresentablePrefKey<
     Value: RawRepresentable,
     StorageValue: PrefStorageValue
->: DefaultedRawRepresentablePrefKey where Value: Sendable, Value.RawValue == StorageValue {
+>: DefaultedPrefKey where Value: Sendable, Value.RawValue == StorageValue {
     public let key: String
     public typealias Value = Value
     public typealias StorageValue = StorageValue
