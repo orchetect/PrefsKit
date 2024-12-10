@@ -56,22 +56,22 @@ struct CustomEncodingTests {
             case custom
         }
         
-        lazy var basic = pref(CustomPrefKey())
+        lazy var customKey = pref(CustomPrefKey())
     }
     
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
     @Test func customValueEncoding() {
         let schema = TestSchema()
         
-        #expect(schema.basic.value?.value == nil)
+        #expect(schema.customKey.value?.value == nil)
         
-        schema.basic.value = NonCodableNonRawRepresentable(value: 42)
-        #expect(schema.basic.value?.value == 42)
+        schema.customKey.value = NonCodableNonRawRepresentable(value: 42)
+        #expect(schema.customKey.value?.value == 42)
         
-        schema.basic.value?.value = 5
-        #expect(schema.basic.value?.value == 5)
+        schema.customKey.value?.value = 5
+        #expect(schema.customKey.value?.value == 5)
         
-        schema.basic.value = nil
-        #expect(schema.basic.value == nil)
+        schema.customKey.value = nil
+        #expect(schema.customKey.value == nil)
     }
 }

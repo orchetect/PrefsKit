@@ -39,25 +39,25 @@ struct UserDefaultsPrefsStorageTests {
     
     // MARK: - Protocol Adoptions
     
-    struct Foo: BasicPrefKey {
+    struct Foo: AtomicPrefKey {
         typealias Value = Bool
         let key: String = "foo"
     }
     
-    struct Bar: BasicDefaultedPrefKey {
+    struct Bar: AtomicDefaultedPrefKey {
         typealias Value = Bool
         let key: String = "bar"
         let defaultValue: Value = true
     }
     
-    struct RawFoo: PrefKey { // RawRepresentable
-        typealias Value = RawEnum
+    struct RawFoo: PrefKey {
+        typealias Value = RawEnum // RawRepresentable
         typealias StorageValue = RawEnum.RawValue
         let key: String = "rawFoo"
     }
     
-    struct RawBar: DefaultedPrefKey { // RawRepresentable
-        typealias Value = RawEnum
+    struct RawBar: DefaultedPrefKey {
+        typealias Value = RawEnum // RawRepresentable
         typealias StorageValue = RawEnum.RawValue
         let key: String = "rawBar"
         let defaultValue: Value = .one
@@ -83,7 +83,7 @@ struct UserDefaultsPrefsStorageTests {
     
     // MARK: - Tests
     
-    @Test func basicPrefKey() async throws {
+    @Test func atomicPrefKey() async throws {
         #expect(foo.getValue(in: storage) == nil)
         
         foo.setValue(to: false, in: storage)
@@ -96,7 +96,7 @@ struct UserDefaultsPrefsStorageTests {
         #expect(foo.getValue(in: storage) == nil)
     }
     
-    @Test func basicDefaultedPrefKey() async throws {
+    @Test func atomicDefaultedPrefKey() async throws {
         #expect(bar.getValue(in: storage) == nil)
         #expect(bar.getDefaultedValue(in: storage) == true)
         

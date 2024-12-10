@@ -27,12 +27,12 @@ struct UserDefaultsPrefsSchemaTests {
     }
     
     // MARK: - Protocol Adoptions
-    struct MockBasicPrefKey: BasicPrefKey {
+    struct MockAtomicPrefKey: AtomicPrefKey {
         typealias Value = Bool
         let key: String = "foo"
     }
     
-    struct MockBasicDefaultedPrefKey: BasicDefaultedPrefKey {
+    struct MockAtomicDefaultedPrefKey: AtomicDefaultedPrefKey {
         typealias Value = Bool
         let key: String = "bar"
         let defaultValue: Value = true
@@ -74,8 +74,8 @@ struct UserDefaultsPrefsSchemaTests {
             static let anyDict = "anyDict"
         }
         
-        lazy var basic = pref(MockBasicPrefKey())
-        lazy var basicDefaulted = pref(MockBasicDefaultedPrefKey())
+        lazy var atomic = pref(MockAtomicPrefKey())
+        lazy var atomicDefaulted = pref(MockAtomicDefaultedPrefKey())
         
         lazy var rawRep = pref(MockRawRepresentablePrefKey())
         lazy var rawRepDefaulted = pref(MockDefaultedRawRepresentablePrefKey())
@@ -115,32 +115,31 @@ struct UserDefaultsPrefsSchemaTests {
     }
     
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
-    @Test(arguments: schemas)
-    func basicPrefKey(schema: TestSchema) async throws {
-        #expect(schema.basic.value == nil)
+    @Test(arguments: schemas) func atomicPrefKey(schema: TestSchema) async throws {
+        #expect(schema.atomic.value == nil)
         
-        schema.basic.value = false
-        #expect(schema.basic.value == false)
+        schema.atomic.value = false
+        #expect(schema.atomic.value == false)
         
-        schema.basic.value = true
-        #expect(schema.basic.value == true)
+        schema.atomic.value = true
+        #expect(schema.atomic.value == true)
         
-        schema.basic.value?.toggle()
-        #expect(schema.basic.value == false)
+        schema.atomic.value?.toggle()
+        #expect(schema.atomic.value == false)
         
-        schema.basic.value = nil
-        #expect(schema.basic.value == nil)
+        schema.atomic.value = nil
+        #expect(schema.atomic.value == nil)
     }
     
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
-    @Test(arguments: schemas) func basicDefaultedPrefKey(schema: TestSchema) async throws {
-        #expect(schema.basicDefaulted.value == true)
+    @Test(arguments: schemas) func atomicDefaultedPrefKey(schema: TestSchema) async throws {
+        #expect(schema.atomicDefaulted.value == true)
         
-        schema.basicDefaulted.value = false
-        #expect(schema.basicDefaulted.value == false)
+        schema.atomicDefaulted.value = false
+        #expect(schema.atomicDefaulted.value == false)
         
-        schema.basicDefaulted.value.toggle()
-        #expect(schema.basicDefaulted.value == true)
+        schema.atomicDefaulted.value.toggle()
+        #expect(schema.atomicDefaulted.value == true)
         
         // can't set nil
     }
@@ -199,7 +198,7 @@ struct UserDefaultsPrefsSchemaTests {
         // can't set nil
     }
     
-    // MARK: - Non-Defaulted (Basic)
+    // MARK: - Non-Defaulted (Atomic)
     
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
     @Test(arguments: schemas) func intPrefKey(schema: TestSchema) async throws {
@@ -419,7 +418,7 @@ struct UserDefaultsPrefsSchemaTests {
         #expect(schema.stringDict.value == nil)
     }
     
-    // MARK: - Defaulted (Basic)
+    // MARK: - Defaulted (Atomic)
     
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
     @Test(arguments: schemas) func intDefaultedPrefKey(schema: TestSchema) async throws {
