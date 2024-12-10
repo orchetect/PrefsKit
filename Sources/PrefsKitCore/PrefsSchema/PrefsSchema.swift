@@ -11,18 +11,19 @@ import Foundation
 @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
 public protocol PrefsSchema where Self: Sendable {
     var storage: any PrefsStorage { get }
+    var isCacheEnabled: Bool { get }
 }
 
 @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
 extension PrefsSchema {
     /// Wrap a pref key instance. Used in ``PrefsSchema``.
     public func pref<Key: PrefKey>(_ key: Key) -> ObservablePref<Key> {
-        ObservablePref(key: key, storage: storage)
+        ObservablePref(key: key, storage: storage, isCacheEnabled: isCacheEnabled)
     }
     
     /// Wrap a pref key instance. Used in ``PrefsSchema``.
     public func pref<Key: DefaultedPrefKey>(_ key: Key) -> ObservableDefaultedPref<Key> {
-        ObservableDefaultedPref(key: key, storage: storage)
+        ObservableDefaultedPref(key: key, storage: storage, isCacheEnabled: isCacheEnabled)
     }
 }
 

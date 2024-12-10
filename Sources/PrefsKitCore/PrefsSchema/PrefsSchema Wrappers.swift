@@ -15,19 +15,23 @@ import Observation
     
     @ObservationIgnored
     let storage: PrefsStorage
+    let isCacheEnabled: Bool
     
-    public init(key: Key, storage: PrefsStorage) {
+    public init(key: Key, storage: PrefsStorage, isCacheEnabled: Bool) {
         self.key = key
         self.storage = storage
+        self.isCacheEnabled = isCacheEnabled
         cachedValue = key.getValue(in: storage)
     }
     
     /// Returns value.
     public var value: Key.Value? {
         get {
-            // let v = key.getValue(in: storage)
-            // if cachedValue != v { cachedValue = v }
-            cachedValue
+            if !isCacheEnabled {
+                let v = key.getValue(in: storage)
+                if cachedValue != v { cachedValue = v }
+            }
+            return cachedValue
         }
         set {
             key.setValue(to: newValue, in: storage)
@@ -45,19 +49,23 @@ import Observation
     
     @ObservationIgnored
     let storage: PrefsStorage
+    let isCacheEnabled: Bool
     
-    public init(key: Key, storage: PrefsStorage) {
+    public init(key: Key, storage: PrefsStorage, isCacheEnabled: Bool) {
         self.key = key
         self.storage = storage
+        self.isCacheEnabled = isCacheEnabled
         cachedValue = key.getDefaultedValue(in: storage)
     }
     
     /// Returns value, or default value if key is missing.
     public var value: Key.Value {
         get {
-            // let v = key.getDefaultedValue(in: storage)
-            // if cachedValue != v { cachedValue = v }
-            cachedValue
+            if !isCacheEnabled {
+                let v = key.getDefaultedValue(in: storage)
+                if cachedValue != v { cachedValue = v }
+            }
+            return cachedValue
         }
         set {
             key.setValue(to: newValue, in: storage)
