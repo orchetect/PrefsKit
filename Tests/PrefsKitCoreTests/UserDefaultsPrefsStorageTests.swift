@@ -18,17 +18,27 @@ struct UserDefaultsPrefsStorageTests {
     
     let storage: UserDefaultsPrefsStorage
     
+    // MARK: - Init
+    
     init() {
         UserDefaults.standard.removePersistentDomain(forName: Self.domain)
         storage = UserDefaultsPrefsStorage(suite: Self.testSuite())
     }
+    
+    // MARK: - Mock Types
     
     enum RawEnum: String, RawRepresentable {
         case one
         case two
     }
     
+    enum CodableEnum: String, Codable {
+        case one
+        case two
+    }
+    
     // MARK: - Protocol Adoptions
+    
     struct Foo: BasicPrefKey {
         typealias Value = Bool
         let key: String = "foo"
@@ -51,10 +61,25 @@ struct UserDefaultsPrefsStorageTests {
         let defaultValue: Value = .one
     }
     
+    struct CodableFoo: JSONCodablePrefKey {
+        typealias Value = CodableEnum
+        let key: String = "codableFoo"
+    }
+    
+    struct CodableBar: DefaultedJSONCodablePrefKey {
+        typealias Value = CodableEnum
+        let key: String = "codableBar"
+        let defaultValue: Value = .one
+    }
+    
     let foo = Foo()
     let bar = Bar()
     let rawFoo = RawFoo()
     let rawBar = RawBar()
+    let codableFoo = CodableFoo()
+    let codableBar = CodableBar()
+    
+    // MARK: - Tests
     
     @Test func basicPrefKey() async throws {
         #expect(foo.getValue(in: storage) == nil)
@@ -114,5 +139,35 @@ struct UserDefaultsPrefsStorageTests {
         rawBar.setValue(to: nil, in: storage)
         #expect(rawBar.getValue(in: storage) == nil)
         #expect(rawBar.getDefaultedValue(in: storage) == .one)
+    }
+    
+    @Test func codablePrefKey() async throws {
+        #expect(codableFoo.getValue(in: storage) == nil)
+        
+        codableFoo.setValue(to: .one, in: storage)
+        #expect(codableFoo.getValue(in: storage) == .one)
+        
+        codableFoo.setValue(to: .two, in: storage)
+        #expect(codableFoo.getValue(in: storage) == .two)
+        
+        codableFoo.setValue(to: nil, in: storage)
+        #expect(codableFoo.getValue(in: storage) == nil)
+    }
+    
+    @Test func defaultedCodablePrefKey() async throws {
+        #expect(codableBar.getValue(in: storage) == nil)
+        #expect(codableBar.getDefaultedValue(in: storage) == .one)
+        
+        codableBar.setValue(to: .one, in: storage)
+        #expect(codableBar.getValue(in: storage) ==  .one)
+        #expect(codableBar.getDefaultedValue(in: storage) ==  .one)
+        
+        codableBar.setValue(to: .two, in: storage)
+        #expect(codableBar.getValue(in: storage) == .two)
+        #expect(codableBar.getDefaultedValue(in: storage) == .two)
+        
+        codableBar.setValue(to: nil, in: storage)
+        #expect(codableBar.getValue(in: storage) == nil)
+        #expect(codableBar.getDefaultedValue(in: storage) == .one)
     }
 }
