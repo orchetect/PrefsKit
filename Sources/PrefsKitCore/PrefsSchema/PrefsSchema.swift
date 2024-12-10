@@ -10,8 +10,11 @@ import Foundation
 /// Protocol for prefs schema.
 @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
 public protocol PrefsSchema where Self: Sendable {
+    /// Storage provider type for prefs.
+    associatedtype Storage: PrefsStorage
+    
     /// Storage provider for prefs.
-    var storage: any PrefsStorage { get }
+    var storage: Storage { get }
     
     /// Enable or disable internal cache of prefs values.
     ///
