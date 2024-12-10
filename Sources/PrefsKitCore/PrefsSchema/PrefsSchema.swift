@@ -27,7 +27,7 @@ extension PrefsSchema {
 
 @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
 extension PrefsSchema {
-    // MARK: - Basic
+    // MARK: - Atomic
     
     /// Synthesize a pref key with an `Int` value.
     public func pref(
@@ -111,7 +111,7 @@ extension PrefsSchema {
         return pref(keyInstance)
     }
     
-    // MARK: - Basic Defaulted
+    // MARK: - Atomic Defaulted
     
     /// Synthesize a pref key with an `Int` value with a default value.
     public func pref(

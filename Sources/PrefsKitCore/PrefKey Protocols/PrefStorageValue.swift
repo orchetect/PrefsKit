@@ -6,7 +6,7 @@
 
 import Foundation
 
-/// Protocol adopted by value types that are valid for storage in UserDefaults.
+/// Protocol adopted by atomic value types that are valid for storage in UserDefaults.
 public protocol PrefStorageValue where Self: Equatable, Self: Sendable {
     associatedtype StorageValue
     var prefStorageValue: StorageValue { get }

@@ -7,8 +7,11 @@
 import Foundation
 
 /// The foundational pref key protocol all other pref key protocols conform to.
+///
 /// Provides the core implementation requirements for read and write access of a key's value.
-/// The underlying storage data type may be the same or different than the type vended by the main `getValue` and `setValue` methods.
+///
+/// The underlying atomic storage data type may be the same or different than the type vended by
+/// the main `getValue` and `setValue` methods.
 public protocol PrefKey<Value, StorageValue>: Sendable
 where Value: Sendable, StorageValue: PrefStorageValue {
     associatedtype Value

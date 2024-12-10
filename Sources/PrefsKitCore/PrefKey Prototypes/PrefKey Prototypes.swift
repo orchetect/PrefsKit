@@ -6,10 +6,10 @@
 
 import Foundation
 
-// MARK: - BasicPrefKey
+// MARK: - AtomicPrefKey
 
 /// Pref key with `Int` value.
-public struct IntPrefKey: BasicPrefKey {
+public struct IntPrefKey: AtomicPrefKey {
     public let key: String
     public typealias Value = Int
     
@@ -19,7 +19,7 @@ public struct IntPrefKey: BasicPrefKey {
 }
 
 /// Pref key with `String` value.
-public struct StringPrefKey: BasicPrefKey {
+public struct StringPrefKey: AtomicPrefKey {
     public let key: String
     public typealias Value = String
     
@@ -29,7 +29,7 @@ public struct StringPrefKey: BasicPrefKey {
 }
 
 /// Pref key with `Bool` value.
-public struct BoolPrefKey: BasicPrefKey {
+public struct BoolPrefKey: AtomicPrefKey {
     public let key: String
     public typealias Value = Bool
     
@@ -39,7 +39,7 @@ public struct BoolPrefKey: BasicPrefKey {
 }
 
 /// Pref key with `Double` value.
-public struct DoublePrefKey: BasicPrefKey {
+public struct DoublePrefKey: AtomicPrefKey {
     public let key: String
     public typealias Value = Double
     
@@ -49,7 +49,7 @@ public struct DoublePrefKey: BasicPrefKey {
 }
 
 /// Pref key with `Float` value.
-public struct FloatPrefKey: BasicPrefKey {
+public struct FloatPrefKey: AtomicPrefKey {
     public let key: String
     public typealias Value = Float
     
@@ -59,7 +59,7 @@ public struct FloatPrefKey: BasicPrefKey {
 }
 
 /// Pref key with `Data` value.
-public struct DataPrefKey: BasicPrefKey {
+public struct DataPrefKey: AtomicPrefKey {
     public let key: String
     public typealias Value = Data
     
@@ -69,7 +69,7 @@ public struct DataPrefKey: BasicPrefKey {
 }
 
 /// Pref key with `Array` value.
-public struct AnyArrayPrefKey: BasicPrefKey {
+public struct AnyArrayPrefKey: AtomicPrefKey {
     public let key: String
     public typealias Value = AnyPrefArray
     
@@ -79,7 +79,7 @@ public struct AnyArrayPrefKey: BasicPrefKey {
 }
 
 /// Pref key with `Array` value.
-public struct ArrayPrefKey<Element: PrefStorageValue>: BasicPrefKey {
+public struct ArrayPrefKey<Element: PrefStorageValue>: AtomicPrefKey {
     public let key: String
     public typealias Value = [Element]
     
@@ -89,7 +89,7 @@ public struct ArrayPrefKey<Element: PrefStorageValue>: BasicPrefKey {
 }
 
 /// Pref key with `Dictionary` value.
-public struct AnyDictionaryPrefKey: BasicPrefKey {
+public struct AnyDictionaryPrefKey: AtomicPrefKey {
     public let key: String
     public typealias Value = AnyPrefDictionary
     
@@ -99,7 +99,7 @@ public struct AnyDictionaryPrefKey: BasicPrefKey {
 }
 
 /// Pref key with `Dictionary` value.
-public struct DictionaryPrefKey<Element: PrefStorageValue>: BasicPrefKey {
+public struct DictionaryPrefKey<Element: PrefStorageValue>: AtomicPrefKey {
     public let key: String
     public typealias Value = [String: Element]
     
@@ -122,10 +122,10 @@ public struct AnyRawRepresentablePrefKey<
     }
 }
 
-// MARK: - BasicDefaultedPrefKey
+// MARK: - AtomicDefaultedPrefKey
 
 /// Pref key with `Int` value.
-public struct DefaultedIntPrefKey: BasicDefaultedPrefKey {
+public struct DefaultedIntPrefKey: AtomicDefaultedPrefKey {
     public let key: String
     public typealias Value = Int
     public let defaultValue: Value
@@ -137,7 +137,7 @@ public struct DefaultedIntPrefKey: BasicDefaultedPrefKey {
 }
 
 /// Pref key with `String` value.
-public struct DefaultedStringPrefKey: BasicDefaultedPrefKey {
+public struct DefaultedStringPrefKey: AtomicDefaultedPrefKey {
     public let key: String
     public typealias Value = String
     public let defaultValue: Value
@@ -149,7 +149,7 @@ public struct DefaultedStringPrefKey: BasicDefaultedPrefKey {
 }
 
 /// Pref key with `Bool` value.
-public struct DefaultedBoolPrefKey: BasicDefaultedPrefKey {
+public struct DefaultedBoolPrefKey: AtomicDefaultedPrefKey {
     public let key: String
     public typealias Value = Bool
     public let defaultValue: Value
@@ -161,7 +161,7 @@ public struct DefaultedBoolPrefKey: BasicDefaultedPrefKey {
 }
 
 /// Pref key with `Double` value.
-public struct DefaultedDoublePrefKey: BasicDefaultedPrefKey {
+public struct DefaultedDoublePrefKey: AtomicDefaultedPrefKey {
     public let key: String
     public typealias Value = Double
     public let defaultValue: Value
@@ -173,7 +173,7 @@ public struct DefaultedDoublePrefKey: BasicDefaultedPrefKey {
 }
 
 /// Pref key with `Float` value.
-public struct DefaultedFloatPrefKey: BasicDefaultedPrefKey {
+public struct DefaultedFloatPrefKey: AtomicDefaultedPrefKey {
     public let key: String
     public typealias Value = Float
     public let defaultValue: Value
@@ -185,7 +185,7 @@ public struct DefaultedFloatPrefKey: BasicDefaultedPrefKey {
 }
 
 /// Pref key with `Data` value.
-public struct DefaultedDataPrefKey: BasicDefaultedPrefKey {
+public struct DefaultedDataPrefKey: AtomicDefaultedPrefKey {
     public let key: String
     public typealias Value = Data
     public let defaultValue: Value
@@ -197,7 +197,7 @@ public struct DefaultedDataPrefKey: BasicDefaultedPrefKey {
 }
 
 /// Pref key with `Array` value.
-public struct DefaultedAnyArrayPrefKey: BasicDefaultedPrefKey {
+public struct DefaultedAnyArrayPrefKey: AtomicDefaultedPrefKey {
     public let key: String
     public typealias Value = AnyPrefArray
     public let defaultValue: Value
@@ -209,7 +209,7 @@ public struct DefaultedAnyArrayPrefKey: BasicDefaultedPrefKey {
 }
 
 /// Pref key with `Array` value.
-public struct DefaultedArrayPrefKey<Element: PrefStorageValue>: BasicDefaultedPrefKey {
+public struct DefaultedArrayPrefKey<Element: PrefStorageValue>: AtomicDefaultedPrefKey {
     public let key: String
     public typealias Value = [Element]
     public let defaultValue: Value
@@ -221,7 +221,7 @@ public struct DefaultedArrayPrefKey<Element: PrefStorageValue>: BasicDefaultedPr
 }
 
 /// Pref key with `Dictionary` value.
-public struct DefaultedAnyDictionaryPrefKey: BasicDefaultedPrefKey {
+public struct DefaultedAnyDictionaryPrefKey: AtomicDefaultedPrefKey {
     public let key: String
     public typealias Value = AnyPrefDictionary
     public let defaultValue: Value
@@ -233,7 +233,7 @@ public struct DefaultedAnyDictionaryPrefKey: BasicDefaultedPrefKey {
 }
 
 /// Pref key with `Dictionary` value.
-public struct DefaultedDictionaryPrefKey<Element: PrefStorageValue>: BasicDefaultedPrefKey {
+public struct DefaultedDictionaryPrefKey<Element: PrefStorageValue>: AtomicDefaultedPrefKey {
     public let key: String
     public typealias Value = [String: Element]
     public let defaultValue: Value
