@@ -37,27 +37,27 @@ struct UserDefaultsPrefsSchemaTests {
     
     // MARK: - Protocol Adoptions
     
-    struct MockAtomicPrefsCodable: AtomicPrefsCodable {
+    struct MockAtomicPrefsCoding: AtomicPrefsCodable {
         let key: String = "foo"
         
         typealias Value = Bool
     }
     
-    struct MockAtomicDefaultedPrefsCodable: AtomicDefaultedPrefsCodable {
+    struct MockAtomicDefaultedPrefsCoding: AtomicDefaultedPrefsCodable {
         let key: String = "bar"
         
         typealias Value = Bool
         let defaultValue: Value = true
     }
     
-    struct MockRawRepresentablePrefsCodable: RawRepresentablePrefsCodable {
+    struct MockRawRepresentablePrefsCoding: RawRepresentablePrefsCodable {
         let key: String = "rawFoo"
         
         typealias Value = RawEnum
         // typealias StorageValue = RawEnum.RawValue // inferred
     }
     
-    struct MockDefaultedRawRepresentablePrefsCodable: DefaultedRawRepresentablePrefsCodable {
+    struct MockDefaultedRawRepresentablePrefsCoding: DefaultedRawRepresentablePrefsCodable {
         let key: String = "rawBar"
         
         typealias Value = RawEnum
@@ -65,7 +65,7 @@ struct UserDefaultsPrefsSchemaTests {
         let defaultValue: Value = .one
     }
     
-    struct MockCodablePrefsCodable: CodablePrefsCodable {
+    struct MockCodablePrefsCoding: CodablePrefsCodable {
         let key: String = "codableFoo"
         
         typealias Value = CodableEnum
@@ -75,7 +75,7 @@ struct UserDefaultsPrefsSchemaTests {
         func prefDecoder() -> JSONDecoder { JSONDecoder() }
     }
     
-    struct MockDefaultedCodablePrefsCodable: DefaultedCodablePrefsCodable {
+    struct MockDefaultedCodablePrefsCoding: DefaultedCodablePrefsCodable {
         let key: String = "codableBar"
         
         typealias Value = CodableEnum
@@ -86,13 +86,13 @@ struct UserDefaultsPrefsSchemaTests {
         func prefDecoder() -> JSONDecoder { JSONDecoder() }
     }
     
-    struct MockJSONCodablePrefsCodable: JSONCodablePrefsCodable {
+    struct MockJSONCodablePrefsCoding: JSONCodablePrefsCodable {
         let key: String = "jsonCodableFoo"
         
         typealias Value = CodableEnum
     }
     
-    struct MockDefaultedJSONCodablePrefsCodable: DefaultedJSONCodablePrefsCodable {
+    struct MockDefaultedJSONCodablePrefsCoding: DefaultedJSONCodablePrefsCodable {
         let key: String = "jsonCodableBar"
         
         typealias Value = CodableEnum
@@ -130,17 +130,17 @@ struct UserDefaultsPrefsSchemaTests {
 //        
 //        // Defined Key Implementations
 //        
-//        lazy var atomic = pref(MockAtomicPrefsCodable())
-//        lazy var atomicDefaulted = pref(MockAtomicDefaultedPrefsCodable())
+//        lazy var atomic = pref(MockAtomicPrefsCoding())
+//        lazy var atomicDefaulted = pref(MockAtomicDefaultedPrefsCoding())
 //        
-//        lazy var rawRep = pref(MockRawRepresentablePrefsCodable())
-//        lazy var rawRepDefaulted = pref(MockDefaultedRawRepresentablePrefsCodable())
+//        lazy var rawRep = pref(MockRawRepresentablePrefsCoding())
+//        lazy var rawRepDefaulted = pref(MockDefaultedRawRepresentablePrefsCoding())
 //        
 //        lazy var rawRep2 = pref(Key.rawFoo, of: RawEnum.self)
 //        lazy var rawRepDefaulted2 = pref(Key.rawBar, of: RawEnum.self, default: .one)
 //        
-//        lazy var codable = pref(MockCodablePrefsCodable())
-//        lazy var codableDefaulted = pref(MockDefaultedCodablePrefsCodable())
+//        lazy var codable = pref(MockCodablePrefsCoding())
+//        lazy var codableDefaulted = pref(MockDefaultedCodablePrefsCoding())
 //        
 //        lazy var codable2 = pref(Key.codableFoo, of: CodableEnum.self, encoder: JSONEncoder(), decoder: JSONDecoder())
 //        lazy var codableDefaulted2 = pref(
@@ -151,8 +151,8 @@ struct UserDefaultsPrefsSchemaTests {
 //            decoder: JSONDecoder()
 //        )
 //        
-//        lazy var jsonCodable = pref(MockJSONCodablePrefsCodable())
-//        lazy var jsonCodableDefaulted = pref(MockDefaultedJSONCodablePrefsCodable())
+//        lazy var jsonCodable = pref(MockJSONCodablePrefsCoding())
+//        lazy var jsonCodableDefaulted = pref(MockDefaultedJSONCodablePrefsCoding())
 //        
 //        lazy var jsonCodable2 = pref(Key.codableFoo, of: CodableEnum.self)
 //        lazy var jsonCodableDefaulted2 = pref(Key.codableFoo, of: CodableEnum.self, default: .one)
