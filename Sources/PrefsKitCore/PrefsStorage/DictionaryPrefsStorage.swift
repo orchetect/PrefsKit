@@ -26,61 +26,61 @@ open class DictionaryPrefsStorage {
 extension DictionaryPrefsStorage: @unchecked Sendable { }
 
 extension DictionaryPrefsStorage: PrefsStorage {
-    public func setValue<Key>(to value: Key.StorageValue?, forKey key: Key) where Key: PrefKey {
+    public func setValue<Key>(to value: Key.StorageValue?, forKey key: Key) where Key: PrefsCodable {
         root[key.key] = value
     }
     
-    public func value<Key>(forKey key: Key) -> Key.StorageValue? where Key: PrefKey {
+    public func value<Key>(forKey key: Key) -> Key.StorageValue? where Key: PrefsCodable {
         root[key.key] as? Key.StorageValue
     }
     
-    public func value<Key>(forKey key: Key) -> Key.StorageValue? where Key: PrefKey, Key.StorageValue == Int {
+    public func value<Key>(forKey key: Key) -> Key.StorageValue? where Key: PrefsCodable, Key.StorageValue == Int {
         root[key.key] as? Int
     }
     
-    public func value<Key>(forKey key: Key) -> Key.StorageValue? where Key: PrefKey, Key.StorageValue == String {
+    public func value<Key>(forKey key: Key) -> Key.StorageValue? where Key: PrefsCodable, Key.StorageValue == String {
         root[key.key] as? String
     }
     
-    public func value<Key>(forKey key: Key) -> Key.StorageValue? where Key: PrefKey, Key.StorageValue == Bool {
+    public func value<Key>(forKey key: Key) -> Key.StorageValue? where Key: PrefsCodable, Key.StorageValue == Bool {
         root[key.key] as? Bool
     }
     
-    public func value<Key>(forKey key: Key) -> Key.StorageValue? where Key: PrefKey, Key.StorageValue == Double {
+    public func value<Key>(forKey key: Key) -> Key.StorageValue? where Key: PrefsCodable, Key.StorageValue == Double {
         root[key.key] as? Double
     }
     
-    public func value<Key>(forKey key: Key) -> Key.StorageValue? where Key: PrefKey, Key.StorageValue == Float {
+    public func value<Key>(forKey key: Key) -> Key.StorageValue? where Key: PrefsCodable, Key.StorageValue == Float {
         root[key.key] as? Float
     }
     
-    public func value<Key>(forKey key: Key) -> Key.StorageValue? where Key: PrefKey, Key.StorageValue == Data {
+    public func value<Key>(forKey key: Key) -> Key.StorageValue? where Key: PrefsCodable, Key.StorageValue == Data {
         root[key.key] as? Data
     }
     
-    public func value<Key>(forKey key: Key) -> Key.StorageValue? where Key: PrefKey, Key.StorageValue == [any PrefStorageValue] {
+    public func value<Key>(forKey key: Key) -> Key.StorageValue? where Key: PrefsCodable, Key.StorageValue == [any PrefStorageValue] {
         root[key.key] as? [any PrefStorageValue]
     }
     
-    public func value<Key>(forKey key: Key) -> Key.StorageValue? where Key: PrefKey, Key.StorageValue == [String: any PrefStorageValue] {
+    public func value<Key>(forKey key: Key) -> Key.StorageValue? where Key: PrefsCodable, Key.StorageValue == [String: any PrefStorageValue] {
         root[key.key] as? [String: any PrefStorageValue]
     }
     
     public func value<Key, Element>(forKey key: Key) -> Key.StorageValue?
-    where Key: PrefKey, Element: PrefStorageValue, Key.StorageValue == [Element] {
+    where Key: PrefsCodable, Element: PrefStorageValue, Key.StorageValue == [Element] {
         root[key.key] as? [Element]
     }
     
     public func value<Key, Element>(forKey key: Key) -> Key.StorageValue?
-    where Key: PrefKey, Element: PrefStorageValue, Key.StorageValue == [String: Element] {
+    where Key: PrefsCodable, Element: PrefStorageValue, Key.StorageValue == [String: Element] {
         root[key.key] as? [String: Element]
     }
     
-    public func value<Key>(forKey key: Key) -> Key.StorageValue? where Key: PrefKey, Key.StorageValue == AnyPrefArray {
+    public func value<Key>(forKey key: Key) -> Key.StorageValue? where Key: PrefsCodable, Key.StorageValue == AnyPrefArray {
         root[key.key] as? AnyPrefArray
     }
     
-    public func value<Key>(forKey key: Key) -> Key.StorageValue? where Key: PrefKey, Key.StorageValue == AnyPrefDictionary {
+    public func value<Key>(forKey key: Key) -> Key.StorageValue? where Key: PrefsCodable, Key.StorageValue == AnyPrefDictionary {
         root[key.key] as? AnyPrefDictionary
     }
 }

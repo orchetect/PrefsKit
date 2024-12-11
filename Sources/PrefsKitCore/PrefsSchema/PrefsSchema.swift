@@ -20,12 +20,12 @@ public protocol PrefsSchema /*where Self: Sendable*/ {
 // @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
 // extension PrefsSchema {
 //     /// Wrap a pref key instance. Used in ``PrefsSchema``.
-//     public func pref<Key: PrefKey>(_ key: Key) -> ObservablePref<Key> {
+//     public func pref<Key: PrefsCodable>(_ key: Key) -> ObservablePref<Key> {
 //         ObservablePref(key: key, storage: storage, isCacheEnabled: isCacheEnabled)
 //     }
 // 
 //     /// Wrap a pref key instance. Used in ``PrefsSchema``.
-//     public func pref<Key: DefaultedPrefKey>(_ key: Key) -> ObservableDefaultedPref<Key> {
+//     public func pref<Key: DefaultedPrefsCodable>(_ key: Key) -> ObservableDefaultedPref<Key> {
 //         ObservableDefaultedPref(key: key, storage: storage, isCacheEnabled: isCacheEnabled)
 //     }
 // }
@@ -37,56 +37,56 @@ public protocol PrefsSchema /*where Self: Sendable*/ {
 //     /// Synthesize a pref key with an `Int` value.
 //     public func pref(
 //         int key: String
-//     ) -> ObservablePref<AnyAtomicPrefKey<Int>> {
-//         let keyInstance = AnyAtomicPrefKey<Int>(key: key)
+//     ) -> ObservablePref<AnyAtomicPrefsCoding<Int>> {
+//         let keyInstance = AnyAtomicPrefsCoding<Int>(key: key)
 //         return pref(keyInstance)
 //     }
 // 
 //     /// Synthesize a pref key with an `String` value.
 //     public func pref(
 //         string key: String
-//     ) -> ObservablePref<AnyAtomicPrefKey<String>> {
-//         let keyInstance = AnyAtomicPrefKey<String>(key: key)
+//     ) -> ObservablePref<AnyAtomicPrefsCoding<String>> {
+//         let keyInstance = AnyAtomicPrefsCoding<String>(key: key)
 //         return pref(keyInstance)
 //     }
 // 
 //     /// Synthesize a pref key with a `Bool` value.
 //     public func pref(
 //         bool key: String
-//     ) -> ObservablePref<AnyAtomicPrefKey<Bool>> {
-//         let keyInstance = AnyAtomicPrefKey<Bool>(key: key)
+//     ) -> ObservablePref<AnyAtomicPrefsCoding<Bool>> {
+//         let keyInstance = AnyAtomicPrefsCoding<Bool>(key: key)
 //         return pref(keyInstance)
 //     }
 // 
 //     /// Synthesize a pref key with a `Double` value.
 //     public func pref(
 //         double key: String
-//     ) -> ObservablePref<AnyAtomicPrefKey<Double>> {
-//         let keyInstance = AnyAtomicPrefKey<Double>(key: key)
+//     ) -> ObservablePref<AnyAtomicPrefsCoding<Double>> {
+//         let keyInstance = AnyAtomicPrefsCoding<Double>(key: key)
 //         return pref(keyInstance)
 //     }
 // 
 //     /// Synthesize a pref key with a `Float` value.
 //     public func pref(
 //         float key: String
-//     ) -> ObservablePref<AnyAtomicPrefKey<Float>> {
-//         let keyInstance = AnyAtomicPrefKey<Float>(key: key)
+//     ) -> ObservablePref<AnyAtomicPrefsCoding<Float>> {
+//         let keyInstance = AnyAtomicPrefsCoding<Float>(key: key)
 //         return pref(keyInstance)
 //     }
 // 
 //     /// Synthesize a pref key with a `Data` value.
 //     public func pref(
 //         data key: String
-//     ) -> ObservablePref<AnyAtomicPrefKey<Data>> {
-//         let keyInstance = AnyAtomicPrefKey<Data>(key: key)
+//     ) -> ObservablePref<AnyAtomicPrefsCoding<Data>> {
+//         let keyInstance = AnyAtomicPrefsCoding<Data>(key: key)
 //         return pref(keyInstance)
 //     }
 // 
 //     /// Synthesize a pref key with an `Array` value.
 //     public func pref(
 //         array key: String
-//     ) -> ObservablePref<AnyAtomicPrefKey<AnyPrefArray>> {
-//         let keyInstance = AnyAtomicPrefKey<AnyPrefArray>(key: key)
+//     ) -> ObservablePref<AnyAtomicPrefsCoding<AnyPrefArray>> {
+//         let keyInstance = AnyAtomicPrefsCoding<AnyPrefArray>(key: key)
 //         return pref(keyInstance)
 //     }
 // 
@@ -94,8 +94,8 @@ public protocol PrefsSchema /*where Self: Sendable*/ {
 //     public func pref<Element: PrefStorageValue>(
 //         array key: String,
 //         of elementType: Element.Type
-//     ) -> ObservablePref<AnyAtomicPrefKey<[Element]>> {
-//         let keyInstance = AnyAtomicPrefKey<[Element]>(key: key)
+//     ) -> ObservablePref<AnyAtomicPrefsCoding<[Element]>> {
+//         let keyInstance = AnyAtomicPrefsCoding<[Element]>(key: key)
 //         return pref(keyInstance)
 //     }
 // 
@@ -103,16 +103,16 @@ public protocol PrefsSchema /*where Self: Sendable*/ {
 //     public func pref<Element: PrefStorageValue>(
 //         dictionary key: String,
 //         of elementType: Element.Type
-//     ) -> ObservablePref<AnyAtomicPrefKey<[String: Element]>> {
-//         let keyInstance = AnyAtomicPrefKey<[String: Element]>(key: key)
+//     ) -> ObservablePref<AnyAtomicPrefsCoding<[String: Element]>> {
+//         let keyInstance = AnyAtomicPrefsCoding<[String: Element]>(key: key)
 //         return pref(keyInstance)
 //     }
 // 
 //     /// Synthesize a pref key with a `Dictionary` value.
 //     public func pref(
 //         dictionary key: String
-//     ) -> ObservablePref<AnyAtomicPrefKey<AnyPrefDictionary>> {
-//         let keyInstance = AnyAtomicPrefKey<AnyPrefDictionary>(key: key)
+//     ) -> ObservablePref<AnyAtomicPrefsCoding<AnyPrefDictionary>> {
+//         let keyInstance = AnyAtomicPrefsCoding<AnyPrefDictionary>(key: key)
 //         return pref(keyInstance)
 //     }
 // 
@@ -122,8 +122,8 @@ public protocol PrefsSchema /*where Self: Sendable*/ {
 //     public func pref(
 //         int key: String,
 //         default defaultValue: Int
-//     ) -> ObservableDefaultedPref<AnyDefaultedAtomicPrefKey<Int>> {
-//         let keyInstance = AnyDefaultedAtomicPrefKey<Int>(key: key, defaultValue: defaultValue)
+//     ) -> ObservableDefaultedPref<AnyDefaultedAtomicPrefsCoding<Int>> {
+//         let keyInstance = AnyDefaultedAtomicPrefsCoding<Int>(key: key, defaultValue: defaultValue)
 //         return pref(keyInstance)
 //     }
 // 
@@ -131,8 +131,8 @@ public protocol PrefsSchema /*where Self: Sendable*/ {
 //     public func pref(
 //         string key: String,
 //         default defaultValue: String
-//     ) -> ObservableDefaultedPref<AnyDefaultedAtomicPrefKey<String>> {
-//         let keyInstance = AnyDefaultedAtomicPrefKey<String>(key: key, defaultValue: defaultValue)
+//     ) -> ObservableDefaultedPref<AnyDefaultedAtomicPrefsCoding<String>> {
+//         let keyInstance = AnyDefaultedAtomicPrefsCoding<String>(key: key, defaultValue: defaultValue)
 //         return pref(keyInstance)
 //     }
 // 
@@ -140,8 +140,8 @@ public protocol PrefsSchema /*where Self: Sendable*/ {
 //     public func pref(
 //         bool key: String,
 //         default defaultValue: Bool
-//     ) -> ObservableDefaultedPref<AnyDefaultedAtomicPrefKey<Bool>> {
-//         let keyInstance = AnyDefaultedAtomicPrefKey<Bool>(key: key, defaultValue: defaultValue)
+//     ) -> ObservableDefaultedPref<AnyDefaultedAtomicPrefsCoding<Bool>> {
+//         let keyInstance = AnyDefaultedAtomicPrefsCoding<Bool>(key: key, defaultValue: defaultValue)
 //         return pref(keyInstance)
 //     }
 // 
@@ -149,8 +149,8 @@ public protocol PrefsSchema /*where Self: Sendable*/ {
 //     public func pref(
 //         double key: String,
 //         default defaultValue: Double
-//     ) -> ObservableDefaultedPref<AnyDefaultedAtomicPrefKey<Double>> {
-//         let keyInstance = AnyDefaultedAtomicPrefKey<Double>(key: key, defaultValue: defaultValue)
+//     ) -> ObservableDefaultedPref<AnyDefaultedAtomicPrefsCoding<Double>> {
+//         let keyInstance = AnyDefaultedAtomicPrefsCoding<Double>(key: key, defaultValue: defaultValue)
 //         return pref(keyInstance)
 //     }
 // 
@@ -158,8 +158,8 @@ public protocol PrefsSchema /*where Self: Sendable*/ {
 //     public func pref(
 //         float key: String,
 //         default defaultValue: Float
-//     ) -> ObservableDefaultedPref<AnyDefaultedAtomicPrefKey<Float>> {
-//         let keyInstance = AnyDefaultedAtomicPrefKey<Float>(key: key, defaultValue: defaultValue)
+//     ) -> ObservableDefaultedPref<AnyDefaultedAtomicPrefsCoding<Float>> {
+//         let keyInstance = AnyDefaultedAtomicPrefsCoding<Float>(key: key, defaultValue: defaultValue)
 //         return pref(keyInstance)
 //     }
 // 
@@ -167,8 +167,8 @@ public protocol PrefsSchema /*where Self: Sendable*/ {
 //     public func pref(
 //         data key: String,
 //         default defaultValue: Data
-//     ) -> ObservableDefaultedPref<AnyDefaultedAtomicPrefKey<Data>> {
-//         let keyInstance = AnyDefaultedAtomicPrefKey<Data>(key: key, defaultValue: defaultValue)
+//     ) -> ObservableDefaultedPref<AnyDefaultedAtomicPrefsCoding<Data>> {
+//         let keyInstance = AnyDefaultedAtomicPrefsCoding<Data>(key: key, defaultValue: defaultValue)
 //         return pref(keyInstance)
 //     }
 // 
@@ -176,8 +176,8 @@ public protocol PrefsSchema /*where Self: Sendable*/ {
 //     public func pref(
 //         array key: String,
 //         default defaultValue: AnyPrefArray
-//     ) -> ObservableDefaultedPref<AnyDefaultedAtomicPrefKey<AnyPrefArray>> {
-//         let keyInstance = AnyDefaultedAtomicPrefKey<AnyPrefArray>(key: key, defaultValue: defaultValue)
+//     ) -> ObservableDefaultedPref<AnyDefaultedAtomicPrefsCoding<AnyPrefArray>> {
+//         let keyInstance = AnyDefaultedAtomicPrefsCoding<AnyPrefArray>(key: key, defaultValue: defaultValue)
 //         return pref(keyInstance)
 //     }
 // 
@@ -186,8 +186,8 @@ public protocol PrefsSchema /*where Self: Sendable*/ {
 //         array key: String,
 //         of elementType: Element.Type,
 //         default defaultValue: [Element]
-//     ) -> ObservableDefaultedPref<AnyDefaultedAtomicPrefKey<[Element]>> {
-//         let keyInstance = AnyDefaultedAtomicPrefKey<[Element]>(key: key, defaultValue: defaultValue)
+//     ) -> ObservableDefaultedPref<AnyDefaultedAtomicPrefsCoding<[Element]>> {
+//         let keyInstance = AnyDefaultedAtomicPrefsCoding<[Element]>(key: key, defaultValue: defaultValue)
 //         return pref(keyInstance)
 //     }
 // 
@@ -195,8 +195,8 @@ public protocol PrefsSchema /*where Self: Sendable*/ {
 //     public func pref(
 //         dictionary key: String,
 //         default defaultValue: AnyPrefDictionary
-//     ) -> ObservableDefaultedPref<AnyDefaultedAtomicPrefKey<AnyPrefDictionary>> {
-//         let keyInstance = AnyDefaultedAtomicPrefKey<AnyPrefDictionary>(key: key, defaultValue: defaultValue)
+//     ) -> ObservableDefaultedPref<AnyDefaultedAtomicPrefsCoding<AnyPrefDictionary>> {
+//         let keyInstance = AnyDefaultedAtomicPrefsCoding<AnyPrefDictionary>(key: key, defaultValue: defaultValue)
 //         return pref(keyInstance)
 //     }
 // 
@@ -205,8 +205,8 @@ public protocol PrefsSchema /*where Self: Sendable*/ {
 //         dictionary key: String,
 //         of elementType: Element.Type,
 //         default defaultValue: [String: Element]
-//     ) -> ObservableDefaultedPref<AnyDefaultedAtomicPrefKey<[String: Element]>> {
-//         let keyInstance = AnyDefaultedAtomicPrefKey<[String: Element]>(key: key, defaultValue: defaultValue)
+//     ) -> ObservableDefaultedPref<AnyDefaultedAtomicPrefsCoding<[String: Element]>> {
+//         let keyInstance = AnyDefaultedAtomicPrefsCoding<[String: Element]>(key: key, defaultValue: defaultValue)
 //         return pref(keyInstance)
 //     }
 // 
@@ -216,8 +216,8 @@ public protocol PrefsSchema /*where Self: Sendable*/ {
 //     public func pref<Value: RawRepresentable, StorageValue: PrefStorageValue>(
 //         _ key: String,
 //         of elementType: Value.Type
-//     ) -> ObservablePref<AnyRawRepresentablePrefKey<Value, StorageValue>> {
-//         let keyInstance = AnyRawRepresentablePrefKey<Value, StorageValue>(key: key)
+//     ) -> ObservablePref<AnyRawRepresentablePrefsCodable<Value, StorageValue>> {
+//         let keyInstance = AnyRawRepresentablePrefsCodable<Value, StorageValue>(key: key)
 //         return pref(keyInstance)
 //     }
 // 
@@ -226,8 +226,8 @@ public protocol PrefsSchema /*where Self: Sendable*/ {
 //         _ key: String,
 //         of elementType: Value.Type,
 //         default defaultValue: Value
-//     ) -> ObservableDefaultedPref<AnyDefaultedRawRepresentablePrefKey<Value, StorageValue>> {
-//         let keyInstance = AnyDefaultedRawRepresentablePrefKey<Value, StorageValue>(key: key, defaultValue: defaultValue)
+//     ) -> ObservableDefaultedPref<AnyDefaultedRawRepresentablePrefsCoding<Value, StorageValue>> {
+//         let keyInstance = AnyDefaultedRawRepresentablePrefsCoding<Value, StorageValue>(key: key, defaultValue: defaultValue)
 //         return pref(keyInstance)
 //     }
 // 
@@ -245,8 +245,8 @@ public protocol PrefsSchema /*where Self: Sendable*/ {
 //         of elementType: Value.Type,
 //         encoder: @escaping @Sendable @autoclosure () -> Encoder,
 //         decoder: @escaping @Sendable @autoclosure () -> Decoder
-//     ) -> ObservablePref<AnyCodablePrefKey<Value, StorageValue, Encoder, Decoder>> {
-//         let keyInstance = AnyCodablePrefKey<Value, StorageValue, Encoder, Decoder>(
+//     ) -> ObservablePref<AnyCodablePrefsCoding<Value, StorageValue, Encoder, Decoder>> {
+//         let keyInstance = AnyCodablePrefsCoding<Value, StorageValue, Encoder, Decoder>(
 //             key: key,
 //             encoder: encoder(),
 //             decoder: decoder()
@@ -267,8 +267,8 @@ public protocol PrefsSchema /*where Self: Sendable*/ {
 //         default defaultValue: Value,
 //         encoder: @escaping @Sendable @autoclosure () -> Encoder,
 //         decoder: @escaping @Sendable @autoclosure () -> Decoder
-//     ) -> ObservableDefaultedPref<AnyDefaultedCodablePrefKey<Value, StorageValue, Encoder, Decoder>> {
-//         let keyInstance = AnyDefaultedCodablePrefKey<Value, StorageValue, Encoder, Decoder>(
+//     ) -> ObservableDefaultedPref<AnyDefaultedCodablePrefsCoding<Value, StorageValue, Encoder, Decoder>> {
+//         let keyInstance = AnyDefaultedCodablePrefsCoding<Value, StorageValue, Encoder, Decoder>(
 //             key: key,
 //             defaultValue: defaultValue,
 //             encoder: encoder(),
@@ -284,8 +284,8 @@ public protocol PrefsSchema /*where Self: Sendable*/ {
 //     public func pref<Value: Codable>(
 //         _ key: String,
 //         of elementType: Value.Type
-//     ) -> ObservablePref<AnyJSONCodablePrefKey<Value>> {
-//         let keyInstance = AnyJSONCodablePrefKey<Value>(
+//     ) -> ObservablePref<AnyJSONCodablePrefsCoding<Value>> {
+//         let keyInstance = AnyJSONCodablePrefsCoding<Value>(
 //             key: key
 //         )
 //         return pref(keyInstance)
@@ -297,8 +297,8 @@ public protocol PrefsSchema /*where Self: Sendable*/ {
 //         _ key: String,
 //         of elementType: Value.Type,
 //         default defaultValue: Value
-//     ) -> ObservableDefaultedPref<AnyDefaultedJSONCodablePrefKey<Value>> {
-//         let keyInstance = AnyDefaultedJSONCodablePrefKey<Value>(
+//     ) -> ObservableDefaultedPref<AnyDefaultedJSONCodablePrefsCoding<Value>> {
+//         let keyInstance = AnyDefaultedJSONCodablePrefsCoding<Value>(
 //             key: key,
 //             defaultValue: defaultValue
 //         )

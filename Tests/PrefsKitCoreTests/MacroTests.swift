@@ -86,7 +86,7 @@ final class MacroTests: XCTestCase {
                 }
             }
             
-            private let __PrefKey_foo = PrefsKitCore.AnyAtomicPrefKey<Int>(key: "someInt")
+            private let __PrefKey_foo = PrefsKitCore.AnyAtomicPrefsCoding<Int>(key: "someInt")
             
             private var __PrefValue_foo: Int?
             """,
@@ -123,7 +123,7 @@ final class MacroTests: XCTestCase {
                 }
             }
             
-            private let __PrefKey_bar = PrefsKitCore.AnyDefaultedAtomicPrefKey<String>(key: KeyName.bar, defaultValue: "baz")
+            private let __PrefKey_bar = PrefsKitCore.AnyDefaultedAtomicPrefsCoding<String>(key: KeyName.bar, defaultValue: "baz")
             
             private var __PrefValue_bar: String = "baz"
             """,

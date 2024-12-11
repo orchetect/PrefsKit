@@ -1,5 +1,5 @@
 //
-//  PrefKey.swift
+//  PrefsCodable.swift
 //  PrefsKit • https://github.com/orchetect/PrefsKit
 //  © 2024 Steffan Andrews • Licensed under MIT License
 //
@@ -12,7 +12,7 @@ import Foundation
 ///
 /// The underlying atomic storage data type may be the same or different than the type vended by
 /// the main `getValue` and `setValue` methods.
-public protocol PrefKey<Value, StorageValue>: Sendable
+public protocol PrefsCodable<Value, StorageValue>: Sendable
 where Value: Sendable, StorageValue: PrefStorageValue {
     associatedtype Value
     associatedtype StorageValue
@@ -35,7 +35,7 @@ where Value: Sendable, StorageValue: PrefStorageValue {
     func setStorageValue(to newValue: StorageValue?, in storage: PrefsStorage)
 }
 
-extension PrefKey where Value == StorageValue {
+extension PrefsCodable where Value == StorageValue {
     public func getValue(in storage: PrefsStorage) -> Value? {
         getStorageValue(in: storage)
     }
@@ -45,7 +45,7 @@ extension PrefKey where Value == StorageValue {
     }
 }
 
-extension PrefKey {
+extension PrefsCodable {
     public func getStorageValue(in storage: PrefsStorage) -> StorageValue? {
         storage.value(forKey: self)
     }
@@ -100,7 +100,7 @@ extension PrefKey {
     }
 }
 
-extension PrefKey {
+extension PrefsCodable {
     public func setStorageValue(to newValue: StorageValue?, in storage: PrefsStorage) {
         storage.setValue(to: newValue, forKey: self)
     }

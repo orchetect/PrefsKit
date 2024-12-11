@@ -43,7 +43,7 @@ import Observation
 // /// Wrapper for pref key and storage reference. Used in ``PrefsSchema``.
 // @_documentation(visibility: internal)
 // @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
-// @Observable public final class ObservableDefaultedPref<Key: DefaultedPrefKey> where Key.Value: Equatable {
+// @Observable public final class ObservableDefaultedPref<Key: DefaultedPrefsCodable> where Key.Value: Equatable {
 //     let key: Key
 //     private var cachedValue: Key.Value
 // 
@@ -77,7 +77,7 @@ import Observation
 /// Wrapper for pref key and storage reference. Used in ``PrefsSchema``.
 @_documentation(visibility: internal)
 @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
-@Observable public final class ObservablePref<Key: PrefKey> where Key.Value: Equatable {
+@Observable public final class ObservablePref<Key: PrefsCodable> where Key.Value: Equatable {
     let key: Key
     private var cachedValue: Key.Value?
     
@@ -122,7 +122,7 @@ import Observation
 /// Wrapper for pref key and storage reference. Used in ``PrefsSchema``.
 @_documentation(visibility: internal)
 @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
-@Observable public final class ObservableDefaultedPref<Key: DefaultedPrefKey> where Key.Value: Equatable {
+@Observable public final class ObservableDefaultedPref<Key: DefaultedPrefsCodable> where Key.Value: Equatable {
     let key: Key
     private var cachedValue: Key.Value
     

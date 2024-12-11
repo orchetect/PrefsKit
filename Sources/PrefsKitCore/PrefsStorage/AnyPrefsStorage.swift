@@ -16,63 +16,63 @@ public final class AnyPrefsStorage: PrefsStorage {
 }
 
 extension AnyPrefsStorage {
-    public func setValue<Key>(to value: Key.StorageValue?, forKey key: Key) where Key: PrefKey {
+    public func setValue<Key>(to value: Key.StorageValue?, forKey key: Key) where Key: PrefsCodable {
         wrapped.setValue(to: value, forKey: key)
     }
     
-    public func value<Key>(forKey key: Key) -> Key.StorageValue? where Key: PrefKey {
+    public func value<Key>(forKey key: Key) -> Key.StorageValue? where Key: PrefsCodable {
         wrapped.value(forKey: key)
     }
     
-    public func value<Key>(forKey key: Key) -> Key.StorageValue? where Key: PrefKey, Key.StorageValue == Int {
+    public func value<Key>(forKey key: Key) -> Key.StorageValue? where Key: PrefsCodable, Key.StorageValue == Int {
         wrapped.value(forKey: key)
     }
     
-    public func value<Key>(forKey key: Key) -> Key.StorageValue? where Key: PrefKey, Key.StorageValue == String {
+    public func value<Key>(forKey key: Key) -> Key.StorageValue? where Key: PrefsCodable, Key.StorageValue == String {
         wrapped.value(forKey: key)
     }
     
-    public func value<Key>(forKey key: Key) -> Key.StorageValue? where Key: PrefKey, Key.StorageValue == Bool {
+    public func value<Key>(forKey key: Key) -> Key.StorageValue? where Key: PrefsCodable, Key.StorageValue == Bool {
         wrapped.value(forKey: key)
     }
     
-    public func value<Key>(forKey key: Key) -> Key.StorageValue? where Key: PrefKey, Key.StorageValue == Double {
+    public func value<Key>(forKey key: Key) -> Key.StorageValue? where Key: PrefsCodable, Key.StorageValue == Double {
         wrapped.value(forKey: key)
     }
     
-    public func value<Key>(forKey key: Key) -> Key.StorageValue? where Key: PrefKey, Key.StorageValue == Float {
+    public func value<Key>(forKey key: Key) -> Key.StorageValue? where Key: PrefsCodable, Key.StorageValue == Float {
         wrapped.value(forKey: key)
     }
     
-    public func value<Key>(forKey key: Key) -> Key.StorageValue? where Key: PrefKey, Key.StorageValue == Data {
-        wrapped.value(forKey: key)
-    }
-    
-    public func value<Key>(forKey key: Key) -> Key.StorageValue?
-    where Key: PrefKey, Key.StorageValue == [any PrefStorageValue] {
+    public func value<Key>(forKey key: Key) -> Key.StorageValue? where Key: PrefsCodable, Key.StorageValue == Data {
         wrapped.value(forKey: key)
     }
     
     public func value<Key>(forKey key: Key) -> Key.StorageValue?
-    where Key: PrefKey, Key.StorageValue == [String: any PrefStorageValue] {
+    where Key: PrefsCodable, Key.StorageValue == [any PrefStorageValue] {
+        wrapped.value(forKey: key)
+    }
+    
+    public func value<Key>(forKey key: Key) -> Key.StorageValue?
+    where Key: PrefsCodable, Key.StorageValue == [String: any PrefStorageValue] {
         wrapped.value(forKey: key)
     }
     
     public func value<Key, Element>(forKey key: Key) -> Key.StorageValue?
-    where Key: PrefKey, Element: PrefStorageValue, Key.StorageValue == [Element] {
+    where Key: PrefsCodable, Element: PrefStorageValue, Key.StorageValue == [Element] {
         wrapped.value(forKey: key)
     }
     
     public func value<Key, Element>(forKey key: Key) -> Key.StorageValue?
-    where Key: PrefKey, Element: PrefStorageValue, Key.StorageValue == [String: Element] {
+    where Key: PrefsCodable, Element: PrefStorageValue, Key.StorageValue == [String: Element] {
         wrapped.value(forKey: key)
     }
     
-    public func value<Key>(forKey key: Key) -> Key.StorageValue? where Key: PrefKey, Key.StorageValue == AnyPrefArray {
+    public func value<Key>(forKey key: Key) -> Key.StorageValue? where Key: PrefsCodable, Key.StorageValue == AnyPrefArray {
         wrapped.value(forKey: key)
     }
     
-    public func value<Key>(forKey key: Key) -> Key.StorageValue? where Key: PrefKey,
+    public func value<Key>(forKey key: Key) -> Key.StorageValue? where Key: PrefsCodable,
     Key.StorageValue == AnyPrefDictionary {
         wrapped.value(forKey: key)
     }

@@ -110,14 +110,14 @@ extension PrefMacro {
                 guard (try? defaultValue(from: varDec)) == nil else {
                     throw PrefMacroError.noDefaultValueAllowed
                 }
-                keyStructName = "\(moduleNamePrefix)AnyAtomicPrefKey<\(typeName)>"
+                keyStructName = "\(moduleNamePrefix)AnyAtomicPrefsCoding<\(typeName)>"
                 keyDeclaration = keyStructName + "(key: \(keyName))"
                 getValueSyntax = "getValue(in: storage)"
                 privateVarDeclaration = "\(typeName)?"
             } else {
                 // must have a default value
                 let defaultValue = try defaultValue(from: varDec)
-                keyStructName = "\(moduleNamePrefix)AnyDefaultedAtomicPrefKey<\(typeName)>"
+                keyStructName = "\(moduleNamePrefix)AnyDefaultedAtomicPrefsCoding<\(typeName)>"
                 keyDeclaration = keyStructName + "(key: \(keyName), defaultValue: \(defaultValue))"
                 getValueSyntax = "getDefaultedValue(in: storage)"
                 privateVarDeclaration = "\(typeName) = \(defaultValue)"

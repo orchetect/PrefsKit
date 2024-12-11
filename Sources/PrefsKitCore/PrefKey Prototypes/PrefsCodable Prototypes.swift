@@ -1,5 +1,5 @@
 //
-//  PrefKey Prototypes.swift
+//  PrefsCodable Prototypes.swift
 //  PrefsKit • https://github.com/orchetect/PrefsKit
 //  © 2024 Steffan Andrews • Licensed under MIT License
 //
@@ -10,7 +10,7 @@ import Foundation
 // MARK: - Atomic
 
 /// Generic concrete pref key with an atomic value type.
-public struct AnyAtomicPrefKey<Value>: AtomicPrefKey where Value: Sendable, Value: PrefStorageValue {
+public struct AnyAtomicPrefsCoding<Value>: AtomicPrefsCodable where Value: Sendable, Value: PrefStorageValue {
     public let key: String
     
     public typealias Value = Value
@@ -22,7 +22,7 @@ public struct AnyAtomicPrefKey<Value>: AtomicPrefKey where Value: Sendable, Valu
 }
 
 /// Generic concrete pref key with an atomic value type and a default value.
-public struct AnyDefaultedAtomicPrefKey<Value>: AtomicDefaultedPrefKey where Value: Sendable, Value: PrefStorageValue {
+public struct AnyDefaultedAtomicPrefsCoding<Value>: AtomicDefaultedPrefsCodable where Value: Sendable, Value: PrefStorageValue {
     public let key: String
     
     public typealias Value = Value
@@ -38,10 +38,10 @@ public struct AnyDefaultedAtomicPrefKey<Value>: AtomicDefaultedPrefKey where Val
 // MARK: - RawRepresentable
 
 /// Generic concrete pref key with a `RawRepresentable` value type.
-public struct AnyRawRepresentablePrefKey<
+public struct AnyRawRepresentablePrefsCodable<
     Value: RawRepresentable,
     StorageValue: PrefStorageValue
->: RawRepresentablePrefKey where Value: Sendable, Value.RawValue == StorageValue {
+>: RawRepresentablePrefsCodable where Value: Sendable, Value.RawValue == StorageValue {
     public let key: String
     
     public typealias Value = Value
@@ -53,10 +53,10 @@ public struct AnyRawRepresentablePrefKey<
 }
 
 /// Generic concrete pref key with a `RawRepresentable` value type and a default value.
-public struct AnyDefaultedRawRepresentablePrefKey<
+public struct AnyDefaultedRawRepresentablePrefsCoding<
     Value: RawRepresentable,
     StorageValue: PrefStorageValue
->: DefaultedRawRepresentablePrefKey where Value: Sendable, Value.RawValue == StorageValue {
+>: DefaultedRawRepresentablePrefsCodable where Value: Sendable, Value.RawValue == StorageValue {
     public let key: String
     
     public typealias Value = Value
@@ -72,12 +72,12 @@ public struct AnyDefaultedRawRepresentablePrefKey<
 // MARK: - Codable
 
 /// Generic concrete pref key with a `Codable` value type.
-public struct AnyCodablePrefKey<
+public struct AnyCodablePrefsCoding<
     Value: Codable,
     StorageValue: PrefStorageValue,
     Encoder: TopLevelEncoder,
     Decoder: TopLevelDecoder
->: CodablePrefKey where Value: Sendable,
+>: CodablePrefsCodable where Value: Sendable,
     StorageValue == Encoder.Output,
     Encoder.Output: PrefStorageValue,
     Decoder.Input: PrefStorageValue,
@@ -108,12 +108,12 @@ public struct AnyCodablePrefKey<
 }
 
 /// Generic concrete pref key with a `Codable` value type and a default value.
-public struct AnyDefaultedCodablePrefKey<
+public struct AnyDefaultedCodablePrefsCoding<
     Value: Codable,
     StorageValue: PrefStorageValue,
     Encoder: TopLevelEncoder,
     Decoder: TopLevelDecoder
->: DefaultedCodablePrefKey where Value: Sendable,
+>: DefaultedCodablePrefsCodable where Value: Sendable,
     StorageValue == Encoder.Output,
     Encoder.Output: PrefStorageValue,
     Decoder.Input: PrefStorageValue,
@@ -149,7 +149,7 @@ public struct AnyDefaultedCodablePrefKey<
 // MARK: - JSON Codable
 
 /// Generic concrete pref key with a `Codable` value type using JSON encoding.
-public struct AnyJSONCodablePrefKey<Value: Codable>: JSONCodablePrefKey where Value: Sendable {
+public struct AnyJSONCodablePrefsCoding<Value: Codable>: JSONCodablePrefsCodable where Value: Sendable {
     public let key: String
     
     public typealias Value = Value
@@ -160,7 +160,7 @@ public struct AnyJSONCodablePrefKey<Value: Codable>: JSONCodablePrefKey where Va
 }
 
 /// Generic concrete pref key with a `Codable` value type using JSON encoding and a default value.
-public struct AnyDefaultedJSONCodablePrefKey<Value: Codable>: DefaultedJSONCodablePrefKey where Value: Sendable {
+public struct AnyDefaultedJSONCodablePrefsCoding<Value: Codable>: DefaultedJSONCodablePrefsCodable where Value: Sendable {
     public let key: String
     
     public typealias Value = Value

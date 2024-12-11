@@ -1,5 +1,5 @@
 //
-//  DefaultedJSONCodablePrefKey.swift
+//  DefaultedJSONCodablePrefsCodable.swift
 //  PrefsKit • https://github.com/orchetect/PrefsKit
 //  © 2024 Steffan Andrews • Licensed under MIT License
 //
@@ -12,4 +12,4 @@ import Foundation
 /// > Note:
 /// > If custom `JSONEncoder`/`JSONDecoder` options are required, override the default implementation(s) of
 /// > `prefEncoder()` and/or `prefDecoder()` methods to return an encoder/decoder with necessary options configured.
-public protocol DefaultedJSONCodablePrefKey: JSONCodablePrefKey, DefaultedCodablePrefKey { }
+public protocol DefaultedJSONCodablePrefsCodable: JSONCodablePrefsCodable, DefaultedCodablePrefsCodable { }

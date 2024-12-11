@@ -8,9 +8,9 @@ import Foundation
 @testable import PrefsKitCore
 import Testing
 
-/// Test `PrefKey` implementation that uses custom `getValue(in:)` and `setValue(to:in:)` method overrides to convert
+/// Test `PrefsCodable` implementation that uses custom `getValue(in:)` and `setValue(to:in:)` method overrides to convert
 /// to/from raw prefs storage data without using any of the included abstraction protocols such as
-/// `RawRepresentablePrefKey` or `CodablePrefKey`.
+/// `RawRepresentablePrefsCodable` or `CodablePrefsCodable`.
 @Suite
 struct CustomEncodingTests {
     struct NonCodableNonRawRepresentable: Equatable {
@@ -32,7 +32,7 @@ struct CustomEncodingTests {
         }
     }
     
-    struct CustomPrefKey: PrefKey {
+    struct CustomPrefKey: PrefsCodable {
         var key: String = "customKey"
         
         typealias Value = NonCodableNonRawRepresentable

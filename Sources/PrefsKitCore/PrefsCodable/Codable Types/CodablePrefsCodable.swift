@@ -1,5 +1,5 @@
 //
-//  CodablePrefKey.swift
+//  CodablePrefsCodable.swift
 //  PrefsKit • https://github.com/orchetect/PrefsKit
 //  © 2024 Steffan Andrews • Licensed under MIT License
 //
@@ -11,10 +11,10 @@ import Foundation
 ///
 /// > Tip:
 /// > It is suggested that if all `Codable` types that are to be stored in prefs storage use
-/// > the same encoder/decoder, that you create a protocol that inherits from ``CodablePrefKey``
+/// > the same encoder/decoder, that you create a protocol that inherits from ``CodablePrefsCodable``
 /// > for all non-defaulted `Codable` prefs and then implement `prefEncoder()` and `prefDecoder()` to return
 /// > the same instances. These types can then adopt this new protocol.
-public protocol CodablePrefKey<Encoder, Decoder>: PrefKey
+public protocol CodablePrefsCodable<Encoder, Decoder>: PrefsCodable
     where Value: Codable,
     StorageValue == Encoder.Output,
     Encoder.Output: PrefStorageValue,
@@ -31,7 +31,7 @@ public protocol CodablePrefKey<Encoder, Decoder>: PrefKey
     func prefDecoder() -> Decoder
 }
 
-extension CodablePrefKey {
+extension CodablePrefsCodable {
     public func getValue(in storage: PrefsStorage) -> Value? {
         guard let rawValue = getStorageValue(in: storage) else { return nil }
         
