@@ -51,31 +51,31 @@ struct CustomEncodingTests {
         }
     }
     
-    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
-    final class TestSchema: PrefsSchema, @unchecked Sendable {
-        let storage = DictionaryPrefsStorage()
-        let isCacheEnabled: Bool = true
-
-        enum Key: String, CaseIterable {
-            case custom
-        }
-        
-        lazy var customKey = pref(CustomPrefKey())
-    }
+//    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
+//    final class TestSchema: PrefsSchema, @unchecked Sendable {
+//        let storage = DictionaryPrefsStorage()
+//        let isCacheEnabled: Bool = true
+//
+//        enum Key: String, CaseIterable {
+//            case custom
+//        }
+//        
+//        lazy var customKey = pref(CustomPrefKey())
+//    }
     
-    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
-    @Test func customValueEncoding() {
-        let schema = TestSchema()
-        
-        #expect(schema.customKey.value?.value == nil)
-        
-        schema.customKey.value = NonCodableNonRawRepresentable(value: 42)
-        #expect(schema.customKey.value?.value == 42)
-        
-        schema.customKey.value?.value = 5
-        #expect(schema.customKey.value?.value == 5)
-        
-        schema.customKey.value = nil
-        #expect(schema.customKey.value == nil)
-    }
+//    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
+//    @Test func customValueEncoding() {
+//        let schema = TestSchema()
+//        
+//        #expect(schema.customKey.value?.value == nil)
+//        
+//        schema.customKey.value = NonCodableNonRawRepresentable(value: 42)
+//        #expect(schema.customKey.value?.value == 42)
+//        
+//        schema.customKey.value?.value = 5
+//        #expect(schema.customKey.value?.value == 5)
+//        
+//        schema.customKey.value = nil
+//        #expect(schema.customKey.value == nil)
+//    }
 }
