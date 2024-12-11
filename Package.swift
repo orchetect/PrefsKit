@@ -1,6 +1,7 @@
 // swift-tools-version: 6.0
 
 import PackageDescription
+import CompilerPluginSupport
 
 let package = Package(
     name: "PrefsKit",
@@ -10,9 +11,31 @@ let package = Package(
         .library(name: "PrefsKitCore", targets: ["PrefsKitCore"]),
         .library(name: "PrefsKitUI", targets: ["PrefsKitUI"])
     ],
+    dependencies: [
+        .package(url: "https://github.com/swiftlang/swift-syntax.git", from: "600.0.0-latest")
+    ],
     targets: [
-        .target(name: "PrefsKitCore"),
-        .target(name: "PrefsKitUI", dependencies: ["PrefsKitCore"]),
-        .testTarget(name: "PrefsKitCoreTests", dependencies: ["PrefsKitCore"])
+        .target(
+            name: "PrefsKitCore",
+            dependencies: ["PrefsKitMacros"]
+        ),
+        .macro(
+            name: "PrefsKitMacros",
+            dependencies: [
+                .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
+                .product(name: "SwiftCompilerPlugin", package: "swift-syntax")
+            ]
+        ),
+        .target(
+            name: "PrefsKitUI",
+            dependencies: ["PrefsKitCore"]
+        ),
+        .testTarget(
+            name: "PrefsKitCoreTests",
+            dependencies: [
+                "PrefsKitCore",
+                .product(name: "SwiftSyntaxMacrosTestSupport", package: "swift-syntax")
+            ]
+        )
     ]
 )
