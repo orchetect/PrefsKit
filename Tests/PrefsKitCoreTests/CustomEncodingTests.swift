@@ -32,22 +32,22 @@ struct CustomEncodingTests {
         }
     }
     
-    struct CustomPrefKey: PrefsCodable {
+    struct CustomPrefCoding: PrefsCodable {
         var key: String = "customKey"
         
         typealias Value = NonCodableNonRawRepresentable
         typealias StorageValue = String
         
-        func getValue(in storage: any PrefsStorage) -> NonCodableNonRawRepresentable? {
-            guard let rawValue = storage.value(forKey: self),
+        func getValue(forKey key: String, in storage: any PrefsStorage) -> NonCodableNonRawRepresentable? {
+            guard let rawValue: StorageValue = storage.value(forKey: key),
                   let instance = NonCodableNonRawRepresentable(encoded: rawValue)
             else { return nil }
             
             return instance
         }
         
-        func setValue(to newValue: NonCodableNonRawRepresentable?, in storage: any PrefsStorage) {
-            storage.setValue(to: newValue?.encoded(), forKey: self)
+        func setValue(forKey key: String, to newValue: NonCodableNonRawRepresentable?, in storage: any PrefsStorage) {
+            storage.setValue(forKey: key, to: newValue?.encoded())
         }
     }
     
@@ -60,7 +60,7 @@ struct CustomEncodingTests {
 //            case custom
 //        }
 //        
-//        lazy var customKey = pref(CustomPrefKey())
+//        lazy var customKey = pref(CustomPrefCoding())
 //    }
     
 //    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)

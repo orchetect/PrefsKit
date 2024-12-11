@@ -13,59 +13,59 @@ public protocol DefaultedPrefsCodable: PrefsCodable {
     
     /// Returns the current stored value.
     /// Returns the ``defaultValue`` if the key does not exist or its value is mismatched.
-    func getDefaultedValue(in storage: PrefsStorage) -> Value
+    func getDefaultedValue(forKey key: String, in storage: PrefsStorage) -> Value
 }
 
 extension DefaultedPrefsCodable {
-    public func getDefaultedValue(in storage: PrefsStorage) -> Value {
-        getValue(in: storage) ?? defaultValue
+    public func getDefaultedValue(forKey key: String, in storage: PrefsStorage) -> Value {
+        getValue(forKey: key, in: storage) ?? defaultValue
     }
 }
 
 // extension DefaultedPrefsCodable where StorageValue == Int {
-//    public func getDefaultedValue(from storage: PrefsStorage) -> Int {
-//        getStorageValue(in: storage) ?? defaultValue
+//    public func getDefaultedValue(forKey key: String, in storage: PrefsStorage) -> Int {
+//        getValue(forKey: key, in: storage) ?? defaultValue
 //    }
 // }
 
 // extension DefaultedPrefsCodable where StorageValue == String {
-//    public func getDefaultedValue(from storage: PrefsStorage) -> String {
-//        getStorageValue(in: storage) ?? defaultValue
+//    public func getDefaultedValue(forKey key: String, in storage: PrefsStorage) -> String {
+//        getValue(forKey: key, in: storage) ?? defaultValue
 //    }
 // }
 
 // extension DefaultedPrefsCodable where StorageValue == Bool {
-//    public func getDefaultedValue(from storage: PrefsStorage) -> Bool {
-//        getStorageValue(in: storage) ?? defaultValue
+//    public func getDefaultedValue(forKey key: String, in storage: PrefsStorage) -> Bool {
+//        getValue(forKey: key, in: storage) ?? defaultValue
 //    }
 // }
 
 // extension DefaultedPrefsCodable where StorageValue == Double {
-//    public func getDefaultedValue(from storage: PrefsStorage) -> Double {
-//        getStorageValue(in: storage) ?? defaultValue
+//    public func getDefaultedValue(forKey key: String, in storage: PrefsStorage) -> Double {
+//        getValue(forKey: key, in: storage) ?? defaultValue
 //    }
 // }
 
 // extension DefaultedPrefsCodable where StorageValue == Float {
-//    public func getDefaultedValue(from storage: PrefsStorage) -> Float {
-//        getStorageValue(in: storage) ?? defaultValue
+//    public func getDefaultedValue(forKey key: String, in storage: PrefsStorage) -> Float {
+//        getValue(forKey: key, in: storage) ?? defaultValue
 //    }
 // }
 
 // extension DefaultedPrefsCodable where StorageValue == Data {
-//    public func getDefaultedValue(from storage: PrefsStorage) -> Data {
-//        getStorageValue(in: storage) ?? defaultValue
+//    public func getDefaultedValue(forKey key: String, in storage: PrefsStorage) -> Data {
+//        getValue(forKey: key, in: storage) ?? defaultValue
 //    }
 // }
 
 // extension DefaultedPrefsCodable where StorageValue == [Any] {
-//    public func getDefaultedValue(from storage: PrefsStorage) -> [Any] {
-//        getStorageValue(in: storage) ?? defaultValue
+//    public func getDefaultedValue(forKey key: String, in storage: PrefsStorage) -> [Any] {
+//        getValue(forKey: key, in: storage) ?? defaultValue
 //    }
 // }
 
 // extension DefaultedPrefsCodable where StorageValue == [String: Any] {
-//    public func getDefaultedValue(from storage: PrefsStorage) -> [String: Any] {
-//        getStorageValue(in: storage) ?? defaultValue
+//    public func getDefaultedValue(forKey key: String, in storage: PrefsStorage) -> [String: Any] {
+//        getValue(forKey: key, in: storage) ?? defaultValue
 //    }
 // }

@@ -38,7 +38,7 @@ public struct AnyDefaultedAtomicPrefsCoding<Value>: AtomicDefaultedPrefsCodable 
 // MARK: - RawRepresentable
 
 /// Generic concrete pref key with a `RawRepresentable` value type.
-public struct AnyRawRepresentablePrefsCodable<
+public struct AnyRawRepresentablePrefsCoding<
     Value: RawRepresentable,
     StorageValue: PrefStorageValue
 >: RawRepresentablePrefsCodable where Value: Sendable, Value.RawValue == StorageValue {

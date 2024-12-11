@@ -32,22 +32,22 @@ public protocol CodablePrefsCodable<Encoder, Decoder>: PrefsCodable
 }
 
 extension CodablePrefsCodable {
-    public func getValue(in storage: PrefsStorage) -> Value? {
-        guard let rawValue = getStorageValue(in: storage) else { return nil }
+    public func getValue(forKey key: String, in storage: PrefsStorage) -> Value? {
+        guard let rawValue = getStorageValue(forKey: key, in: storage) else { return nil }
         
         let decoder = prefDecoder()
         guard let value = try? decoder.decode(Value.self, from: rawValue) else { return nil }
         return value
     }
     
-    public func setValue(to newValue: Value?, in storage: PrefsStorage) {
+    public func setValue(forKey key: String, to newValue: Value?, in storage: PrefsStorage) {
         guard let newValue else {
-            storage.setValue(to: nil, forKey: self)
+            storage.setValue(forKey: key, to: StorageValue?.none)
             return
         }
         
         let encoder = prefEncoder()
         guard let encoded = try? encoder.encode(newValue) else { return }
-        setStorageValue(to: encoded, in: storage)
+        setStorageValue(forKey: key, to: encoded, in: storage)
     }
 }

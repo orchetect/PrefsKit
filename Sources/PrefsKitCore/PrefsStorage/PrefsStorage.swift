@@ -9,19 +9,22 @@ import Foundation
 /// Conform a type to enable it to be used for prefs storage.
 /// The type must be a reference type (class).
 public protocol PrefsStorage: AnyObject where Self: Sendable {
-    func setValue<Key: PrefsCodable>(to value: Key.StorageValue?, forKey key: Key)
+    // MARK: - Set
     
-    func value<Key: PrefsCodable>(forKey key: Key) -> Key.StorageValue?
-    func value<Key: PrefsCodable>(forKey key: Key) -> Key.StorageValue? where Key.StorageValue == Int
-    func value<Key: PrefsCodable>(forKey key: Key) -> Key.StorageValue? where Key.StorageValue == String
-    func value<Key: PrefsCodable>(forKey key: Key) -> Key.StorageValue? where Key.StorageValue == Bool
-    func value<Key: PrefsCodable>(forKey key: Key) -> Key.StorageValue? where Key.StorageValue == Double
-    func value<Key: PrefsCodable>(forKey key: Key) -> Key.StorageValue? where Key.StorageValue == Float
-    func value<Key: PrefsCodable>(forKey key: Key) -> Key.StorageValue? where Key.StorageValue == Data
-    func value<Key: PrefsCodable>(forKey key: Key) -> Key.StorageValue? where Key.StorageValue == [any PrefStorageValue]
-    func value<Key: PrefsCodable>(forKey key: Key) -> Key.StorageValue? where Key.StorageValue == [String: any PrefStorageValue]
-    func value<Key: PrefsCodable, Element: PrefStorageValue>(forKey key: Key) -> Key.StorageValue? where Key.StorageValue == [Element]
-    func value<Key: PrefsCodable, Element: PrefStorageValue>(forKey key: Key) -> Key.StorageValue? where Key.StorageValue == [String: Element]
-    func value<Key: PrefsCodable>(forKey key: Key) -> Key.StorageValue? where Key.StorageValue == AnyPrefArray
-    func value<Key: PrefsCodable>(forKey key: Key) -> Key.StorageValue? where Key.StorageValue == AnyPrefDictionary
+    func setValue<Value: PrefStorageValue>(forKey key: String, to value: Value?)
+    
+    // MARK: - Get
+    
+    func value(forKey key: String) -> Int?
+    func value(forKey key: String) -> String?
+    func value(forKey key: String) -> Bool?
+    func value(forKey key: String) -> Double?
+    func value(forKey key: String) -> Float?
+    func value(forKey key: String) -> Data?
+    func value(forKey key: String) -> [any PrefStorageValue]?
+    func value(forKey key: String) -> [String: any PrefStorageValue]?
+    // func value<Element: PrefStorageValue>(forKey key: String) -> [Element]?
+    // func value<Element: PrefStorageValue>(forKey key: String) -> [String: Element]?
+    // func value(forKey key: String) -> AnyPrefArray?
+    // func value(forKey key: String) -> AnyPrefDictionary?
 }

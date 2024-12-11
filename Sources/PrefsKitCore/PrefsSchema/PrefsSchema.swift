@@ -216,8 +216,8 @@ public protocol PrefsSchema /*where Self: Sendable*/ {
 //     public func pref<Value: RawRepresentable, StorageValue: PrefStorageValue>(
 //         _ key: String,
 //         of elementType: Value.Type
-//     ) -> ObservablePref<AnyRawRepresentablePrefsCodable<Value, StorageValue>> {
-//         let keyInstance = AnyRawRepresentablePrefsCodable<Value, StorageValue>(key: key)
+//     ) -> ObservablePref<AnyRawRepresentablePrefsCoding<Value, StorageValue>> {
+//         let keyInstance = AnyRawRepresentablePrefsCoding<Value, StorageValue>(key: key)
 //         return pref(keyInstance)
 //     }
 // 

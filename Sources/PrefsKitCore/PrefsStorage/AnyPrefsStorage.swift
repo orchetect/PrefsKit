@@ -16,64 +16,43 @@ public final class AnyPrefsStorage: PrefsStorage {
 }
 
 extension AnyPrefsStorage {
-    public func setValue<Key>(to value: Key.StorageValue?, forKey key: Key) where Key: PrefsCodable {
-        wrapped.setValue(to: value, forKey: key)
+    // MARK: - Set
+    
+    public func setValue<Value: PrefStorageValue>(forKey key: String, to value: Value?) {
+        wrapped.setValue(forKey: key, to: value)
     }
     
-    public func value<Key>(forKey key: Key) -> Key.StorageValue? where Key: PrefsCodable {
+    // MARK: - Get
+    
+    public func value(forKey key: String) -> Int? {
         wrapped.value(forKey: key)
     }
     
-    public func value<Key>(forKey key: Key) -> Key.StorageValue? where Key: PrefsCodable, Key.StorageValue == Int {
+    public func value(forKey key: String) -> String? {
         wrapped.value(forKey: key)
     }
     
-    public func value<Key>(forKey key: Key) -> Key.StorageValue? where Key: PrefsCodable, Key.StorageValue == String {
+    public func value(forKey key: String) -> Bool? {
         wrapped.value(forKey: key)
     }
     
-    public func value<Key>(forKey key: Key) -> Key.StorageValue? where Key: PrefsCodable, Key.StorageValue == Bool {
+    public func value(forKey key: String) -> Double? {
         wrapped.value(forKey: key)
     }
     
-    public func value<Key>(forKey key: Key) -> Key.StorageValue? where Key: PrefsCodable, Key.StorageValue == Double {
+    public func value(forKey key: String) -> Float? {
         wrapped.value(forKey: key)
     }
     
-    public func value<Key>(forKey key: Key) -> Key.StorageValue? where Key: PrefsCodable, Key.StorageValue == Float {
+    public func value(forKey key: String) -> Data? {
         wrapped.value(forKey: key)
     }
     
-    public func value<Key>(forKey key: Key) -> Key.StorageValue? where Key: PrefsCodable, Key.StorageValue == Data {
+    public func value(forKey key: String) -> [any PrefStorageValue]? {
         wrapped.value(forKey: key)
     }
     
-    public func value<Key>(forKey key: Key) -> Key.StorageValue?
-    where Key: PrefsCodable, Key.StorageValue == [any PrefStorageValue] {
-        wrapped.value(forKey: key)
-    }
-    
-    public func value<Key>(forKey key: Key) -> Key.StorageValue?
-    where Key: PrefsCodable, Key.StorageValue == [String: any PrefStorageValue] {
-        wrapped.value(forKey: key)
-    }
-    
-    public func value<Key, Element>(forKey key: Key) -> Key.StorageValue?
-    where Key: PrefsCodable, Element: PrefStorageValue, Key.StorageValue == [Element] {
-        wrapped.value(forKey: key)
-    }
-    
-    public func value<Key, Element>(forKey key: Key) -> Key.StorageValue?
-    where Key: PrefsCodable, Element: PrefStorageValue, Key.StorageValue == [String: Element] {
-        wrapped.value(forKey: key)
-    }
-    
-    public func value<Key>(forKey key: Key) -> Key.StorageValue? where Key: PrefsCodable, Key.StorageValue == AnyPrefArray {
-        wrapped.value(forKey: key)
-    }
-    
-    public func value<Key>(forKey key: Key) -> Key.StorageValue? where Key: PrefsCodable,
-    Key.StorageValue == AnyPrefDictionary {
+    public func value(forKey key: String) -> [String: any PrefStorageValue]? {
         wrapped.value(forKey: key)
     }
 }

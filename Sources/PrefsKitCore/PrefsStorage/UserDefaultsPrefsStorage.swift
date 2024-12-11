@@ -19,76 +19,74 @@ extension UserDefaultsPrefsStorage: @unchecked Sendable { }
 extension UserDefaultsPrefsStorage: PrefsStorage {
     // MARK: - Set
     
-    public func setValue<Key: PrefsCodable>(to value: Key.StorageValue?, forKey key: Key) {
-        suite.set(value?.prefStorageValue, forKey: key.key)
+    public func setValue<Value: PrefStorageValue>(forKey key: String, to value: Value?) {
+        suite.set(value?.prefStorageValue, forKey: key)
     }
     
     // MARK: - Get
     
-    public func value<Key: PrefsCodable>(forKey key: Key) -> Key.StorageValue? {
-        suite.value(forKey: key.key) as? Key.StorageValue
+    public func value(forKey key: String) -> Int? {
+        suite.integerOptional(forKey: key)
     }
     
-    public func value<Key: PrefsCodable>(forKey key: Key) -> Key.StorageValue? where Key.StorageValue == Int {
-        suite.integerOptional(forKey: key.key)
+    public func value(forKey key: String) -> String? {
+        suite.string(forKey: key)
     }
     
-    public func value<Key: PrefsCodable>(forKey key: Key) -> Key.StorageValue? where Key.StorageValue == String {
-        suite.string(forKey: key.key)
+    public func value(forKey key: String) -> Bool? {
+        suite.boolOptional(forKey: key)
     }
     
-    public func value<Key: PrefsCodable>(forKey key: Key) -> Key.StorageValue? where Key.StorageValue == Bool {
-        suite.boolOptional(forKey: key.key)
+    public func value(forKey key: String) -> Double? {
+        suite.doubleOptional(forKey: key)
     }
     
-    public func value<Key: PrefsCodable>(forKey key: Key) -> Key.StorageValue? where Key.StorageValue == Double {
-        suite.doubleOptional(forKey: key.key)
+    public func value(forKey key: String) -> Float? {
+        suite.floatOptional(forKey: key)
     }
     
-    public func value<Key: PrefsCodable>(forKey key: Key) -> Key.StorageValue? where Key.StorageValue == Float {
-        suite.floatOptional(forKey: key.key)
+    public func value(forKey key: String) -> Data? {
+        suite.data(forKey: key)
     }
     
-    public func value<Key: PrefsCodable>(forKey key: Key) -> Key.StorageValue? where Key.StorageValue == Data {
-        suite.data(forKey: key.key)
-    }
-    
-    public func value<Key: PrefsCodable>(forKey key: Key) -> Key.StorageValue? where Key.StorageValue == [any PrefStorageValue] {
-        guard let rawArray = suite.array(forKey: key.key) else { return nil }
+    public func value(forKey key: String) -> [any PrefStorageValue]? {
+        guard let rawArray = suite.array(forKey: key) else { return nil }
         let typedArray = rawArray.convertToAnyPrefArray()
         return typedArray.content.map(\.value)
     }
     
-    public func value<Key: PrefsCodable>(forKey key: Key) -> Key.StorageValue? where Key.StorageValue == [String: any PrefStorageValue] {
-        guard let rawDict = suite.dictionary(forKey: key.key) else { return nil }
+    public func value(forKey key: String) -> [String: any PrefStorageValue]? {
+        guard let rawDict = suite.dictionary(forKey: key) else { return nil }
         let typedDict = rawDict.convertToAnyPrefDict()
         return typedDict.content.mapValues(\.value)
     }
     
-    public func value<Key: PrefsCodable, Element: PrefStorageValue>(forKey key: Key) -> Key.StorageValue? where Key.StorageValue == [Element] {
-        guard let rawArray = suite.array(forKey: key.key) else { return nil }
+    // MARK: - Additional type conversions
+    // TODO: Implement these in library or refactor to somewhere elsewhere
+    
+    public func value<Element: PrefStorageValue>(forKey key: String) -> [Element]? {
+        guard let rawArray = suite.array(forKey: key) else { return nil }
         let typedArray = rawArray.compactMap { $0 as? Element }
         assert(typedArray.count == rawArray.count)
         return typedArray
     }
     
-    public func value<Key: PrefsCodable, Element: PrefStorageValue>(forKey key: Key) -> Key.StorageValue?
-    where Key.StorageValue == [String: Element] {
-        guard let rawDict = suite.dictionary(forKey: key.key) else { return nil }
+    public func value<Element: PrefStorageValue>(forKey key: String) -> [String: Element]? {
+        guard let rawDict = suite.dictionary(forKey: key) else { return nil }
         let typedDict = rawDict.compactMapValues { $0 as? Element }
         assert(typedDict.count == rawDict.count)
         return typedDict
     }
     
-    public func value<Key: PrefsCodable>(forKey key: Key) -> Key.StorageValue? where Key.StorageValue == AnyPrefArray {
-        guard let rawArray = suite.array(forKey: key.key) else { return nil }
+    public func value(forKey key: String) -> AnyPrefArray? {
+        guard let rawArray = suite.array(forKey: key) else { return nil }
         let typedArray = rawArray.convertToAnyPrefArray()
         assert(typedArray.content.count == rawArray.count)
         return typedArray
     }
     
-    public func value<Key: PrefsCodable>(forKey key: Key) -> Key.StorageValue? where Key.StorageValue == AnyPrefDictionary {
-        guard let rawDict = suite.dictionary(forKey: key.key) else { return nil }
+    public func value(forKey key: String) -> AnyPrefDictionary? {
+        guard let rawDict = suite.dictionary(forKey: key) else { return nil }
         let typedDict = rawDict.convertToAnyPrefDict()
         assert(typedDict.content.count == rawDict.count)
         return typedDict
