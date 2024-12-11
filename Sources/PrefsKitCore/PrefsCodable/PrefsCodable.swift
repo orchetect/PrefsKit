@@ -79,7 +79,7 @@ extension PrefsCodable {
         storage.value(forKey: key)
     }
     
-    // TODO: implement these or delete
+    // TODO: reimplement these as protocol requirements? or delete
     
     // public func getStorageValue<Element: PrefStorageValue>(forKey key: String, in storage: PrefsStorage) -> StorageValue?
     // where StorageValue == [Element] {
