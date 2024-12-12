@@ -11,5 +11,5 @@ import Foundation
 public macro Prefs() = #externalMacro(module: "PrefsKitMacros", type: "PrefsMacro")
 
 @attached(accessor, names: named(get), named(set), named(_modify))
-@attached(peer, names: /*arbitrary*/ prefixed(__PrefKey_), prefixed(__PrefValue_))
+@attached(peer, names: /*arbitrary*/ prefixed(__PrefCoding_), prefixed(__PrefValue_))
 public macro Pref(key: String) = #externalMacro(module: "PrefsKitMacros", type: "PrefMacro")

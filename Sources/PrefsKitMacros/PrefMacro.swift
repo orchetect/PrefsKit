@@ -15,7 +15,7 @@ public struct PrefMacro { }
 extension PrefMacro {
     static let moduleNamePrefix = "PrefsKitCore."
     
-    static let privateKeyVarPrefix = "__PrefKey_"
+    static let privateCodingVarPrefix = "__PrefCoding_"
     static let privateValueVarPrefix = "__PrefValue_"
 }
 
@@ -112,14 +112,14 @@ extension PrefMacro {
                 }
                 keyStructName = "\(moduleNamePrefix)AnyAtomicPrefsCoding<\(typeName)>"
                 keyDeclaration = keyStructName + "(key: \(keyName))"
-                getValueSyntax = "getValue(in: storage)"
+                getValueSyntax = "getValue(forKey: \(keyName), in: storage)"
                 privateVarDeclaration = "\(typeName)?"
             } else {
                 // must have a default value
                 let defaultValue = try defaultValue(from: varDec)
                 keyStructName = "\(moduleNamePrefix)AnyDefaultedAtomicPrefsCoding<\(typeName)>"
                 keyDeclaration = keyStructName + "(key: \(keyName), defaultValue: \(defaultValue))"
-                getValueSyntax = "getDefaultedValue(in: storage)"
+                getValueSyntax = "getDefaultedValue(forKey: \(keyName), in: storage)"
                 privateVarDeclaration = "\(typeName) = \(defaultValue)"
             }
         }
@@ -157,7 +157,7 @@ extension PrefMacro: AccessorMacro {
         
         let keyName = try keyArg(from: node).expression.description
         let varName = try varName(from: varDec)
-        let privateKeyVarName = "\(privateKeyVarPrefix)\(varName)"
+        let privateCodingVarName = "\(privateCodingVarPrefix)\(varName)"
         let privateValueVarName = "\(privateValueVarPrefix)\(varName)"
         
         let typeInfo = try TypeBindingInfo(from: varDec, keyName: keyName)
@@ -168,14 +168,14 @@ extension PrefMacro: AccessorMacro {
             """
             get {
                 _$observationRegistrar.access(self, keyPath: \(raw: keyPath))
-                \(raw: privateValueVarName) = \(raw: privateKeyVarName).\(raw: typeInfo.getValueSyntax)
+                \(raw: privateValueVarName) = \(raw: privateCodingVarName).\(raw: typeInfo.getValueSyntax)
                 return \(raw: privateValueVarName)
             }
             """,
             """
             set {
                 withMutation(keyPath: \(raw: keyPath)) {
-                    \(raw: privateKeyVarName).setValue(to: newValue, in: storage)
+                    \(raw: privateCodingVarName).setValue(forKey: \(raw: keyName), to: newValue, in: storage)
                     \(raw: privateValueVarName) = newValue
                 }
             }
@@ -188,7 +188,7 @@ extension PrefMacro: AccessorMacro {
                     _$observationRegistrar.didSet(self, keyPath: \(raw: keyPath))
                 }
                 yield &\(raw: privateValueVarName)
-                \(raw: privateKeyVarName).setValue(to: \(raw: privateValueVarName), in: storage)
+                \(raw: privateCodingVarName).setValue(forKey: \(raw: keyName), to: \(raw: privateValueVarName), in: storage)
             }
             """
         ]
@@ -210,7 +210,7 @@ extension PrefMacro: PeerMacro {
         }
         
         let varName = try varName(from: varDec).description
-        let privateKeyVarName = "\(privateKeyVarPrefix)\(varName)"
+        let privateKeyVarName = "\(privateCodingVarPrefix)\(varName)"
         let privateValueVarName = "\(privateValueVarPrefix)\(varName)"
         
         let typeInfo = try TypeBindingInfo(from: varDec, keyName: keyName)

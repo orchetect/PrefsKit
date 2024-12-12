@@ -66,12 +66,12 @@ final class MacroTests: XCTestCase {
             var foo: Int? {
                 get {
                     _$observationRegistrar.access(self, keyPath: \\.foo)
-                    __PrefValue_foo = __PrefKey_foo.getValue(in: storage)
+                    __PrefValue_foo = __PrefCoding_foo.getValue(in: storage)
                     return __PrefValue_foo
                 }
                 set {
                     withMutation(keyPath: \\.foo) {
-                        __PrefKey_foo.setValue(to: newValue, in: storage)
+                        __PrefCoding_foo.setValue(to: newValue, in: storage)
                         __PrefValue_foo = newValue
                     }
                 }
@@ -82,11 +82,11 @@ final class MacroTests: XCTestCase {
                         _$observationRegistrar.didSet(self, keyPath: \\.foo)
                     }
                     yield &__PrefValue_foo
-                    __PrefKey_foo.setValue(to: __PrefValue_foo, in: storage)
+                    __PrefCoding_foo.setValue(to: __PrefValue_foo, in: storage)
                 }
             }
             
-            private let __PrefKey_foo = PrefsKitCore.AnyAtomicPrefsCoding<Int>(key: "someInt")
+            private let __PrefCoding_foo = PrefsKitCore.AnyAtomicPrefsCoding<Int>(key: "someInt")
             
             private var __PrefValue_foo: Int?
             """,
@@ -103,12 +103,12 @@ final class MacroTests: XCTestCase {
             var bar: String {
                 get {
                     _$observationRegistrar.access(self, keyPath: \\.bar)
-                    __PrefValue_bar = __PrefKey_bar.getDefaultedValue(in: storage)
+                    __PrefValue_bar = __PrefCoding_bar.getDefaultedValue(in: storage)
                     return __PrefValue_bar
                 }
                 set {
                     withMutation(keyPath: \\.bar) {
-                        __PrefKey_bar.setValue(to: newValue, in: storage)
+                        __PrefCoding_bar.setValue(to: newValue, in: storage)
                         __PrefValue_bar = newValue
                     }
                 }
@@ -119,11 +119,11 @@ final class MacroTests: XCTestCase {
                         _$observationRegistrar.didSet(self, keyPath: \\.bar)
                     }
                     yield &__PrefValue_bar
-                    __PrefKey_bar.setValue(to: __PrefValue_bar, in: storage)
+                    __PrefCoding_bar.setValue(to: __PrefValue_bar, in: storage)
                 }
             }
             
-            private let __PrefKey_bar = PrefsKitCore.AnyDefaultedAtomicPrefsCoding<String>(key: KeyName.bar, defaultValue: "baz")
+            private let __PrefCoding_bar = PrefsKitCore.AnyDefaultedAtomicPrefsCoding<String>(key: KeyName.bar, defaultValue: "baz")
             
             private var __PrefValue_bar: String = "baz"
             """,
