@@ -26,5 +26,5 @@ public protocol PrefsStorage: AnyObject where Self: Sendable {
     // func storageValue<Element: PrefsStorageValue>(forKey key: String) -> [Element]?
     // func storageValue<Element: PrefsStorageValue>(forKey key: String) -> [String: Element]?
     // func storageValue(forKey key: String) -> AnyPrefsArray?
-    // func storageValue(forKey key: String) -> AnyPrefDictionary?
+    // func storageValue(forKey key: String) -> AnyPrefsDictionary?
 }

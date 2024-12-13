@@ -42,7 +42,7 @@ extension AnyPrefsArray: PrefsStorageValue {
     }
 }
 
-extension AnyPrefDictionary: PrefsStorageValue {
+extension AnyPrefsDictionary: PrefsStorageValue {
     public var prefsStorageValue: [String: Any] {
         content.mapValues { $0.value.prefsStorageValue }
     }

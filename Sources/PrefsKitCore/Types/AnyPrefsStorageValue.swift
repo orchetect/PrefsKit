@@ -13,7 +13,7 @@ public enum AnyPrefsStorageValue {
     case bool(Bool)
     case data(Data)
     case array(AnyPrefsArray)
-    case dictionary(AnyPrefDictionary)
+    case dictionary(AnyPrefsDictionary)
     
     @usableFromInline
     init?(_ value: any PrefsStorageValue) {
@@ -41,10 +41,10 @@ public enum AnyPrefsStorageValue {
         case let value as [any PrefsStorageValue]:
             self = .array(AnyPrefsArray(value))
         case let value as [String: any PrefsStorageValue]:
-            self = .dictionary(AnyPrefDictionary(value))
+            self = .dictionary(AnyPrefsDictionary(value))
         case let value as AnyPrefsArray:
             self = .array(value)
-        case let value as AnyPrefDictionary:
+        case let value as AnyPrefsDictionary:
             self = .dictionary(value)
         default:
             print("Unhandled pref storage value type: \(type(of: value))")

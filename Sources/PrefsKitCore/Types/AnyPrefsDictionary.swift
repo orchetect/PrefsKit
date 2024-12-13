@@ -1,11 +1,11 @@
 //
-//  AnyPrefDictionary.swift
+//  AnyPrefsDictionary.swift
 //  PrefsKit • https://github.com/orchetect/PrefsKit
 //  © 2024 Steffan Andrews • Licensed under MIT License
 //
 
 /// A type that wraps a dictionary of type-erased values for use in prefs storage.
-public struct AnyPrefDictionary {
+public struct AnyPrefsDictionary {
     public var content: [String: AnyPrefsStorageValue]
     
     @inlinable
@@ -21,11 +21,11 @@ public struct AnyPrefDictionary {
     }
 }
 
-extension AnyPrefDictionary: Equatable { }
+extension AnyPrefsDictionary: Equatable { }
 
-extension AnyPrefDictionary: Sendable { }
+extension AnyPrefsDictionary: Sendable { }
 
-extension AnyPrefDictionary: ExpressibleByDictionaryLiteral {
+extension AnyPrefsDictionary: ExpressibleByDictionaryLiteral {
     @inlinable
     public init(dictionaryLiteral elements: (String, any PrefsStorageValue)...) {
         let content = elements.reduce(into: [:]) { partialResult, pair in
@@ -38,7 +38,7 @@ extension AnyPrefDictionary: ExpressibleByDictionaryLiteral {
 
 // MARK: - Dictionary Proxy Methods
 
-extension AnyPrefDictionary {
+extension AnyPrefsDictionary {
     @inlinable
     public subscript(_ key: String) -> (any PrefsStorageValue)? {
         get {

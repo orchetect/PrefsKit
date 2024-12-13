@@ -40,7 +40,7 @@ func convertToPrefDict(plist nsDict: NSDictionary) throws -> [String: any PrefsS
         case let v as Float: base[key] = v
         case let v as Data: base[key] = v
         case let v as NSArray: base[key] = AnyPrefsArray(try convertToPrefArray(plist: v))
-        case let v as NSDictionary: base[key] = AnyPrefDictionary(try convertToPrefDict(plist: v))
+        case let v as NSDictionary: base[key] = AnyPrefsDictionary(try convertToPrefDict(plist: v))
         default: throw CocoaError(.coderReadCorrupt)
         }
     }
@@ -56,7 +56,7 @@ func convertToPrefArray(plist nsArray: NSArray) throws -> [any PrefsStorageValue
         case let v as Float: base.append(v)
         case let v as Data: base.append(v)
         case let v as NSArray: base.append(AnyPrefsArray(v as? [any PrefsStorageValue] ?? []))
-        case let v as NSDictionary: base.append(AnyPrefDictionary(try convertToPrefDict(plist: v)))
+        case let v as NSDictionary: base.append(AnyPrefsDictionary(try convertToPrefDict(plist: v)))
         default: throw CocoaError(.coderReadCorrupt)
         }
     }
