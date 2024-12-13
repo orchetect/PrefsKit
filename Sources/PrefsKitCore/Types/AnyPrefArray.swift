@@ -8,10 +8,12 @@
 public struct AnyPrefArray {
     public var content: [AnyPrefsStorageValue]
     
+    @inlinable
     public init(_ content: [AnyPrefsStorageValue]) {
         self.content = content
     }
     
+    @inlinable
     public init(_ content: [any PrefsStorageValue]) {
         let converted = content
             .compactMap(AnyPrefsStorageValue.init)
@@ -33,6 +35,7 @@ extension AnyPrefArray: ExpressibleByArrayLiteral {
 // MARK: - Array Proxy Methods
 
 extension AnyPrefArray {
+    @inlinable
     public subscript(index: Int) -> any PrefsStorageValue {
         get {
             content[index].value
@@ -55,10 +58,12 @@ extension AnyPrefArray {
         }
     }
     
+    @inlinable
     public var count: Int {
         content.count
     }
     
+    @inlinable
     public mutating func append(_ newElement: any PrefsStorageValue) {
         guard let newElement = AnyPrefsStorageValue(newElement)
         else {
@@ -68,10 +73,12 @@ extension AnyPrefArray {
         append(newElement)
     }
     
+    @inlinable
     public mutating func append(_ newElement: AnyPrefsStorageValue) {
         content.append(newElement)
     }
     
+    @inlinable
     public mutating func append(contentsOf newElements: [any PrefsStorageValue]) {
         let converted = newElements
             .compactMap(AnyPrefsStorageValue.init)
@@ -79,10 +86,12 @@ extension AnyPrefArray {
         append(contentsOf: newElements)
     }
     
+    @inlinable
     public mutating func append(contentsOf newElements: [AnyPrefsStorageValue]) {
         content.append(contentsOf: newElements)
     }
     
+    @inlinable
     public mutating func append(contentsOf newElements: AnyPrefArray) {
         content.append(contentsOf: newElements.content)
     }

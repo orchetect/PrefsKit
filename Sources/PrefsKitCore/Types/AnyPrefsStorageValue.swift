@@ -15,6 +15,7 @@ public enum AnyPrefsStorageValue {
     case array(AnyPrefArray)
     case dictionary(AnyPrefDictionary)
     
+    @usableFromInline
     init?(_ value: any PrefsStorageValue) {
         // Note that underlying number format of NSNumber can't easily be determined
         // so the cleanest solution is to make NSNumber `PrefsStorageValue` and allow
@@ -51,6 +52,7 @@ public enum AnyPrefsStorageValue {
         }
     }
     
+    @usableFromInline
     init?(userDefaultsValue value: Any) {
         // Note that underlying number format of NSNumber can't easily be determined
         // so the cleanest solution is to make NSNumber `PrefsStorageValue` and allow

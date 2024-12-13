@@ -8,10 +8,12 @@
 public struct AnyPrefDictionary {
     public var content: [String: AnyPrefsStorageValue]
     
+    @inlinable
     public init(_ content: [String: AnyPrefsStorageValue]) {
         self.content = content
     }
     
+    @inlinable
     public init(_ content: [String: any PrefsStorageValue]) {
         let converted = content.compactMapValues(AnyPrefsStorageValue.init(userDefaultsValue:))
         assert(converted.count == content.count)
@@ -24,6 +26,7 @@ extension AnyPrefDictionary: Equatable { }
 extension AnyPrefDictionary: Sendable { }
 
 extension AnyPrefDictionary: ExpressibleByDictionaryLiteral {
+    @inlinable
     public init(dictionaryLiteral elements: (String, any PrefsStorageValue)...) {
         let content = elements.reduce(into: [:]) { partialResult, pair in
             partialResult[pair.0] = AnyPrefsStorageValue(pair.1)
@@ -36,6 +39,7 @@ extension AnyPrefDictionary: ExpressibleByDictionaryLiteral {
 // MARK: - Dictionary Proxy Methods
 
 extension AnyPrefDictionary {
+    @inlinable
     public subscript(_ key: String) -> (any PrefsStorageValue)? {
         get {
             content[key]?.value
@@ -66,6 +70,7 @@ extension AnyPrefDictionary {
         }
     }
     
+    @inlinable
     public var count: Int {
         content.count
     }
