@@ -89,10 +89,10 @@ public enum AnyPrefsStorageValue {
             bool
         case let .data(data):
             data
-        case let .array(anyPrefArray):
-            anyPrefArray
-        case let .dictionary(anyPrefDictionary):
-            anyPrefDictionary
+        case let .array(anyPrefsArray):
+            anyPrefsArray
+        case let .dictionary(anyPrefsDictionary):
+            anyPrefsDictionary
         }
     }
 }
