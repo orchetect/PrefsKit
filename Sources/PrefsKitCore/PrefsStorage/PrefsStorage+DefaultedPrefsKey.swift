@@ -4,6 +4,8 @@
 //  © 2024 Steffan Andrews • Licensed under MIT License
 //
 
+import Foundation
+
 // swiftformat:disable wrap
 
 extension PrefsStorage {
@@ -24,6 +26,10 @@ extension PrefsStorage {
     }
     
     public func value<Key: DefaultedPrefsKey>(forKey key: Key) -> Key.Value where Key.StorageValue == Float {
+        key.decodeDefaulted(storageValue(forKey: key))
+    }
+    
+    public func value<Key: DefaultedPrefsKey>(forKey key: Key) -> Key.Value where Key.StorageValue == Data {
         key.decodeDefaulted(storageValue(forKey: key))
     }
     
