@@ -38,11 +38,11 @@ extension PrefsStorage {
         storageValue(forKey: key)
     }
     
-    public func storageValue<Coding: PrefsCodable>(forKey key: String, using coding: Coding) -> Coding.StorageValue? where Coding.StorageValue == [any PrefStorageValue] {
+    public func storageValue<Coding: PrefsCodable>(forKey key: String, using coding: Coding) -> Coding.StorageValue? where Coding.StorageValue == [any PrefsStorageValue] {
         storageValue(forKey: key)
     }
     
-    public func storageValue<Coding: PrefsCodable>(forKey key: String, using coding: Coding) -> Coding.StorageValue? where Coding.StorageValue == [String: any PrefStorageValue] {
+    public func storageValue<Coding: PrefsCodable>(forKey key: String, using coding: Coding) -> Coding.StorageValue? where Coding.StorageValue == [String: any PrefsStorageValue] {
         storageValue(forKey: key)
     }
 }
@@ -77,12 +77,12 @@ extension PrefsStorage {
         return coding.decode(prefsValue: storageValue)
     }
     
-    public func value<Coding: PrefsCodable>(forKey key: String, using coding: Coding) -> Coding.Value? where Coding.StorageValue == [any PrefStorageValue] {
+    public func value<Coding: PrefsCodable>(forKey key: String, using coding: Coding) -> Coding.Value? where Coding.StorageValue == [any PrefsStorageValue] {
         guard let storageValue = storageValue(forKey: key, using: coding) else { return nil }
         return coding.decode(prefsValue: storageValue)
     }
     
-    public func value<Coding: PrefsCodable>(forKey key: String, using coding: Coding) -> Coding.Value? where Coding.StorageValue == [String: any PrefStorageValue] {
+    public func value<Coding: PrefsCodable>(forKey key: String, using coding: Coding) -> Coding.Value? where Coding.StorageValue == [String: any PrefsStorageValue] {
         guard let storageValue = storageValue(forKey: key, using: coding) else { return nil }
         return coding.decode(prefsValue: storageValue)
     }

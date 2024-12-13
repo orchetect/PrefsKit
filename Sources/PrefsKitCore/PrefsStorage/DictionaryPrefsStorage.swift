@@ -9,16 +9,16 @@ import Foundation
 /// Dictionary-backed ``PrefsStorage`` with internally-synchronized dictionary access.
 open class DictionaryPrefsStorage {
     @SynchronizedLock
-    var storage: [String: any PrefStorageValue]
+    var storage: [String: any PrefsStorageValue]
     
     /// Local dictionary storage in memory.
-    public var root: [String: any PrefStorageValue] {
+    public var root: [String: any PrefsStorageValue] {
         get { storage }
         _modify { yield &storage }
         set { storage = newValue }
     }
     
-    public init(root: [String: any PrefStorageValue] = [:]) {
+    public init(root: [String: any PrefsStorageValue] = [:]) {
         storage = root
     }
 }
@@ -28,7 +28,7 @@ extension DictionaryPrefsStorage: @unchecked Sendable { }
 extension DictionaryPrefsStorage: PrefsStorage {
     // MARK: - Set
     
-    public func setStorageValue<StorageValue: PrefStorageValue>(forKey key: String, to value: StorageValue?) {
+    public func setStorageValue<StorageValue: PrefsStorageValue>(forKey key: String, to value: StorageValue?) {
         root[key] = value
     }
     
@@ -58,12 +58,12 @@ extension DictionaryPrefsStorage: PrefsStorage {
         root[key] as? Data
     }
     
-    public func storageValue(forKey key: String) -> [any PrefStorageValue]? {
-        root[key] as? [any PrefStorageValue]
+    public func storageValue(forKey key: String) -> [any PrefsStorageValue]? {
+        root[key] as? [any PrefsStorageValue]
     }
     
-    public func storageValue(forKey key: String) -> [String: any PrefStorageValue]? {
-        root[key] as? [String: any PrefStorageValue]
+    public func storageValue(forKey key: String) -> [String: any PrefsStorageValue]? {
+        root[key] as? [String: any PrefsStorageValue]
     }
 }
 

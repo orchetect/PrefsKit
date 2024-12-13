@@ -6,15 +6,15 @@
 
 /// A type that wraps an array of type-erased values for use in prefs storage.
 public struct AnyPrefArray {
-    public var content: [AnyPrefStorageValue]
+    public var content: [AnyPrefsStorageValue]
     
-    public init(_ content: [AnyPrefStorageValue]) {
+    public init(_ content: [AnyPrefsStorageValue]) {
         self.content = content
     }
     
-    public init(_ content: [any PrefStorageValue]) {
+    public init(_ content: [any PrefsStorageValue]) {
         let converted = content
-            .compactMap(AnyPrefStorageValue.init)
+            .compactMap(AnyPrefsStorageValue.init)
         assert(converted.count == content.count)
         self.content = converted
     }
@@ -25,7 +25,7 @@ extension AnyPrefArray: Equatable { }
 extension AnyPrefArray: Sendable { }
 
 extension AnyPrefArray: ExpressibleByArrayLiteral {
-    public init(arrayLiteral elements: (any PrefStorageValue)...) {
+    public init(arrayLiteral elements: (any PrefsStorageValue)...) {
         self.init(elements)
     }
 }
@@ -33,21 +33,21 @@ extension AnyPrefArray: ExpressibleByArrayLiteral {
 // MARK: - Array Proxy Methods
 
 extension AnyPrefArray {
-    public subscript(index: Int) -> any PrefStorageValue {
+    public subscript(index: Int) -> any PrefsStorageValue {
         get {
             content[index].value
         }
         _modify {
             var val = content[index].value
             yield &val
-            guard let typeErased = AnyPrefStorageValue(val) else {
+            guard let typeErased = AnyPrefsStorageValue(val) else {
                 assertionFailure()
                 return
             }
             content[index] = typeErased
         }
         set {
-            guard let typeErased = AnyPrefStorageValue(newValue) else {
+            guard let typeErased = AnyPrefsStorageValue(newValue) else {
                 assertionFailure()
                 return
             }
@@ -59,8 +59,8 @@ extension AnyPrefArray {
         content.count
     }
     
-    public mutating func append(_ newElement: any PrefStorageValue) {
-        guard let newElement = AnyPrefStorageValue(newElement)
+    public mutating func append(_ newElement: any PrefsStorageValue) {
+        guard let newElement = AnyPrefsStorageValue(newElement)
         else {
             assertionFailure()
             return
@@ -68,18 +68,18 @@ extension AnyPrefArray {
         append(newElement)
     }
     
-    public mutating func append(_ newElement: AnyPrefStorageValue) {
+    public mutating func append(_ newElement: AnyPrefsStorageValue) {
         content.append(newElement)
     }
     
-    public mutating func append(contentsOf newElements: [any PrefStorageValue]) {
+    public mutating func append(contentsOf newElements: [any PrefsStorageValue]) {
         let converted = newElements
-            .compactMap(AnyPrefStorageValue.init)
+            .compactMap(AnyPrefsStorageValue.init)
         assert(converted.count == newElements.count)
         append(contentsOf: newElements)
     }
     
-    public mutating func append(contentsOf newElements: [AnyPrefStorageValue]) {
+    public mutating func append(contentsOf newElements: [AnyPrefsStorageValue]) {
         content.append(contentsOf: newElements)
     }
     

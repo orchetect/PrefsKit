@@ -10,7 +10,7 @@ import Foundation
 // MARK: - Atomic
 
 /// Generic concrete pref key with an atomic value type.
-public struct AnyAtomicPrefsKey<Value>: AtomicPrefsCodable where Value: Sendable, Value: PrefStorageValue {
+public struct AnyAtomicPrefsKey<Value>: AtomicPrefsCodable where Value: Sendable, Value: PrefsStorageValue {
     public let key: String
     
     public typealias Value = Value
@@ -22,7 +22,7 @@ public struct AnyAtomicPrefsKey<Value>: AtomicPrefsCodable where Value: Sendable
 }
 
 /// Generic concrete pref key with an atomic value type and a default value.
-public struct AnyDefaultedAtomicPrefsKey<Value>: AtomicPrefsCodable where Value: Sendable, Value: PrefStorageValue {
+public struct AnyDefaultedAtomicPrefsKey<Value>: AtomicPrefsCodable where Value: Sendable, Value: PrefsStorageValue {
     public let key: String
     
     public typealias Value = Value
@@ -40,7 +40,7 @@ public struct AnyDefaultedAtomicPrefsKey<Value>: AtomicPrefsCodable where Value:
 /// Generic concrete pref key with a `RawRepresentable` value type.
 public struct AnyRawRepresentablePrefsKey<
     Value: RawRepresentable,
-    StorageValue: PrefStorageValue
+    StorageValue: PrefsStorageValue
 >: RawRepresentablePrefsCodable where Value: Sendable, Value.RawValue == StorageValue {
     public let key: String
     
@@ -55,7 +55,7 @@ public struct AnyRawRepresentablePrefsKey<
 /// Generic concrete pref key with a `RawRepresentable` value type and a default value.
 public struct AnyDefaultedRawRepresentablePrefsKey<
     Value: RawRepresentable,
-    StorageValue: PrefStorageValue
+    StorageValue: PrefsStorageValue
 >: RawRepresentablePrefsCodable where Value: Sendable, Value.RawValue == StorageValue {
     public let key: String
     
@@ -74,13 +74,13 @@ public struct AnyDefaultedRawRepresentablePrefsKey<
 /// Generic concrete pref key with a `Codable` value type.
 public struct AnyCodablePrefsKey<
     Value: Codable,
-    StorageValue: PrefStorageValue,
+    StorageValue: PrefsStorageValue,
     Encoder: TopLevelEncoder,
     Decoder: TopLevelDecoder
 >: CodablePrefsCodable where Value: Sendable,
     StorageValue == Encoder.Output,
-    Encoder.Output: PrefStorageValue,
-    Decoder.Input: PrefStorageValue,
+    Encoder.Output: PrefsStorageValue,
+    Decoder.Input: PrefsStorageValue,
     Encoder.Output == Decoder.Input
 {
     public let key: String
@@ -110,13 +110,13 @@ public struct AnyCodablePrefsKey<
 /// Generic concrete pref key with a `Codable` value type and a default value.
 public struct AnyDefaultedCodablePrefsKey<
     Value: Codable,
-    StorageValue: PrefStorageValue,
+    StorageValue: PrefsStorageValue,
     Encoder: TopLevelEncoder,
     Decoder: TopLevelDecoder
 >: CodablePrefsCodable where Value: Sendable,
     StorageValue == Encoder.Output,
-    Encoder.Output: PrefStorageValue,
-    Decoder.Input: PrefStorageValue,
+    Encoder.Output: PrefsStorageValue,
+    Decoder.Input: PrefsStorageValue,
     Encoder.Output == Decoder.Input
 {
     public let key: String

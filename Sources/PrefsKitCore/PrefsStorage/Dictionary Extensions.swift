@@ -6,7 +6,7 @@
 
 import Foundation
 
-extension [String: any PrefStorageValue] {
+extension [String: any PrefsStorageValue] {
     public init(plist url: URL) throws {
         let fileData = try Data(contentsOf: url)
         try self.init(plist: fileData)
@@ -27,7 +27,7 @@ extension [String: any PrefStorageValue] {
     }
 }
 
-func convertToPrefDict(plist nsDict: NSDictionary) throws -> [String: any PrefStorageValue] {
+func convertToPrefDict(plist nsDict: NSDictionary) throws -> [String: any PrefsStorageValue] {
     try nsDict.reduce(into: [:]) { base, pair in
         guard let key = pair.key as? String
         else { throw CocoaError(.coderReadCorrupt) }
@@ -46,7 +46,7 @@ func convertToPrefDict(plist nsDict: NSDictionary) throws -> [String: any PrefSt
     }
 }
 
-func convertToPrefArray(plist nsArray: NSArray) throws -> [any PrefStorageValue] {
+func convertToPrefArray(plist nsArray: NSArray) throws -> [any PrefsStorageValue] {
     try nsArray.reduce(into: []) { base, element in
         switch element {
         case let v as Bool: base.append(v)
@@ -55,7 +55,7 @@ func convertToPrefArray(plist nsArray: NSArray) throws -> [any PrefStorageValue]
         case let v as Double: base.append(v)
         case let v as Float: base.append(v)
         case let v as Data: base.append(v)
-        case let v as NSArray: base.append(AnyPrefArray(v as? [any PrefStorageValue] ?? []))
+        case let v as NSArray: base.append(AnyPrefArray(v as? [any PrefsStorageValue] ?? []))
         case let v as NSDictionary: base.append(AnyPrefDictionary(try convertToPrefDict(plist: v)))
         default: throw CocoaError(.coderReadCorrupt)
         }

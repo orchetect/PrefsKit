@@ -11,7 +11,7 @@ import Foundation
 public protocol PrefsStorage: AnyObject where Self: Sendable {
     // MARK: - Set
     
-    func setStorageValue<StorageValue: PrefStorageValue>(forKey key: String, to value: StorageValue?)
+    func setStorageValue<StorageValue: PrefsStorageValue>(forKey key: String, to value: StorageValue?)
     
     // MARK: - Get
     
@@ -21,10 +21,10 @@ public protocol PrefsStorage: AnyObject where Self: Sendable {
     func storageValue(forKey key: String) -> Double?
     func storageValue(forKey key: String) -> Float?
     func storageValue(forKey key: String) -> Data?
-    func storageValue(forKey key: String) -> [any PrefStorageValue]?
-    func storageValue(forKey key: String) -> [String: any PrefStorageValue]?
-    // func storageValue<Element: PrefStorageValue>(forKey key: String) -> [Element]?
-    // func storageValue<Element: PrefStorageValue>(forKey key: String) -> [String: Element]?
+    func storageValue(forKey key: String) -> [any PrefsStorageValue]?
+    func storageValue(forKey key: String) -> [String: any PrefsStorageValue]?
+    // func storageValue<Element: PrefsStorageValue>(forKey key: String) -> [Element]?
+    // func storageValue<Element: PrefsStorageValue>(forKey key: String) -> [String: Element]?
     // func storageValue(forKey key: String) -> AnyPrefArray?
     // func storageValue(forKey key: String) -> AnyPrefDictionary?
 }

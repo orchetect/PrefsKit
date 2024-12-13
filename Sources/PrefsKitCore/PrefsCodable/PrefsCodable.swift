@@ -8,7 +8,7 @@ import Foundation
 
 /// Defines value encoding and decoding for reading and writing to prefs storage.
 public protocol PrefsCodable<Value, StorageValue>: Sendable
-where Value: Sendable, StorageValue: PrefStorageValue {
+where Value: Sendable, StorageValue: PrefsStorageValue {
     associatedtype Value
     associatedtype StorageValue
     

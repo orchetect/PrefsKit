@@ -17,8 +17,8 @@ import Foundation
 public protocol CodablePrefsCodable<Encoder, Decoder>: PrefsCodable
     where Value: Codable,
     StorageValue == Encoder.Output,
-    Encoder.Output: PrefStorageValue,
-    Decoder.Input: PrefStorageValue,
+    Encoder.Output: PrefsStorageValue,
+    Decoder.Input: PrefsStorageValue,
     Encoder.Output == Decoder.Input
 {
     associatedtype Encoder: TopLevelEncoder

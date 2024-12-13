@@ -18,7 +18,7 @@ public final class AnyPrefsStorage: PrefsStorage {
 extension AnyPrefsStorage {
     // MARK: - Set
     
-    public func setStorageValue<StorageValue: PrefStorageValue>(forKey key: String, to value: StorageValue?) {
+    public func setStorageValue<StorageValue: PrefsStorageValue>(forKey key: String, to value: StorageValue?) {
         wrapped.setStorageValue(forKey: key, to: value)
     }
     
@@ -48,11 +48,11 @@ extension AnyPrefsStorage {
         wrapped.storageValue(forKey: key)
     }
     
-    public func storageValue(forKey key: String) -> [any PrefStorageValue]? {
+    public func storageValue(forKey key: String) -> [any PrefsStorageValue]? {
         wrapped.storageValue(forKey: key)
     }
     
-    public func storageValue(forKey key: String) -> [String: any PrefStorageValue]? {
+    public func storageValue(forKey key: String) -> [String: any PrefsStorageValue]? {
         wrapped.storageValue(forKey: key)
     }
 }

@@ -1,5 +1,5 @@
 //
-//  AnyPrefStorageValue.swift
+//  AnyPrefsStorageValue.swift
 //  PrefsKit • https://github.com/orchetect/PrefsKit
 //  © 2024 Steffan Andrews • Licensed under MIT License
 //
@@ -7,7 +7,7 @@
 import Foundation
 
 /// Type-erased box for prefs storage values.
-public enum AnyPrefStorageValue {
+public enum AnyPrefsStorageValue {
     case number(NSNumber)
     case string(String)
     case bool(Bool)
@@ -15,9 +15,9 @@ public enum AnyPrefStorageValue {
     case array(AnyPrefArray)
     case dictionary(AnyPrefDictionary)
     
-    init?(_ value: any PrefStorageValue) {
+    init?(_ value: any PrefsStorageValue) {
         // Note that underlying number format of NSNumber can't easily be determined
-        // so the cleanest solution is to make NSNumber `PrefStorageValue` and allow
+        // so the cleanest solution is to make NSNumber `PrefsStorageValue` and allow
         // the user to conditionally cast it as the number type they desire.
         
         switch value {
@@ -37,9 +37,9 @@ public enum AnyPrefStorageValue {
             self = .array(value.convertToAnyPrefArray())
         case let value as [String: Any]:
             self = .dictionary(value.convertToAnyPrefDict())
-        case let value as [any PrefStorageValue]:
+        case let value as [any PrefsStorageValue]:
             self = .array(AnyPrefArray(value))
-        case let value as [String: any PrefStorageValue]:
+        case let value as [String: any PrefsStorageValue]:
             self = .dictionary(AnyPrefDictionary(value))
         case let value as AnyPrefArray:
             self = .array(value)
@@ -53,7 +53,7 @@ public enum AnyPrefStorageValue {
     
     init?(userDefaultsValue value: Any) {
         // Note that underlying number format of NSNumber can't easily be determined
-        // so the cleanest solution is to make NSNumber `PrefStorageValue` and allow
+        // so the cleanest solution is to make NSNumber `PrefsStorageValue` and allow
         // the user to conditionally cast it as the number type they desire.
         
         switch value {
@@ -69,7 +69,7 @@ public enum AnyPrefStorageValue {
             self = .array(value.convertToAnyPrefArray())
         case let value as [String: Any]:
             self = .dictionary(value.convertToAnyPrefDict())
-        // case let value as any PrefStorageValue:
+        // case let value as any PrefsStorageValue:
         //     self = value
         default:
             print("Unhandled pref storage value type: \(type(of: value))")
@@ -77,7 +77,7 @@ public enum AnyPrefStorageValue {
         }
     }
     
-    public var value: any PrefStorageValue {
+    public var value: any PrefsStorageValue {
         switch self {
         case let .number(nsNumber):
             nsNumber
@@ -95,6 +95,6 @@ public enum AnyPrefStorageValue {
     }
 }
 
-extension AnyPrefStorageValue: Equatable { }
+extension AnyPrefsStorageValue: Equatable { }
 
-extension AnyPrefStorageValue: Sendable { }
+extension AnyPrefsStorageValue: Sendable { }

@@ -6,14 +6,14 @@
 
 /// A type that wraps a dictionary of type-erased values for use in prefs storage.
 public struct AnyPrefDictionary {
-    public var content: [String: AnyPrefStorageValue]
+    public var content: [String: AnyPrefsStorageValue]
     
-    public init(_ content: [String: AnyPrefStorageValue]) {
+    public init(_ content: [String: AnyPrefsStorageValue]) {
         self.content = content
     }
     
-    public init(_ content: [String: any PrefStorageValue]) {
-        let converted = content.compactMapValues(AnyPrefStorageValue.init(userDefaultsValue:))
+    public init(_ content: [String: any PrefsStorageValue]) {
+        let converted = content.compactMapValues(AnyPrefsStorageValue.init(userDefaultsValue:))
         assert(converted.count == content.count)
         self.content = converted
     }
@@ -24,9 +24,9 @@ extension AnyPrefDictionary: Equatable { }
 extension AnyPrefDictionary: Sendable { }
 
 extension AnyPrefDictionary: ExpressibleByDictionaryLiteral {
-    public init(dictionaryLiteral elements: (String, any PrefStorageValue)...) {
+    public init(dictionaryLiteral elements: (String, any PrefsStorageValue)...) {
         let content = elements.reduce(into: [:]) { partialResult, pair in
-            partialResult[pair.0] = AnyPrefStorageValue(pair.1)
+            partialResult[pair.0] = AnyPrefsStorageValue(pair.1)
         }
         assert(content.count == elements.count)
         self.init(content)
@@ -36,7 +36,7 @@ extension AnyPrefDictionary: ExpressibleByDictionaryLiteral {
 // MARK: - Dictionary Proxy Methods
 
 extension AnyPrefDictionary {
-    public subscript(_ key: String) -> (any PrefStorageValue)? {
+    public subscript(_ key: String) -> (any PrefsStorageValue)? {
         get {
             content[key]?.value
         }
@@ -44,7 +44,7 @@ extension AnyPrefDictionary {
             var val = content[key]?.value
             yield &val
             if let val {
-                guard let typeErased = AnyPrefStorageValue(val) else {
+                guard let typeErased = AnyPrefsStorageValue(val) else {
                     assertionFailure()
                     return
                 }
@@ -55,7 +55,7 @@ extension AnyPrefDictionary {
         }
         set {
             if let newValue {
-                guard let typeErased = AnyPrefStorageValue(newValue) else {
+                guard let typeErased = AnyPrefsStorageValue(newValue) else {
                     assertionFailure()
                     return
                 }
