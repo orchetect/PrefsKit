@@ -6,7 +6,6 @@
 
 import Foundation
 import PrefsKitCore
-import PrefsKitMacros
 import Testing
 
 /// Test `PrefsCodable` implementation that uses custom `getValue(in:)` and `setValue(to:in:)` method overrides to convert

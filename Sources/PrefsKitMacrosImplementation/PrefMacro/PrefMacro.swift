@@ -132,7 +132,7 @@ extension PrefMacro /* : PeerMacro */ {
 // MARK: - Helpers
 
 extension PrefMacro {
-    static var moduleNamePrefix: String { "PrefsKitCore." }
+    static var moduleNamePrefix: String { "PrefsKitTypes." }
     
     static var privateCodingVarPrefix: String { "__PrefCoding_" }
     static var privateValueVarPrefix: String { "__PrefValue_" }

@@ -8,7 +8,7 @@ let package = Package(
     platforms: [.macOS(.v10_15), .iOS(.v13), .tvOS(.v13), .watchOS(.v6)],
     products: [
         .library(name: "PrefsKit", targets: ["PrefsKit"]),
-        .library(name: "PrefsKitCore", targets: ["PrefsKitCore", "PrefsKitMacros"]),
+        .library(name: "PrefsKitCore", targets: ["PrefsKitCore"]),
         .library(name: "PrefsKitUI", targets: ["PrefsKitUI"])
     ],
     dependencies: [
@@ -17,15 +17,15 @@ let package = Package(
     targets: [
         .target(
             name: "PrefsKit",
-            dependencies: ["PrefsKitCore", "PrefsKitMacros", "PrefsKitUI"]
+            dependencies: ["PrefsKitCore", "PrefsKitUI"]
         ),
         .target(
             name: "PrefsKitCore",
-            dependencies: []
+            dependencies: ["PrefsKitTypes", "PrefsKitMacrosImplementation"]
         ),
         .target(
-            name: "PrefsKitMacros",
-            dependencies: ["PrefsKitCore", "PrefsKitMacrosImplementation"]
+            name: "PrefsKitTypes",
+            dependencies: []
         ),
         .macro(
             name: "PrefsKitMacrosImplementation",
@@ -40,14 +40,14 @@ let package = Package(
         ),
         .testTarget(
             name: "PrefsKitCoreTests",
-            dependencies: ["PrefsKitCore"]
-        ),
-        .testTarget(
-            name: "PrefsKitMacrosTests",
             dependencies: [
-                "PrefsKitMacros",
+                "PrefsKitCore",
                 .product(name: "SwiftSyntaxMacrosTestSupport", package: "swift-syntax")
             ]
+        ),
+        .testTarget(
+            name: "PrefsKitTypesTests",
+            dependencies: ["PrefsKitTypes"]
         )
     ]
 )

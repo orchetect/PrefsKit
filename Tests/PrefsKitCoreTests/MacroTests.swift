@@ -10,7 +10,6 @@ import SwiftSyntaxMacros
 import SwiftSyntaxMacrosTestSupport
 
 import PrefsKitCore
-import PrefsKitMacros
 import XCTest
 
 // MARK: - Macro Implementation Testing
@@ -107,7 +106,7 @@ final class MacroTests: XCTestCase {
                 }
             }
             
-            private let __PrefCoding_foo = PrefsKitCore.AnyAtomicPrefsKey<Int>(key: "someInt")
+            private let __PrefCoding_foo = PrefsKitTypes.AnyAtomicPrefsKey<Int>(key: "someInt")
             
             private var __PrefValue_foo: Int?
             """,
@@ -163,7 +162,7 @@ final class MacroTests: XCTestCase {
                 }
             }
             
-            private let __PrefCoding_bar = PrefsKitCore.AnyDefaultedAtomicPrefsKey<String>(key: KeyName.bar, defaultValue: "baz")
+            private let __PrefCoding_bar = PrefsKitTypes.AnyDefaultedAtomicPrefsKey<String>(key: KeyName.bar, defaultValue: "baz")
             
             private var __PrefValue_bar: String?
             """,

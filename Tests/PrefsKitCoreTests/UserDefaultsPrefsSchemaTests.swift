@@ -6,7 +6,6 @@
 
 import Foundation
 import PrefsKitCore
-import PrefsKitMacros
 import Testing
 
 @Suite(.serialized)
