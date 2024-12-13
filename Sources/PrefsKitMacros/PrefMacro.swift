@@ -89,18 +89,33 @@ extension PrefMacro {
         let typeName: String
         let keyAndCodingStructName: String
         let keyAndCodingStructDeclaration: String
-        let getValueSyntax: String
-        let privateVarDeclaration: String
+        let privateKeyVarDeclaration: String
+        let privateValueVarDeclaration: String
         
-        init(from declaration: some DeclSyntaxProtocol, keyName: String) throws {
+        init(
+            from declaration: some DeclSyntaxProtocol,
+            keyName: String,
+            privateKeyVarName: String,
+            privateValueVarName: String
+        ) throws {
             guard let varDec = declaration.as(VariableDeclSyntax.self)
             else {
                 throw PrefMacroError.incorrectSyntax
             }
-            try self.init(from: varDec, keyName: keyName)
+            try self.init(
+                from: varDec,
+                keyName: keyName,
+                privateKeyVarName: privateKeyVarName,
+                privateValueVarName: privateValueVarName
+            )
         }
         
-        init(from varDec: VariableDeclSyntax, keyName: String) throws {
+        init(
+            from varDec: VariableDeclSyntax,
+            keyName: String,
+            privateKeyVarName: String,
+            privateValueVarName: String
+        ) throws {
             let typeBinding = try typeBinding(from: varDec)
             typeName = typeBinding.description
             
@@ -112,15 +127,15 @@ extension PrefMacro {
                 }
                 keyAndCodingStructName = "\(moduleNamePrefix)AnyAtomicPrefsKey<\(typeName)>"
                 keyAndCodingStructDeclaration = keyAndCodingStructName + "(key: \(keyName))"
-                getValueSyntax = "storage.value(forKey: \(keyName), using: coding)"
-                privateVarDeclaration = "\(typeName)?"
+                privateKeyVarDeclaration = "private let \(privateKeyVarName) = \(keyAndCodingStructDeclaration)"
+                privateValueVarDeclaration = "private var \(privateValueVarName): \(typeName)?"
             } else {
                 // must have a default value
                 let defaultValue = try defaultValue(from: varDec)
                 keyAndCodingStructName = "\(moduleNamePrefix)AnyDefaultedAtomicPrefsKey<\(typeName)>"
                 keyAndCodingStructDeclaration = keyAndCodingStructName + "(key: \(keyName), defaultValue: \(defaultValue))"
-                getValueSyntax = "storage.value(forKey: \(keyName), using: coding)"
-                privateVarDeclaration = "\(typeName) = \(defaultValue)"
+                privateKeyVarDeclaration = "private let \(privateKeyVarName) = \(keyAndCodingStructDeclaration)"
+                privateValueVarDeclaration = "private var \(privateValueVarName): \(typeName)?"
             }
         }
     }
@@ -155,27 +170,40 @@ extension PrefMacro: AccessorMacro {
             throw PrefMacroError.modifiersNotAllowed
         }
         
-        let keyName = try keyArg(from: node).expression.description
         let varName = try varName(from: varDec)
-        let privateCodingVarName = "\(privateCodingVarPrefix)\(varName)"
+        let privateKeyVarName = "\(privateCodingVarPrefix)\(varName)"
         let privateValueVarName = "\(privateValueVarPrefix)\(varName)"
         
-        let typeInfo = try TypeBindingInfo(from: varDec, keyName: keyName)
+        let keyPath = #"\."# + varName.description
         
-        let keyPath = "\\.\(varName)"
+        let hasDefault = (try? self.defaultValue(from: varDec)) != nil
+        
+        let modifyBlock: AccessorDeclSyntax = hasDefault
+            ? """
+                if \(raw: privateValueVarName) == nil {
+                    \(raw: privateValueVarName) = \(raw: privateKeyVarName).defaultValue
+                }
+                yield &\(raw: privateValueVarName)!
+                storage.setValue(forKey: \(raw: privateKeyVarName), to: \(raw: privateValueVarName))
+                """
+            : """
+                yield &\(raw: privateValueVarName)
+                storage.setValue(forKey: \(raw: privateKeyVarName), to: \(raw: privateValueVarName))
+                """
         
         return [
             """
             get {
                 _$observationRegistrar.access(self, keyPath: \(raw: keyPath))
-                \(raw: privateValueVarName) = \(raw: privateCodingVarName).\(raw: typeInfo.getValueSyntax)
-                return \(raw: privateValueVarName)
+                let val = storage.value(forKey: \(raw: privateKeyVarName))
+                \(raw: privateValueVarName) = val
+                return val
             }
             """,
             """
             set {
                 withMutation(keyPath: \(raw: keyPath)) {
-                    \(raw: privateCodingVarName).setValue(forKey: \(raw: keyName), to: newValue, in: storage)
+                    storage.setValue(forKey: \(raw: privateKeyVarName), to: newValue)
                     \(raw: privateValueVarName) = newValue
                 }
             }
@@ -187,8 +215,7 @@ extension PrefMacro: AccessorMacro {
                 defer {
                     _$observationRegistrar.didSet(self, keyPath: \(raw: keyPath))
                 }
-                yield &\(raw: privateValueVarName)
-                \(raw: privateCodingVarName).setValue(forKey: \(raw: keyName), to: \(raw: privateValueVarName), in: storage)
+                \(modifyBlock)
             }
             """
         ]
@@ -213,14 +240,19 @@ extension PrefMacro: PeerMacro {
         let privateKeyVarName = "\(privateCodingVarPrefix)\(varName)"
         let privateValueVarName = "\(privateValueVarPrefix)\(varName)"
         
-        let typeInfo = try TypeBindingInfo(from: varDec, keyName: keyName)
+        let typeInfo = try TypeBindingInfo(
+            from: varDec,
+            keyName: keyName,
+            privateKeyVarName: privateKeyVarName,
+            privateValueVarName: privateValueVarName
+        )
         
         return [
             """
-            private let \(raw: privateKeyVarName) = \(raw: typeInfo.keyAndCodingStructDeclaration)
+            \(raw: typeInfo.privateKeyVarDeclaration)
             """,
             """
-            private var \(raw: privateValueVarName): \(raw: typeInfo.privateVarDeclaration)
+            \(raw: typeInfo.privateValueVarDeclaration)
             """
         ]
     }

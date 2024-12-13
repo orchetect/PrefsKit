@@ -15,6 +15,17 @@ public protocol PrefsKey where Coding.Value == Value, Coding.StorageValue == Sto
     func decode(_ storageValue: StorageValue) -> Value?
 }
 
+extension PrefsKey {
+    public func encode(_ value: Value?) -> StorageValue? {
+        guard let value else { return nil }
+        return encode(value)
+    }
+    public func decode(_ storageValue: StorageValue?) -> Value? {
+        guard let storageValue else { return nil }
+        return decode(storageValue)
+    }
+}
+
 extension PrefsKey where Value == StorageValue {
     public func encode(_ value: Value) -> StorageValue? { value }
     public func decode(_ storageValue: StorageValue) -> Value? { storageValue }

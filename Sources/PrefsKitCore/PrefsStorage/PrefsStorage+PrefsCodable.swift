@@ -6,18 +6,9 @@
 
 import Foundation
 
-extension PrefsStorage {
-    public func setValue<Coding: PrefsCodable>(forKey key: String, to value: Coding.Value?, using coding: Coding) {
-        let encoded = value != nil ? coding.encode(prefsValue: value!) : nil
-        setStorageValue(forKey: key, to: encoded)
-    }
-}
+// swiftformat:disable wrap
 
 extension PrefsStorage {
-    public func storageValue<Coding: PrefsCodable>(forKey key: String, using coding: Coding) -> Coding.StorageValue? {
-        fatalError()
-    }
-    
     public func storageValue<Coding: PrefsCodable>(forKey key: String, using coding: Coding) -> Coding.StorageValue? where Coding.StorageValue == Int {
         storageValue(forKey: key)
     }
@@ -48,10 +39,13 @@ extension PrefsStorage {
 }
 
 extension PrefsStorage {
-    public func value<Coding: PrefsCodable>(forKey key: String, using coding: Coding) -> Coding.Value? {
-        fatalError()
+    public func setValue<Coding: PrefsCodable>(forKey key: String, to value: Coding.Value?, using coding: Coding) {
+        let encoded = value != nil ? coding.encode(prefsValue: value!) : nil
+        setStorageValue(forKey: key, to: encoded)
     }
-    
+}
+
+extension PrefsStorage {
     public func value<Coding: PrefsCodable>(forKey key: String, using coding: Coding) -> Coding.Value? where Coding.StorageValue == Int {
         guard let storageValue = storageValue(forKey: key, using: coding) else { return nil }
         return coding.decode(prefsValue: storageValue)
