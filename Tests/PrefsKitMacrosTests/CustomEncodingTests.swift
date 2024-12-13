@@ -5,7 +5,8 @@
 //
 
 import Foundation
-@testable import PrefsKitCore
+import PrefsKitCore
+import PrefsKitMacros
 import Testing
 
 /// Test `PrefsCodable` implementation that uses custom `getValue(in:)` and `setValue(to:in:)` method overrides to convert
@@ -48,7 +49,7 @@ struct CustomEncodingTests {
     }
     
 //    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
-//    final class TestSchema: PrefsSchema, @unchecked Sendable {
+//    @Prefs final class TestSchema: PrefsSchema {
 //        let storage = DictionaryPrefsStorage()
 //        let storageMode: PrefsSchemaMode = .cachedReadStorageWrite
 //
@@ -56,7 +57,7 @@ struct CustomEncodingTests {
 //            case custom
 //        }
 //        
-//        lazy var customKey = pref(CustomPrefCoding())
+//        @Pref(key: Key.custom, coding: CustomPrefCoding()) var customKey: NonCodableNonRawRepresentable?
 //    }
     
 //    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)

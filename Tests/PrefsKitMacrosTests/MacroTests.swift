@@ -10,13 +10,14 @@ import SwiftSyntaxMacros
 import SwiftSyntaxMacrosTestSupport
 
 import PrefsKitCore
+import PrefsKitMacros
 import XCTest
 
 // MARK: - Macro Implementation Testing
 
 #if canImport(PrefsKitMacros)
 
-@testable import PrefsKitMacros
+@testable import PrefsKitMacrosImplementation
 
 final class MacroTests: XCTestCase {
     let testMacros: [String: Macro.Type] = [
