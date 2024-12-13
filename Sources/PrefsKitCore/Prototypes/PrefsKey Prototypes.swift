@@ -98,10 +98,11 @@ public struct AnyDefaultedPrefsKey<Value, StorageValue>: DefaultedPrefsKey
 // MARK: - RawRepresentable
 
 /// Generic concrete pref key with a `RawRepresentable` value type.
-public struct AnyRawRepresentablePrefsKey<Value, StorageValue>: PrefsKey
-    where Value: RawRepresentable, Value.RawValue == StorageValue, Value: Sendable,
-    StorageValue: PrefsStorageValue
+public struct AnyRawRepresentablePrefsKey<Value>: PrefsKey
+    where Value: RawRepresentable, Value: Sendable, Value.RawValue: PrefsStorageValue
 {
+    public typealias StorageValue = Value.RawValue
+    
     public let key: String
     public let coding = RawRepresentablePrefsCoding<Value>()
     
@@ -111,10 +112,11 @@ public struct AnyRawRepresentablePrefsKey<Value, StorageValue>: PrefsKey
 }
 
 /// Generic concrete pref key with a `RawRepresentable` value type and a default value.
-public struct AnyDefaultedRawRepresentablePrefsKey<Value, StorageValue>: DefaultedPrefsKey
-    where Value: RawRepresentable, Value: Sendable, StorageValue: PrefsStorageValue,
-    Value.RawValue == StorageValue
+public struct AnyDefaultedRawRepresentablePrefsKey<Value>: DefaultedPrefsKey
+    where Value: RawRepresentable, Value: Sendable, Value.RawValue: PrefsStorageValue
 {
+    public typealias StorageValue = Value.RawValue
+    
     public let key: String
     public let defaultValue: Value
     public let coding = RawRepresentablePrefsCoding<Value>()

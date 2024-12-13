@@ -139,9 +139,9 @@ struct UserDefaultsPrefsSchemaTests {
 //        lazy var rawRep = pref(MockRawRepresentablePrefsCoding())
 //        lazy var rawRepDefaulted = pref(MockDefaultedRawRepresentablePrefsCoding())
 //        
-//        lazy var rawRep2 = pref(Key.rawFoo, of: RawEnum.self)
-//        lazy var rawRepDefaulted2 = pref(Key.rawBar, of: RawEnum.self, default: .one)
-//        
+        @RawRepresentablePref(key: Key.rawFoo) var rawRep2: RawEnum?
+        @RawRepresentablePref(key: Key.rawBar) var rawRepDefaulted2: RawEnum = .one
+//
 //        lazy var codable = pref(MockCodablePrefsCoding())
 //        lazy var codableDefaulted = pref(MockDefaultedCodablePrefsCoding())
 //        
@@ -263,36 +263,36 @@ struct UserDefaultsPrefsSchemaTests {
 //        
 //        // can't set nil
 //    }
-//    
-//    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
-//    @Test(arguments: schemas)
-//    func rawRepresentable2PrefKey(schema: TestSchema) async throws {
-//        #expect(schema.rawRep2 == nil)
-//        
-//        schema.rawRep2 = .one
-//        #expect(schema.rawRep2 == .one)
-//        
-//        schema.rawRep2 = .two
-//        #expect(schema.rawRep2 == .two)
-//        
-//        schema.rawRep2 = nil
-//        #expect(schema.rawRep2 == nil)
-//    }
-//    
-//    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
-//    @Test(arguments: schemas)
-//    func rawRepresentableDefaulted2PrefKey(schema: TestSchema) async throws {
-//        #expect(schema.rawRepDefaulted2 == .one)
-//        
-//        schema.rawRepDefaulted2 = .one
-//        #expect(schema.rawRepDefaulted2 == .one)
-//        
-//        schema.rawRepDefaulted2 = .two
-//        #expect(schema.rawRepDefaulted2 == .two)
-//        
-//        // can't set nil
-//    }
-//    
+    
+    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
+    @Test(arguments: schemas)
+    func rawRepresentable2PrefKey(schema: TestSchema) async throws {
+        #expect(schema.rawRep2 == nil)
+        
+        schema.rawRep2 = .one
+        #expect(schema.rawRep2 == .one)
+        
+        schema.rawRep2 = .two
+        #expect(schema.rawRep2 == .two)
+        
+        schema.rawRep2 = nil
+        #expect(schema.rawRep2 == nil)
+    }
+    
+    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
+    @Test(arguments: schemas)
+    func rawRepresentableDefaulted2PrefKey(schema: TestSchema) async throws {
+        #expect(schema.rawRepDefaulted2 == .one)
+        
+        schema.rawRepDefaulted2 = .one
+        #expect(schema.rawRepDefaulted2 == .one)
+        
+        schema.rawRepDefaulted2 = .two
+        #expect(schema.rawRepDefaulted2 == .two)
+        
+        // can't set nil
+    }
+    
 //    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
 //    @Test(arguments: schemas)
 //    func codablePrefKey(schema: TestSchema) async throws {

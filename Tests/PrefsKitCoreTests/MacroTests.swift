@@ -20,8 +20,9 @@ import XCTest
 
 final class MacroTests: XCTestCase {
     let testMacros: [String: Macro.Type] = [
-        "Pref": PrefMacro.self,
-        "Prefs": PrefsMacro.self
+        "Prefs": PrefsMacro.self,
+        "Pref": AtomicPrefMacro.self,
+        "RawRepresentablePref": RawRepresentablePrefMacro.self
     ]
     
     func testPrefsMacro() {

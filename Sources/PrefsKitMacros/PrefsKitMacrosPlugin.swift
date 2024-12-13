@@ -13,6 +13,7 @@ import SwiftSyntaxMacros
 struct PrefsKitMacrosPlugin: CompilerPlugin {
     let providingMacros: [Macro.Type] = [
         PrefsMacro.self,
-        PrefMacro.self
+        AtomicPrefMacro.self,
+        RawRepresentablePrefMacro.self
     ]
 }
