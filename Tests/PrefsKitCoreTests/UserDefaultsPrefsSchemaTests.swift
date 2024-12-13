@@ -38,36 +38,26 @@ struct UserDefaultsPrefsSchemaTests {
     // MARK: - Protocol Adoptions
     
     struct MockAtomicPrefsCoding: AtomicPrefsCodable {
-        let key: String = "foo"
-        
         typealias Value = Bool
     }
     
     struct MockAtomicDefaultedPrefsCoding: AtomicPrefsCodable {
-        let key: String = "bar"
-        
         typealias Value = Bool
         let defaultValue: Value = true
     }
     
     struct MockRawRepresentablePrefsCoding: RawRepresentablePrefsCodable {
-        let key: String = "rawFoo"
-        
         typealias Value = RawEnum
         // typealias StorageValue = RawEnum.RawValue // inferred
     }
     
     struct MockDefaultedRawRepresentablePrefsCoding: RawRepresentablePrefsCodable {
-        let key: String = "rawBar"
-        
         typealias Value = RawEnum
         // typealias StorageValue = RawEnum.RawValue // inferred
         let defaultValue: Value = .one
     }
     
     struct MockCodablePrefsCoding: CodablePrefsCodable {
-        let key: String = "codableFoo"
-        
         typealias Value = CodableEnum
         // typealias StorageValue // inferred from encoder/decoder
         
@@ -76,8 +66,6 @@ struct UserDefaultsPrefsSchemaTests {
     }
     
     struct MockDefaultedCodablePrefsCoding: CodablePrefsCodable {
-        let key: String = "codableBar"
-        
         typealias Value = CodableEnum
         // typealias StorageValue // inferred from encoder/decoder
         let defaultValue: Value = .one
@@ -87,23 +75,27 @@ struct UserDefaultsPrefsSchemaTests {
     }
     
     struct MockJSONCodablePrefsCoding: JSONCodablePrefsCodable {
-        let key: String = "jsonCodableFoo"
-        
         typealias Value = CodableEnum
     }
     
     struct MockDefaultedJSONCodablePrefsCoding: JSONCodablePrefsCodable {
-        let key: String = "jsonCodableBar"
-        
         typealias Value = CodableEnum
         let defaultValue: Value = .one
     }
     
     enum Key {
+        static let foo = "foo"
+        static let bar = "bar"
+        static let rawRep = "rawRep"
+        static let rawRepDefaulted = "rawRepDefaulted"
         static let rawFoo = "rawFoo"
         static let rawBar = "rawBar"
+        static let codable = "codable"
+        static let codableDefaulted = "codableDefaulted"
         static let codableFoo = "codableFoo"
         static let codableBar = "codableBar"
+        static let jsonCodable = "jsonCodable"
+        static let jsonCodableDefaulted = "jsonCodableDefaulted"
         static let jsonCodableFoo = "jsonCodableFoo"
         static let jsonCodableBar = "jsonCodableBar"
         
@@ -133,7 +125,7 @@ struct UserDefaultsPrefsSchemaTests {
         
         // Defined Key Implementations
         
-//        lazy var atomic = pref(MockAtomicPrefsCoding())
+//        @Pref(key: Key.foo, coding: MockAtomicPrefsCoding()) var atomic
 //        lazy var atomicDefaulted = pref(MockAtomicDefaultedPrefsCoding())
 //        
 //        lazy var rawRep = pref(MockRawRepresentablePrefsCoding())
