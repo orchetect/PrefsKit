@@ -21,3 +21,7 @@ public macro Pref(key: String) = #externalMacro(module: "PrefsKitMacros", type: 
 @attached(accessor, names: named(get), named(set), named(_modify))
 @attached(peer, names: /*arbitrary*/ prefixed(__PrefCoding_), prefixed(__PrefValue_))
 public macro RawRepresentablePref(key: String) = #externalMacro(module: "PrefsKitMacros", type: "RawRepresentablePrefMacro")
+
+@attached(accessor, names: named(get), named(set), named(_modify))
+@attached(peer, names: /*arbitrary*/ prefixed(__PrefCoding_), prefixed(__PrefValue_))
+public macro JSONCodablePref(key: String) = #externalMacro(module: "PrefsKitMacros", type: "JSONCodablePrefMacro")
