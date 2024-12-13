@@ -8,3 +8,5 @@ import PrefsKitTypes
 import Testing
 
 // no tests here yet
+
+@Test func empty() { }

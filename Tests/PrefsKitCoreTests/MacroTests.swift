@@ -14,7 +14,7 @@ import XCTest
 
 // MARK: - Macro Implementation Testing
 
-#if canImport(PrefsKitMacros)
+#if canImport(PrefsKitMacrosImplementation)
 
 @testable import PrefsKitMacrosImplementation
 
