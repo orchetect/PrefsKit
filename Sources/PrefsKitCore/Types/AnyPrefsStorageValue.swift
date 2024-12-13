@@ -12,7 +12,7 @@ public enum AnyPrefsStorageValue {
     case string(String)
     case bool(Bool)
     case data(Data)
-    case array(AnyPrefArray)
+    case array(AnyPrefsArray)
     case dictionary(AnyPrefDictionary)
     
     @usableFromInline
@@ -35,14 +35,14 @@ public enum AnyPrefsStorageValue {
         case let value as NSData:
             self = .data(value as Data)
         case let value as [Any]:
-            self = .array(value.convertToAnyPrefArray())
+            self = .array(value.convertToAnyPrefsArray())
         case let value as [String: Any]:
             self = .dictionary(value.convertToAnyPrefDict())
         case let value as [any PrefsStorageValue]:
-            self = .array(AnyPrefArray(value))
+            self = .array(AnyPrefsArray(value))
         case let value as [String: any PrefsStorageValue]:
             self = .dictionary(AnyPrefDictionary(value))
-        case let value as AnyPrefArray:
+        case let value as AnyPrefsArray:
             self = .array(value)
         case let value as AnyPrefDictionary:
             self = .dictionary(value)
@@ -68,7 +68,7 @@ public enum AnyPrefsStorageValue {
         case let value as NSData:
             self = .data(value as Data)
         case let value as [Any]:
-            self = .array(value.convertToAnyPrefArray())
+            self = .array(value.convertToAnyPrefsArray())
         case let value as [String: Any]:
             self = .dictionary(value.convertToAnyPrefDict())
         // case let value as any PrefsStorageValue:

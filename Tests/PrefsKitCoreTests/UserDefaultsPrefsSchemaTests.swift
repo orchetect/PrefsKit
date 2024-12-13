@@ -162,7 +162,7 @@ struct UserDefaultsPrefsSchemaTests {
         @Pref(key: Key.float) var float: Float?
         @Pref(key: Key.data) var data: Data?
 //        @Pref(key: Key.array) var array: [any PrefsStorageValue]? // can't work with 'any'
-//        @Pref(key: Key.anyArray) var anyArray: AnyPrefArray?
+//        @Pref(key: Key.anyArray) var anyArray: AnyPrefsArray?
 //        @Pref(key: Key.stringArray) var stringArray: [String]?
 //        @Pref(key: Key.dict) var dict: [String: any PrefsStorageValue]?? // can't work with 'any'
 //        @Pref(key: Key.anyDict) var anyDict: AnyPrefDictionary?
@@ -176,7 +176,7 @@ struct UserDefaultsPrefsSchemaTests {
         @Pref(key: Key.float) var floatDefaulted: Float = 2.5
         @Pref(key: Key.data) var dataDefaulted: Data = Data([0x01, 0x02])
 //        @Pref(key: Key.array) var arrayDefaulted: [any PrefsStorageValue] = [123, "a string"] // can't work with 'any'
-//        @Pref(key: Key.anyArray) var anyArrayDefaulted: AnyPrefArray = [123, "a string"]
+//        @Pref(key: Key.anyArray) var anyArrayDefaulted: AnyPrefsArray = [123, "a string"]
 //        @Pref(key: Key.stringArray) var stringArrayDefaulted: [String] = ["a", "b"]
 //        @Pref(key: Key.dict) var dictDefaulted: [String: any PrefsStorageValue] = ["foo": 123, "bar": "a string"] // can't work with 'any'
 //        @Pref(key: Key.anyDict) var anyDictDefaulted: AnyPrefDictionary = ["foo": 123, "bar": "a string"]
@@ -532,7 +532,7 @@ struct UserDefaultsPrefsSchemaTests {
 //            150.0 as Double,
 //            200.5 as Float,
 //            Data([0x03, 0x04]),
-//            [456, "test"] as AnyPrefArray,
+//            [456, "test"] as AnyPrefsArray,
 //            ["def": 234, "ghi": "str"] as AnyPrefDictionary
 //        ]
 //        #expect(schema.anyArray?.count == 8)
@@ -542,7 +542,7 @@ struct UserDefaultsPrefsSchemaTests {
 //        #expect(schema.anyArray?[3] as? Double == 150.0)
 //        #expect(schema.anyArray?[4] as? Float == 200.5)
 //        #expect(schema.anyArray?[5] as? Data == Data([0x03, 0x04]))
-//        let arr = schema.anyArray?[6] as? AnyPrefArray
+//        let arr = schema.anyArray?[6] as? AnyPrefsArray
 //        #expect(arr?[0] as? Int == 456)
 //        #expect(arr?[1] as? String == "test")
 //        let dict = schema.anyArray?[7] as? AnyPrefDictionary
@@ -591,7 +591,7 @@ struct UserDefaultsPrefsSchemaTests {
 //            "d": 150.0 as Double,
 //            "e": 200.5 as Float,
 //            "f": Data([0x03, 0x04]),
-//            "g": [456, "test"] as AnyPrefArray,
+//            "g": [456, "test"] as AnyPrefsArray,
 //            "h": ["def": 234, "ghi": 500.6] as AnyPrefDictionary
 //        ]
 //        #expect(schema.anyDict?.count == 8)
@@ -602,7 +602,7 @@ struct UserDefaultsPrefsSchemaTests {
 //        #expect(schema.anyDict?["e"] as? Float == 200.5)
 //        #expect(schema.anyDict?["f"] as? Data == Data([0x03, 0x04]))
 //        
-//        let arr = schema.anyDict?["g"] as? AnyPrefArray
+//        let arr = schema.anyDict?["g"] as? AnyPrefsArray
 //        #expect(arr?[0] as? Int == 456)
 //        #expect(arr?[1] as? String == "test")
 //        

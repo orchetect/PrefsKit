@@ -1,11 +1,11 @@
 //
-//  AnyPrefArray.swift
+//  AnyPrefsArray.swift
 //  PrefsKit • https://github.com/orchetect/PrefsKit
 //  © 2024 Steffan Andrews • Licensed under MIT License
 //
 
 /// A type that wraps an array of type-erased values for use in prefs storage.
-public struct AnyPrefArray {
+public struct AnyPrefsArray {
     public var content: [AnyPrefsStorageValue]
     
     @inlinable
@@ -22,11 +22,11 @@ public struct AnyPrefArray {
     }
 }
 
-extension AnyPrefArray: Equatable { }
+extension AnyPrefsArray: Equatable { }
 
-extension AnyPrefArray: Sendable { }
+extension AnyPrefsArray: Sendable { }
 
-extension AnyPrefArray: ExpressibleByArrayLiteral {
+extension AnyPrefsArray: ExpressibleByArrayLiteral {
     public init(arrayLiteral elements: (any PrefsStorageValue)...) {
         self.init(elements)
     }
@@ -34,7 +34,7 @@ extension AnyPrefArray: ExpressibleByArrayLiteral {
 
 // MARK: - Array Proxy Methods
 
-extension AnyPrefArray {
+extension AnyPrefsArray {
     @inlinable
     public subscript(index: Int) -> any PrefsStorageValue {
         get {
@@ -92,7 +92,7 @@ extension AnyPrefArray {
     }
     
     @inlinable
-    public mutating func append(contentsOf newElements: AnyPrefArray) {
+    public mutating func append(contentsOf newElements: AnyPrefsArray) {
         content.append(contentsOf: newElements.content)
     }
 }

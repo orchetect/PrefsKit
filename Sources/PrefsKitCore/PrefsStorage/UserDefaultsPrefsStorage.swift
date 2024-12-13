@@ -51,7 +51,7 @@ extension UserDefaultsPrefsStorage: PrefsStorage {
     
     public func storageValue(forKey key: String) -> [any PrefsStorageValue]? {
         guard let rawArray = suite.array(forKey: key) else { return nil }
-        let typedArray = rawArray.convertToAnyPrefArray()
+        let typedArray = rawArray.convertToAnyPrefsArray()
         return typedArray.content.map(\.value)
     }
     
@@ -78,9 +78,9 @@ extension UserDefaultsPrefsStorage: PrefsStorage {
         return typedDict
     }
     
-    public func storageValue(forKey key: String) -> AnyPrefArray? {
+    public func storageValue(forKey key: String) -> AnyPrefsArray? {
         guard let rawArray = suite.array(forKey: key) else { return nil }
-        let typedArray = rawArray.convertToAnyPrefArray()
+        let typedArray = rawArray.convertToAnyPrefsArray()
         assert(typedArray.content.count == rawArray.count)
         return typedArray
     }
@@ -97,10 +97,10 @@ extension UserDefaultsPrefsStorage: PrefsStorage {
 
 /// Convert a raw array from UserDefaults to a one that conforms to ``PrefsStorageValue``.
 extension [Any] {
-    func convertToAnyPrefArray() -> AnyPrefArray {
+    func convertToAnyPrefsArray() -> AnyPrefsArray {
         let converted = compactMap { AnyPrefsStorageValue(userDefaultsValue: $0) }
         assert(converted.count == count)
-        return AnyPrefArray(converted)
+        return AnyPrefsArray(converted)
     }
 }
 

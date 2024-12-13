@@ -36,7 +36,7 @@ extension Data: PrefsStorageValue {
     public var prefsStorageValue: Self { self }
 }
 
-extension AnyPrefArray: PrefsStorageValue {
+extension AnyPrefsArray: PrefsStorageValue {
     public var prefsStorageValue: [Any] {
         content.map { $0.value.prefsStorageValue }
     }
