@@ -113,23 +113,26 @@ struct UserDefaultsPrefsSchemaTests {
         static let double = "double"
         static let float = "float"
         static let data = "data"
+        static let array = "array"
         static let anyArray = "anyArray"
         static let stringArray = "stringArray"
+        static let dict = "dict"
         static let anyDict = "anyDict"
+        static let stringDict = "stringDict"
     }
     
-//    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
-//    final class TestSchema: AnyPrefsSchema, @unchecked Sendable {
-//        let storage: AnyPrefsStorage
-//        let isCacheEnabled: Bool
-//        
-//        init(storage: any PrefsStorage, isCacheEnabled: Bool) {
-//            self.storage = AnyPrefsStorage(storage)
-//            self.isCacheEnabled = isCacheEnabled
-//        }
-//        
-//        // Defined Key Implementations
-//        
+    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
+    @Prefs final class TestSchema: AnyPrefsSchema, @unchecked Sendable {
+        let storage: AnyPrefsStorage
+        let isCacheEnabled: Bool
+        
+        init(storage: any PrefsStorage, isCacheEnabled: Bool) {
+            self.storage = AnyPrefsStorage(storage)
+            self.isCacheEnabled = isCacheEnabled
+        }
+        
+        // Defined Key Implementations
+        
 //        lazy var atomic = pref(MockAtomicPrefsCoding())
 //        lazy var atomicDefaulted = pref(MockAtomicDefaultedPrefsCoding())
 //        
@@ -156,74 +159,78 @@ struct UserDefaultsPrefsSchemaTests {
 //        
 //        lazy var jsonCodable2 = pref(Key.codableFoo, of: CodableEnum.self)
 //        lazy var jsonCodableDefaulted2 = pref(Key.codableFoo, of: CodableEnum.self, default: .one)
-//        
-//        // Synthesized Key Implementations
-//        
-//        // Atomic
-//        lazy var int = pref(int: Key.int)
-//        lazy var string = pref(string: Key.string)
-//        lazy var bool = pref(bool: Key.bool)
-//        lazy var double = pref(double: Key.double)
-//        lazy var float = pref(float: Key.float)
-//        lazy var data = pref(data: Key.data)
-//        lazy var anyArray = pref(array: Key.anyArray)
-//        lazy var stringArray = pref(array: Key.anyArray, of: String.self)
-//        lazy var anyDict = pref(dictionary: Key.anyDict)
-//        lazy var stringDict = pref(dictionary: Key.anyDict, of: String.self)
-//        
-//        // Atomic (Defaulted)
-//        lazy var intDefaulted = pref(int: Key.int, default: 1)
-//        lazy var stringDefaulted = pref(string: Key.string, default: "a string")
-//        lazy var boolDefaulted = pref(bool: Key.bool, default: true)
-//        lazy var doubleDefaulted = pref(double: Key.double, default: 1.5)
-//        lazy var floatDefaulted = pref(float: Key.float, default: 2.5)
-//        lazy var dataDefaulted = pref(data: Key.data, default: Data([0x01, 0x02]))
-//        lazy var anyArrayDefaulted = pref(array: Key.anyArray, default: [123, "a string"])
-//        lazy var stringArrayDefaulted = pref(array: Key.stringArray, of: String.self, default: ["a", "b"])
-//        lazy var anyDictDefaulted = pref(dictionary: Key.anyDict, default: ["foo": 123, "bar": "a string"])
-//        lazy var stringDictDefaulted = pref(dictionary: Key.anyDict, of: String.self, default: ["a": "123", "b": "456"])
-//    }
-//    
-//    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
-//    static var schemas: [TestSchema] {
-//        [
-//            TestSchema(storage: UserDefaultsPrefsStorage(suite: testSuite()), isCacheEnabled: true),
-//            TestSchema(storage: UserDefaultsPrefsStorage(suite: testSuite()), isCacheEnabled: false),
-//            TestSchema(storage: DictionaryPrefsStorage(), isCacheEnabled: true),
-//            TestSchema(storage: DictionaryPrefsStorage(), isCacheEnabled: false)
-//        ]
-//    }
-//    
-//    // MARK: - Defined Key Implementations
-//    
+        
+        // Synthesized Key Implementations
+        
+        // Atomic
+        @Pref(key: Key.int) var int: Int?
+        @Pref(key: Key.string) var string: String?
+        @Pref(key: Key.bool) var bool: Bool?
+        @Pref(key: Key.double) var double: Double?
+        @Pref(key: Key.float) var float: Float?
+        @Pref(key: Key.data) var data: Data?
+//        @Pref(key: Key.array) var array: [any PrefsStorageValue]? // can't work with 'any'
+//        @Pref(key: Key.anyArray) var anyArray: AnyPrefArray?
+//        @Pref(key: Key.stringArray) var stringArray: [String]?
+//        @Pref(key: Key.dict) var dict: [String: any PrefsStorageValue]?? // can't work with 'any'
+//        @Pref(key: Key.anyDict) var anyDict: AnyPrefDictionary?
+//        @Pref(key: Key.stringDict) var stringDict: [String: String]?
+        
+        // Atomic (Defaulted)
+        @Pref(key: Key.int) var intDefaulted: Int = 1
+        @Pref(key: Key.string) var stringDefaulted: String = "a string"
+        @Pref(key: Key.bool) var boolDefaulted: Bool = true
+        @Pref(key: Key.double) var doubleDefaulted: Double = 1.5
+        @Pref(key: Key.float) var floatDefaulted: Float = 2.5
+        @Pref(key: Key.data) var dataDefaulted: Data = Data([0x01, 0x02])
+//        @Pref(key: Key.array) var arrayDefaulted: [any PrefsStorageValue] = [123, "a string"] // can't work with 'any'
+//        @Pref(key: Key.anyArray) var anyArrayDefaulted: AnyPrefArray = [123, "a string"]
+//        @Pref(key: Key.stringArray) var stringArrayDefaulted: [String] = ["a", "b"]
+//        @Pref(key: Key.dict) var dictDefaulted: [String: any PrefsStorageValue] = ["foo": 123, "bar": "a string"] // can't work with 'any'
+//        @Pref(key: Key.anyDict) var anyDictDefaulted: AnyPrefDictionary = ["foo": 123, "bar": "a string"]
+//        @Pref(key: Key.stringDict) var stringDictDefaulted: [String: String] = ["a": "123", "b": "456"]
+    }
+    
+    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
+    static var schemas: [TestSchema] {
+        [
+            TestSchema(storage: UserDefaultsPrefsStorage(suite: testSuite()), isCacheEnabled: true),
+            TestSchema(storage: UserDefaultsPrefsStorage(suite: testSuite()), isCacheEnabled: false),
+            TestSchema(storage: DictionaryPrefsStorage(), isCacheEnabled: true),
+            TestSchema(storage: DictionaryPrefsStorage(), isCacheEnabled: false)
+        ]
+    }
+    
+    // MARK: - Defined Key Implementations
+    
 //    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
 //    @Test(arguments: schemas)
 //    func atomicPrefKey(schema: TestSchema) async throws {
-//        #expect(schema.atomic.value == nil)
+//        #expect(schema.atomic == nil)
 //        
-//        schema.atomic.value = false
-//        #expect(schema.atomic.value == false)
+//        schema.atomic = false
+//        #expect(schema.atomic == false)
 //        
-//        schema.atomic.value = true
-//        #expect(schema.atomic.value == true)
+//        schema.atomic = true
+//        #expect(schema.atomic == true)
 //        
 //        schema.atomic.value?.toggle()
-//        #expect(schema.atomic.value == false)
+//        #expect(schema.atomic == false)
 //        
-//        schema.atomic.value = nil
-//        #expect(schema.atomic.value == nil)
+//        schema.atomic = nil
+//        #expect(schema.atomic == nil)
 //    }
 //    
 //    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
 //    @Test(arguments: schemas)
 //    func atomicDefaultedPrefKey(schema: TestSchema) async throws {
-//        #expect(schema.atomicDefaulted.value == true)
+//        #expect(schema.atomicDefaulted == true)
 //        
-//        schema.atomicDefaulted.value = false
-//        #expect(schema.atomicDefaulted.value == false)
+//        schema.atomicDefaulted = false
+//        #expect(schema.atomicDefaulted == false)
 //        
 //        schema.atomicDefaulted.value.toggle()
-//        #expect(schema.atomicDefaulted.value == true)
+//        #expect(schema.atomicDefaulted == true)
 //        
 //        // can't set nil
 //    }
@@ -231,28 +238,28 @@ struct UserDefaultsPrefsSchemaTests {
 //    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
 //    @Test(arguments: schemas)
 //    func rawRepresentablePrefKey(schema: TestSchema) async throws {
-//        #expect(schema.rawRep.value == nil)
+//        #expect(schema.rawRep == nil)
 //        
-//        schema.rawRep.value = .one
-//        #expect(schema.rawRep.value == .one)
+//        schema.rawRep = .one
+//        #expect(schema.rawRep == .one)
 //        
-//        schema.rawRep.value = .two
-//        #expect(schema.rawRep.value == .two)
+//        schema.rawRep = .two
+//        #expect(schema.rawRep == .two)
 //        
-//        schema.rawRep.value = nil
-//        #expect(schema.rawRep.value == nil)
+//        schema.rawRep = nil
+//        #expect(schema.rawRep == nil)
 //    }
 //    
 //    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
 //    @Test(arguments: schemas)
 //    func rawRepresentableDefaultedPrefKey(schema: TestSchema) async throws {
-//        #expect(schema.rawRepDefaulted.value == .one)
+//        #expect(schema.rawRepDefaulted == .one)
 //        
-//        schema.rawRepDefaulted.value = .one
-//        #expect(schema.rawRepDefaulted.value == .one)
+//        schema.rawRepDefaulted = .one
+//        #expect(schema.rawRepDefaulted == .one)
 //        
-//        schema.rawRepDefaulted.value = .two
-//        #expect(schema.rawRepDefaulted.value == .two)
+//        schema.rawRepDefaulted = .two
+//        #expect(schema.rawRepDefaulted == .two)
 //        
 //        // can't set nil
 //    }
@@ -260,28 +267,28 @@ struct UserDefaultsPrefsSchemaTests {
 //    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
 //    @Test(arguments: schemas)
 //    func rawRepresentable2PrefKey(schema: TestSchema) async throws {
-//        #expect(schema.rawRep2.value == nil)
+//        #expect(schema.rawRep2 == nil)
 //        
-//        schema.rawRep2.value = .one
-//        #expect(schema.rawRep2.value == .one)
+//        schema.rawRep2 = .one
+//        #expect(schema.rawRep2 == .one)
 //        
-//        schema.rawRep2.value = .two
-//        #expect(schema.rawRep2.value == .two)
+//        schema.rawRep2 = .two
+//        #expect(schema.rawRep2 == .two)
 //        
-//        schema.rawRep2.value = nil
-//        #expect(schema.rawRep2.value == nil)
+//        schema.rawRep2 = nil
+//        #expect(schema.rawRep2 == nil)
 //    }
 //    
 //    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
 //    @Test(arguments: schemas)
 //    func rawRepresentableDefaulted2PrefKey(schema: TestSchema) async throws {
-//        #expect(schema.rawRepDefaulted2.value == .one)
+//        #expect(schema.rawRepDefaulted2 == .one)
 //        
-//        schema.rawRepDefaulted2.value = .one
-//        #expect(schema.rawRepDefaulted2.value == .one)
+//        schema.rawRepDefaulted2 = .one
+//        #expect(schema.rawRepDefaulted2 == .one)
 //        
-//        schema.rawRepDefaulted2.value = .two
-//        #expect(schema.rawRepDefaulted2.value == .two)
+//        schema.rawRepDefaulted2 = .two
+//        #expect(schema.rawRepDefaulted2 == .two)
 //        
 //        // can't set nil
 //    }
@@ -289,28 +296,28 @@ struct UserDefaultsPrefsSchemaTests {
 //    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
 //    @Test(arguments: schemas)
 //    func codablePrefKey(schema: TestSchema) async throws {
-//        #expect(schema.codable.value == nil)
+//        #expect(schema.codable == nil)
 //        
-//        schema.codable.value = .one
-//        #expect(schema.codable.value == .one)
+//        schema.codable = .one
+//        #expect(schema.codable == .one)
 //        
-//        schema.codable.value = .two
-//        #expect(schema.codable.value == .two)
+//        schema.codable = .two
+//        #expect(schema.codable == .two)
 //        
-//        schema.codable.value = nil
-//        #expect(schema.codable.value == nil)
+//        schema.codable = nil
+//        #expect(schema.codable == nil)
 //    }
 //    
 //    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
 //    @Test(arguments: schemas)
 //    func codableDefaultedPrefKey(schema: TestSchema) async throws {
-//        #expect(schema.codableDefaulted.value == .one)
+//        #expect(schema.codableDefaulted == .one)
 //        
-//        schema.codableDefaulted.value = .one
-//        #expect(schema.codableDefaulted.value == .one)
+//        schema.codableDefaulted = .one
+//        #expect(schema.codableDefaulted == .one)
 //        
-//        schema.codableDefaulted.value = .two
-//        #expect(schema.codableDefaulted.value == .two)
+//        schema.codableDefaulted = .two
+//        #expect(schema.codableDefaulted == .two)
 //        
 //        // can't set nil
 //    }
@@ -318,28 +325,28 @@ struct UserDefaultsPrefsSchemaTests {
 //    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
 //    @Test(arguments: schemas)
 //    func codable2PrefKey(schema: TestSchema) async throws {
-//        #expect(schema.codable2.value == nil)
+//        #expect(schema.codable2 == nil)
 //        
-//        schema.codable2.value = .one
-//        #expect(schema.codable2.value == .one)
+//        schema.codable2 = .one
+//        #expect(schema.codable2 == .one)
 //        
-//        schema.codable2.value = .two
-//        #expect(schema.codable2.value == .two)
+//        schema.codable2 = .two
+//        #expect(schema.codable2 == .two)
 //        
-//        schema.codable2.value = nil
-//        #expect(schema.codable2.value == nil)
+//        schema.codable2 = nil
+//        #expect(schema.codable2 == nil)
 //    }
 //    
 //    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
 //    @Test(arguments: schemas)
 //    func codableDefaulted2PrefKey(schema: TestSchema) async throws {
-//        #expect(schema.codableDefaulted2.value == .one)
+//        #expect(schema.codableDefaulted2 == .one)
 //        
-//        schema.codableDefaulted2.value = .one
-//        #expect(schema.codableDefaulted2.value == .one)
+//        schema.codableDefaulted2 = .one
+//        #expect(schema.codableDefaulted2 == .one)
 //        
-//        schema.codableDefaulted2.value = .two
-//        #expect(schema.codableDefaulted2.value == .two)
+//        schema.codableDefaulted2 = .two
+//        #expect(schema.codableDefaulted2 == .two)
 //        
 //        // can't set nil
 //    }
@@ -347,28 +354,28 @@ struct UserDefaultsPrefsSchemaTests {
 //    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
 //    @Test(arguments: schemas)
 //    func jsonCodablePrefsCodable(schema: TestSchema) async throws {
-//        #expect(schema.jsonCodable.value == nil)
+//        #expect(schema.jsonCodable == nil)
 //        
-//        schema.jsonCodable.value = .one
-//        #expect(schema.jsonCodable.value == .one)
+//        schema.jsonCodable = .one
+//        #expect(schema.jsonCodable == .one)
 //        
-//        schema.jsonCodable.value = .two
-//        #expect(schema.jsonCodable.value == .two)
+//        schema.jsonCodable = .two
+//        #expect(schema.jsonCodable == .two)
 //        
-//        schema.jsonCodable.value = nil
-//        #expect(schema.jsonCodable.value == nil)
+//        schema.jsonCodable = nil
+//        #expect(schema.jsonCodable == nil)
 //    }
 //    
 //    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
 //    @Test(arguments: schemas)
 //    func jsonCodableDefaultedPrefKey(schema: TestSchema) async throws {
-//        #expect(schema.jsonCodableDefaulted.value == .one)
+//        #expect(schema.jsonCodableDefaulted == .one)
 //        
-//        schema.jsonCodableDefaulted.value = .one
-//        #expect(schema.jsonCodableDefaulted.value == .one)
+//        schema.jsonCodableDefaulted = .one
+//        #expect(schema.jsonCodableDefaulted == .one)
 //        
-//        schema.jsonCodableDefaulted.value = .two
-//        #expect(schema.jsonCodableDefaulted.value == .two)
+//        schema.jsonCodableDefaulted = .two
+//        #expect(schema.jsonCodableDefaulted == .two)
 //        
 //        // can't set nil
 //    }
@@ -376,157 +383,157 @@ struct UserDefaultsPrefsSchemaTests {
 //    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
 //    @Test(arguments: schemas)
 //    func jsonCodable2PrefKey(schema: TestSchema) async throws {
-//        #expect(schema.jsonCodable2.value == nil)
+//        #expect(schema.jsonCodable2 == nil)
 //        
-//        schema.jsonCodable2.value = .one
-//        #expect(schema.jsonCodable2.value == .one)
+//        schema.jsonCodable2 = .one
+//        #expect(schema.jsonCodable2 == .one)
 //        
-//        schema.jsonCodable2.value = .two
-//        #expect(schema.jsonCodable2.value == .two)
+//        schema.jsonCodable2 = .two
+//        #expect(schema.jsonCodable2 == .two)
 //        
-//        schema.jsonCodable2.value = nil
-//        #expect(schema.jsonCodable2.value == nil)
+//        schema.jsonCodable2 = nil
+//        #expect(schema.jsonCodable2 == nil)
 //    }
 //    
 //    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
 //    @Test(arguments: schemas)
 //    func jsonCodableDefaulted2PrefKey(schema: TestSchema) async throws {
-//        #expect(schema.jsonCodableDefaulted2.value == .one)
+//        #expect(schema.jsonCodableDefaulted2 == .one)
 //        
-//        schema.jsonCodableDefaulted2.value = .one
-//        #expect(schema.jsonCodableDefaulted2.value == .one)
+//        schema.jsonCodableDefaulted2 = .one
+//        #expect(schema.jsonCodableDefaulted2 == .one)
 //        
-//        schema.jsonCodableDefaulted2.value = .two
-//        #expect(schema.jsonCodableDefaulted2.value == .two)
+//        schema.jsonCodableDefaulted2 = .two
+//        #expect(schema.jsonCodableDefaulted2 == .two)
 //        
 //        // can't set nil
 //    }
-//    
-//    // MARK: - Synthesized Key Implementations: Non-Defaulted (Atomic)
-//    
-//    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
-//    @Test(arguments: schemas)
-//    func intPrefKey(schema: TestSchema) async throws {
-//        #expect(schema.int.value == nil)
-//        
-//        schema.int.value = 1
-//        #expect(schema.int.value == 1)
-//        
-//        schema.int.value = 2
-//        #expect(schema.int.value == 2)
-//        
-//        schema.int.value? += 1
-//        #expect(schema.int.value == 3)
-//        
-//        schema.int.value = nil
-//        #expect(schema.int.value == nil)
-//    }
-//    
-//    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
-//    @Test(arguments: schemas)
-//    func stringPrefKey(schema: TestSchema) async throws {
-//        #expect(schema.string.value == nil)
-//        
-//        schema.string.value = "1"
-//        #expect(schema.string.value == "1")
-//        
-//        schema.string.value = "2"
-//        #expect(schema.string.value == "2")
-//        
-//        schema.string.value? += "0"
-//        #expect(schema.string.value == "20")
-//        
-//        schema.string.value = nil
-//        #expect(schema.string.value == nil)
-//    }
-//    
-//    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
-//    @Test(arguments: schemas)
-//    func boolPrefKey(schema: TestSchema) async throws {
-//        #expect(schema.bool.value == nil)
-//        
-//        schema.bool.value = true
-//        #expect(schema.bool.value == true)
-//        
-//        schema.bool.value = false
-//        #expect(schema.bool.value == false)
-//        
-//        schema.bool.value?.toggle()
-//        #expect(schema.bool.value == true)
-//        
-//        schema.bool.value = nil
-//        #expect(schema.bool.value == nil)
-//    }
-//    
-//    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
-//    @Test(arguments: schemas)
-//    func doublePrefKey(schema: TestSchema) async throws {
-//        #expect(schema.double.value == nil)
-//        
-//        schema.double.value = 1.5
-//        #expect(schema.double.value == 1.5)
-//        
-//        schema.double.value = 2.0
-//        #expect(schema.double.value == 2.0)
-//        
-//        schema.double.value? += 1.0
-//        #expect(schema.double.value == 3.0)
-//        
-//        schema.double.value = nil
-//        #expect(schema.double.value == nil)
-//    }
-//    
-//    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
-//    @Test(arguments: schemas)
-//    func floatPrefKey(schema: TestSchema) async throws {
-//        #expect(schema.float.value == nil)
-//        
-//        schema.float.value = 1.5
-//        #expect(schema.float.value == 1.5)
-//        
-//        schema.float.value = 2.0
-//        #expect(schema.float.value == 2.0)
-//        
-//        schema.float.value? += 1.0
-//        #expect(schema.float.value == 3.0)
-//        
-//        schema.float.value = nil
-//        #expect(schema.float.value == nil)
-//    }
-//    
-//    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
-//    @Test(arguments: schemas)
-//    func dataPrefKey(schema: TestSchema) async throws {
-//        #expect(schema.data.value == nil)
-//        
-//        schema.data.value = Data([0x01, 0x02])
-//        #expect(schema.data.value == Data([0x01, 0x02]))
-//        
-//        schema.data.value = Data([0x03, 0x04])
-//        #expect(schema.data.value == Data([0x03, 0x04]))
-//        
-//        schema.data.value?.append(contentsOf: [0x05])
-//        #expect(schema.data.value == Data([0x03, 0x04, 0x05]))
-//        
-//        schema.data.value = nil
-//        #expect(schema.data.value == nil)
-//    }
-//    
+    
+    // MARK: - Synthesized Key Implementations: Non-Defaulted (Atomic)
+    
+    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
+    @Test(arguments: schemas)
+    func intPrefKey(schema: TestSchema) async throws {
+        #expect(schema.int == nil)
+        
+        schema.int = 1
+        #expect(schema.int == 1)
+        
+        schema.int = 2
+        #expect(schema.int == 2)
+        
+        schema.int? += 1
+        #expect(schema.int == 3)
+        
+        schema.int = nil
+        #expect(schema.int == nil)
+    }
+    
+    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
+    @Test(arguments: schemas)
+    func stringPrefKey(schema: TestSchema) async throws {
+        #expect(schema.string == nil)
+        
+        schema.string = "1"
+        #expect(schema.string == "1")
+        
+        schema.string = "2"
+        #expect(schema.string == "2")
+        
+        schema.string? += "0"
+        #expect(schema.string == "20")
+        
+        schema.string = nil
+        #expect(schema.string == nil)
+    }
+    
+    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
+    @Test(arguments: schemas)
+    func boolPrefKey(schema: TestSchema) async throws {
+        #expect(schema.bool == nil)
+        
+        schema.bool = true
+        #expect(schema.bool == true)
+        
+        schema.bool = false
+        #expect(schema.bool == false)
+        
+        schema.bool?.toggle()
+        #expect(schema.bool == true)
+        
+        schema.bool = nil
+        #expect(schema.bool == nil)
+    }
+    
+    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
+    @Test(arguments: schemas)
+    func doublePrefKey(schema: TestSchema) async throws {
+        #expect(schema.double == nil)
+        
+        schema.double = 1.5
+        #expect(schema.double == 1.5)
+        
+        schema.double = 2.0
+        #expect(schema.double == 2.0)
+        
+        schema.double? += 1.0
+        #expect(schema.double == 3.0)
+        
+        schema.double = nil
+        #expect(schema.double == nil)
+    }
+    
+    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
+    @Test(arguments: schemas)
+    func floatPrefKey(schema: TestSchema) async throws {
+        #expect(schema.float == nil)
+        
+        schema.float = 1.5
+        #expect(schema.float == 1.5)
+        
+        schema.float = 2.0
+        #expect(schema.float == 2.0)
+        
+        schema.float? += 1.0
+        #expect(schema.float == 3.0)
+        
+        schema.float = nil
+        #expect(schema.float == nil)
+    }
+    
+    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
+    @Test(arguments: schemas)
+    func dataPrefKey(schema: TestSchema) async throws {
+        #expect(schema.data == nil)
+        
+        schema.data = Data([0x01, 0x02])
+        #expect(schema.data == Data([0x01, 0x02]))
+        
+        schema.data = Data([0x03, 0x04])
+        #expect(schema.data == Data([0x03, 0x04]))
+        
+        schema.data?.append(contentsOf: [0x05])
+        #expect(schema.data == Data([0x03, 0x04, 0x05]))
+        
+        schema.data = nil
+        #expect(schema.data == nil)
+    }
+    
 //    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
 //    @Test(arguments: schemas)
 //    func anyArrayPrefKey(schema: TestSchema) async throws {
-//        #expect(schema.anyArray.value == nil)
+//        #expect(schema.anyArray == nil)
 //        
-//        schema.anyArray.value = ["abc"]
-//        #expect(schema.anyArray.value?.count == 1)
-//        #expect(schema.anyArray.value?[0] as? String == "abc")
+//        schema.anyArray = ["abc"]
+//        #expect(schema.anyArray?.count == 1)
+//        #expect(schema.anyArray?[0] as? String == "abc")
 //        
-//        schema.anyArray.value?.append("xyz")
-//        #expect(schema.anyArray.value?.count == 2)
-//        #expect(schema.anyArray.value?[0] as? String == "abc")
-//        #expect(schema.anyArray.value?[1] as? String == "xyz")
+//        schema.anyArray?.append("xyz")
+//        #expect(schema.anyArray?.count == 2)
+//        #expect(schema.anyArray?[0] as? String == "abc")
+//        #expect(schema.anyArray?[1] as? String == "xyz")
 //        
-//        schema.anyArray.value = [
+//        schema.anyArray = [
 //            1 as Int,
 //            "xyz",
 //            true,
@@ -536,56 +543,56 @@ struct UserDefaultsPrefsSchemaTests {
 //            [456, "test"] as AnyPrefArray,
 //            ["def": 234, "ghi": "str"] as AnyPrefDictionary
 //        ]
-//        #expect(schema.anyArray.value?.count == 8)
-//        #expect(schema.anyArray.value?[0] as? Int == 1)
-//        #expect(schema.anyArray.value?[1] as? String == "xyz")
-//        #expect(schema.anyArray.value?[2] as? Bool == true)
-//        #expect(schema.anyArray.value?[3] as? Double == 150.0)
-//        #expect(schema.anyArray.value?[4] as? Float == 200.5)
-//        #expect(schema.anyArray.value?[5] as? Data == Data([0x03, 0x04]))
-//        let arr = schema.anyArray.value?[6] as? AnyPrefArray
+//        #expect(schema.anyArray?.count == 8)
+//        #expect(schema.anyArray?[0] as? Int == 1)
+//        #expect(schema.anyArray?[1] as? String == "xyz")
+//        #expect(schema.anyArray?[2] as? Bool == true)
+//        #expect(schema.anyArray?[3] as? Double == 150.0)
+//        #expect(schema.anyArray?[4] as? Float == 200.5)
+//        #expect(schema.anyArray?[5] as? Data == Data([0x03, 0x04]))
+//        let arr = schema.anyArray?[6] as? AnyPrefArray
 //        #expect(arr?[0] as? Int == 456)
 //        #expect(arr?[1] as? String == "test")
-//        let dict = schema.anyArray.value?[7] as? AnyPrefDictionary
+//        let dict = schema.anyArray?[7] as? AnyPrefDictionary
 //        #expect(dict?["def"] as? Int == 234)
 //        #expect(dict?["ghi"] as? String == "str")
 //        
-//        schema.anyArray.value = nil
-//        #expect(schema.anyArray.value == nil)
+//        schema.anyArray = nil
+//        #expect(schema.anyArray == nil)
 //    }
 //    
 //    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
 //    @Test(arguments: schemas)
 //    func typedArrayPrefKey(schema: TestSchema) async throws {
-//        #expect(schema.stringArray.value == nil)
+//        #expect(schema.stringArray == nil)
 //        
-//        schema.stringArray.value = ["abc"]
-//        #expect(schema.stringArray.value?.count == 1)
-//        #expect(schema.stringArray.value?[0] == "abc")
+//        schema.stringArray = ["abc"]
+//        #expect(schema.stringArray?.count == 1)
+//        #expect(schema.stringArray?[0] == "abc")
 //        
-//        schema.stringArray.value?[0] = "foo"
-//        #expect(schema.stringArray.value?.count == 1)
-//        #expect(schema.stringArray.value?[0] == "foo")
+//        schema.stringArray?[0] = "foo"
+//        #expect(schema.stringArray?.count == 1)
+//        #expect(schema.stringArray?[0] == "foo")
 //        
-//        schema.stringArray.value = ["def", "xyz"]
-//        #expect(schema.stringArray.value?.count == 2)
-//        #expect(schema.stringArray.value?[0] == "def")
-//        #expect(schema.stringArray.value?[1] == "xyz")
+//        schema.stringArray = ["def", "xyz"]
+//        #expect(schema.stringArray?.count == 2)
+//        #expect(schema.stringArray?[0] == "def")
+//        #expect(schema.stringArray?[1] == "xyz")
 //        
-//        schema.anyArray.value = nil
-//        #expect(schema.anyArray.value == nil)
+//        schema.anyArray = nil
+//        #expect(schema.anyArray == nil)
 //    }
 //    
 //    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
 //    @Test(arguments: schemas)
 //    func anyDictionaryPrefKey(schema: TestSchema) async throws {
-//        #expect(schema.anyDict.value == nil)
+//        #expect(schema.anyDict == nil)
 //        
-//        schema.anyDict.value = ["abc": 123]
-//        #expect(schema.anyDict.value?.count == 1)
-//        #expect(schema.anyDict.value?["abc"] as? Int == 123)
+//        schema.anyDict = ["abc": 123]
+//        #expect(schema.anyDict?.count == 1)
+//        #expect(schema.anyDict?["abc"] as? Int == 123)
 //        
-//        schema.anyDict.value = [
+//        schema.anyDict = [
 //            "a": 1 as Int,
 //            "b": "xyz",
 //            "c": true,
@@ -595,143 +602,143 @@ struct UserDefaultsPrefsSchemaTests {
 //            "g": [456, "test"] as AnyPrefArray,
 //            "h": ["def": 234, "ghi": 500.6] as AnyPrefDictionary
 //        ]
-//        #expect(schema.anyDict.value?.count == 8)
-//        #expect(schema.anyDict.value?["a"] as? Int == 1)
-//        #expect(schema.anyDict.value?["b"] as? String == "xyz")
-//        #expect(schema.anyDict.value?["c"] as? Bool == true)
-//        #expect(schema.anyDict.value?["d"] as? Double == 150.0)
-//        #expect(schema.anyDict.value?["e"] as? Float == 200.5)
-//        #expect(schema.anyDict.value?["f"] as? Data == Data([0x03, 0x04]))
+//        #expect(schema.anyDict?.count == 8)
+//        #expect(schema.anyDict?["a"] as? Int == 1)
+//        #expect(schema.anyDict?["b"] as? String == "xyz")
+//        #expect(schema.anyDict?["c"] as? Bool == true)
+//        #expect(schema.anyDict?["d"] as? Double == 150.0)
+//        #expect(schema.anyDict?["e"] as? Float == 200.5)
+//        #expect(schema.anyDict?["f"] as? Data == Data([0x03, 0x04]))
 //        
-//        let arr = schema.anyDict.value?["g"] as? AnyPrefArray
+//        let arr = schema.anyDict?["g"] as? AnyPrefArray
 //        #expect(arr?[0] as? Int == 456)
 //        #expect(arr?[1] as? String == "test")
 //        
-//        let dict = schema.anyDict.value?["h"] as? AnyPrefDictionary
+//        let dict = schema.anyDict?["h"] as? AnyPrefDictionary
 //        #expect(dict?["def"] as? Int == 234)
 //        #expect(dict?["ghi"] as? Double == 500.6)
 //        
-//        schema.anyDict.value = nil
-//        #expect(schema.anyDict.value == nil)
+//        schema.anyDict = nil
+//        #expect(schema.anyDict == nil)
 //    }
 //    
 //    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
 //    @Test(arguments: schemas)
 //    func typedDictionaryPrefKey(schema: TestSchema) async throws {
-//        #expect(schema.stringDict.value == nil)
+//        #expect(schema.stringDict == nil)
 //        
-//        schema.stringDict.value = ["a": "abc"]
-//        #expect(schema.stringDict.value?.count == 1)
-//        #expect(schema.stringDict.value?["a"] == "abc")
+//        schema.stringDict = ["a": "abc"]
+//        #expect(schema.stringDict?.count == 1)
+//        #expect(schema.stringDict?["a"] == "abc")
 //        
-//        schema.stringDict.value?["a"] = "def"
-//        #expect(schema.stringDict.value?.count == 1)
-//        #expect(schema.stringDict.value?["a"] == "def")
+//        schema.stringDict?["a"] = "def"
+//        #expect(schema.stringDict?.count == 1)
+//        #expect(schema.stringDict?["a"] == "def")
 //        
-//        schema.stringDict.value = nil
-//        #expect(schema.stringDict.value == nil)
+//        schema.stringDict = nil
+//        #expect(schema.stringDict == nil)
 //    }
-//    
-//    // MARK: - Synthesized Key Implementations: Defaulted (Atomic)
-//    
-//    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
-//    @Test(arguments: schemas)
-//    func intDefaultedPrefKey(schema: TestSchema) async throws {
-//        #expect(schema.intDefaulted.value == 1)
-//        
-//        schema.intDefaulted.value = 2
-//        #expect(schema.intDefaulted.value == 2)
-//    }
-//    
-//    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
-//    @Test(arguments: schemas)
-//    func stringDefaultedPrefKey(schema: TestSchema) async throws {
-//        #expect(schema.stringDefaulted.value == "a string")
-//        
-//        schema.stringDefaulted.value = "1"
-//        #expect(schema.stringDefaulted.value == "1")
-//    }
-//    
-//    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
-//    @Test(arguments: schemas)
-//    func boolDefaultedPrefKey(schema: TestSchema) async throws {
-//        #expect(schema.boolDefaulted.value == true)
-//        
-//        schema.boolDefaulted.value = false
-//        #expect(schema.boolDefaulted.value == false)
-//    }
-//    
-//    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
-//    @Test(arguments: schemas)
-//    func doubleDefaultedPrefKey(schema: TestSchema) async throws {
-//        #expect(schema.doubleDefaulted.value == 1.5)
-//        
-//        schema.doubleDefaulted.value = 3.25
-//        #expect(schema.doubleDefaulted.value == 3.25)
-//    }
-//    
-//    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
-//    @Test(arguments: schemas)
-//    func floatDefaultedPrefKey(schema: TestSchema) async throws {
-//        #expect(schema.floatDefaulted.value == 2.5)
-//        
-//        schema.floatDefaulted.value = 5.6
-//        #expect(schema.floatDefaulted.value == 5.6)
-//    }
-//    
-//    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
-//    @Test(arguments: schemas)
-//    func dataDefaultedPrefKey(schema: TestSchema) async throws {
-//        #expect(schema.dataDefaulted.value == Data([0x01, 0x02]))
-//        
-//        schema.dataDefaulted.value = Data([0x03, 0x04])
-//        #expect(schema.dataDefaulted.value == Data([0x03, 0x04]))
-//    }
-//    
+    
+    // MARK: - Synthesized Key Implementations: Defaulted (Atomic)
+    
+    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
+    @Test(arguments: schemas)
+    func intDefaultedPrefKey(schema: TestSchema) async throws {
+        #expect(schema.intDefaulted == 1)
+        
+        schema.intDefaulted = 2
+        #expect(schema.intDefaulted == 2)
+    }
+    
+    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
+    @Test(arguments: schemas)
+    func stringDefaultedPrefKey(schema: TestSchema) async throws {
+        #expect(schema.stringDefaulted == "a string")
+        
+        schema.stringDefaulted = "1"
+        #expect(schema.stringDefaulted == "1")
+    }
+    
+    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
+    @Test(arguments: schemas)
+    func boolDefaultedPrefKey(schema: TestSchema) async throws {
+        #expect(schema.boolDefaulted == true)
+        
+        schema.boolDefaulted = false
+        #expect(schema.boolDefaulted == false)
+    }
+    
+    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
+    @Test(arguments: schemas)
+    func doubleDefaultedPrefKey(schema: TestSchema) async throws {
+        #expect(schema.doubleDefaulted == 1.5)
+        
+        schema.doubleDefaulted = 3.25
+        #expect(schema.doubleDefaulted == 3.25)
+    }
+    
+    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
+    @Test(arguments: schemas)
+    func floatDefaultedPrefKey(schema: TestSchema) async throws {
+        #expect(schema.floatDefaulted == 2.5)
+        
+        schema.floatDefaulted = 5.6
+        #expect(schema.floatDefaulted == 5.6)
+    }
+    
+    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
+    @Test(arguments: schemas)
+    func dataDefaultedPrefKey(schema: TestSchema) async throws {
+        #expect(schema.dataDefaulted == Data([0x01, 0x02]))
+        
+        schema.dataDefaulted = Data([0x03, 0x04])
+        #expect(schema.dataDefaulted == Data([0x03, 0x04]))
+    }
+    
 //    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
 //    @Test(arguments: schemas)
 //    func anyArrayDefaultedPrefKey(schema: TestSchema) async throws {
-//        #expect(schema.anyArrayDefaulted.value.count == 2)
-//        #expect(schema.anyArrayDefaulted.value[0] as? Int == 123)
-//        #expect(schema.anyArrayDefaulted.value[1] as? String == "a string")
+//        #expect(schema.anyArrayDefaulted.count == 2)
+//        #expect(schema.anyArrayDefaulted[0] as? Int == 123)
+//        #expect(schema.anyArrayDefaulted[1] as? String == "a string")
 //        
-//        schema.anyArrayDefaulted.value = ["abc"]
-//        #expect(schema.anyArrayDefaulted.value.count == 1)
-//        #expect(schema.anyArrayDefaulted.value[0] as? String == "abc")
+//        schema.anyArrayDefaulted = ["abc"]
+//        #expect(schema.anyArrayDefaulted.count == 1)
+//        #expect(schema.anyArrayDefaulted[0] as? String == "abc")
 //    }
 //    
 //    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
 //    @Test(arguments: schemas)
 //    func stringArrayDefaultedPrefKey(schema: TestSchema) async throws {
-//        #expect(schema.stringArrayDefaulted.value.count == 2)
-//        #expect(schema.stringArrayDefaulted.value == ["a", "b"])
+//        #expect(schema.stringArrayDefaulted.count == 2)
+//        #expect(schema.stringArrayDefaulted == ["a", "b"])
 //        
-//        schema.stringArrayDefaulted.value = ["abc"]
-//        #expect(schema.stringArrayDefaulted.value.count == 1)
-//        #expect(schema.stringArrayDefaulted.value == ["abc"])
+//        schema.stringArrayDefaulted = ["abc"]
+//        #expect(schema.stringArrayDefaulted.count == 1)
+//        #expect(schema.stringArrayDefaulted == ["abc"])
 //    }
 //    
 //    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
 //    @Test(arguments: schemas)
 //    func anyDictionaryDefaultedPrefKey(schema: TestSchema) async throws {
-//        #expect(schema.anyDictDefaulted.value.count == 2)
-//        #expect(schema.anyDictDefaulted.value["foo"] as? Int == 123)
-//        #expect(schema.anyDictDefaulted.value["bar"] as? String == "a string")
+//        #expect(schema.anyDictDefaulted.count == 2)
+//        #expect(schema.anyDictDefaulted["foo"] as? Int == 123)
+//        #expect(schema.anyDictDefaulted["bar"] as? String == "a string")
 //        
-//        schema.anyDictDefaulted.value = ["abc": 456]
-//        #expect(schema.anyDictDefaulted.value.count == 1)
-//        #expect(schema.anyDictDefaulted.value["abc"] as? Int == 456)
+//        schema.anyDictDefaulted = ["abc": 456]
+//        #expect(schema.anyDictDefaulted.count == 1)
+//        #expect(schema.anyDictDefaulted["abc"] as? Int == 456)
 //    }
 //    
 //    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
 //    @Test(arguments: schemas)
 //    func stringDictionaryDefaultedPrefKey(schema: TestSchema) async throws {
-//        #expect(schema.stringDictDefaulted.value.count == 2)
-//        #expect(schema.stringDictDefaulted.value["a"] == "123")
-//        #expect(schema.stringDictDefaulted.value["b"] == "456")
+//        #expect(schema.stringDictDefaulted.count == 2)
+//        #expect(schema.stringDictDefaulted["a"] == "123")
+//        #expect(schema.stringDictDefaulted["b"] == "456")
 //        
-//        schema.stringDictDefaulted.value = ["c": "789"]
-//        #expect(schema.stringDictDefaulted.value.count == 1)
-//        #expect(schema.stringDictDefaulted.value["c"] == "789")
+//        schema.stringDictDefaulted = ["c": "789"]
+//        #expect(schema.stringDictDefaulted.count == 1)
+//        #expect(schema.stringDictDefaulted["c"] == "789")
 //    }
 }
