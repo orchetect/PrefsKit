@@ -178,33 +178,27 @@ extension PrefMacro: AccessorMacro {
         
         let hasDefault = (try? self.defaultValue(from: varDec)) != nil
         
-        let modifyBlock: AccessorDeclSyntax = hasDefault
-            ? """
-                if \(raw: privateValueVarName) == nil {
-                    \(raw: privateValueVarName) = \(raw: privateKeyVarName).defaultValue
-                }
-                yield &\(raw: privateValueVarName)!
-                storage.setValue(forKey: \(raw: privateKeyVarName), to: \(raw: privateValueVarName))
-                """
-            : """
-                yield &\(raw: privateValueVarName)
-                storage.setValue(forKey: \(raw: privateKeyVarName), to: \(raw: privateValueVarName))
-                """
-        
         return [
             """
             get {
                 _$observationRegistrar.access(self, keyPath: \(raw: keyPath))
-                let val = storage.value(forKey: \(raw: privateKeyVarName))
-                \(raw: privateValueVarName) = val
-                return val
+                if isCacheEnabled {
+                    if \(raw: privateValueVarName) == nil {
+                        \(raw: privateValueVarName) = storage.value(forKey: \(raw: privateKeyVarName))
+                    }
+                    return \(raw: privateValueVarName)\(raw: hasDefault ? " ?? \(privateKeyVarName).defaultValue" : "")
+                } else {
+                    return storage.value(forKey: \(raw: privateKeyVarName))
+                }
             }
             """,
             """
             set {
                 withMutation(keyPath: \(raw: keyPath)) {
                     storage.setValue(forKey: \(raw: privateKeyVarName), to: newValue)
-                    \(raw: privateValueVarName) = newValue
+                    if isCacheEnabled {
+                        \(raw: privateValueVarName) = newValue
+                    }
                 }
             }
             """,
@@ -215,7 +209,17 @@ extension PrefMacro: AccessorMacro {
                 defer {
                     _$observationRegistrar.didSet(self, keyPath: \(raw: keyPath))
                 }
-                \(modifyBlock)
+                if isCacheEnabled {
+                    if \(raw: privateValueVarName) == nil {
+                        \(raw: privateValueVarName) = storage.value(forKey: \(raw: privateKeyVarName))
+                    }
+                    yield &\(raw: privateValueVarName)\(raw: hasDefault ? "!" : "")
+                    storage.setValue(forKey: \(raw: privateKeyVarName), to: \(raw: privateValueVarName))
+                } else {
+                    var val = storage.value(forKey: \(raw: privateKeyVarName))
+                    yield &val
+                    storage.setValue(forKey: \(raw: privateKeyVarName), to: val)
+                }
             }
             """
         ]
