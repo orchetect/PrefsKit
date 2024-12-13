@@ -116,11 +116,11 @@ struct UserDefaultsPrefsSchemaTests {
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
     @Prefs final class TestSchema: AnyPrefsSchema, @unchecked Sendable {
         let storage: AnyPrefsStorage
-        let isCacheEnabled: Bool
+        let storageMode: PrefsSchemaMode
         
-        init(storage: any PrefsStorage, isCacheEnabled: Bool) {
+        init(storage: any PrefsStorage, storageMode: PrefsSchemaMode) {
             self.storage = AnyPrefsStorage(storage)
-            self.isCacheEnabled = isCacheEnabled
+            self.storageMode = storageMode
         }
         
         // Defined Key Implementations
@@ -186,10 +186,10 @@ struct UserDefaultsPrefsSchemaTests {
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
     static var schemas: [TestSchema] {
         [
-            TestSchema(storage: UserDefaultsPrefsStorage(suite: testSuite()), isCacheEnabled: true),
-            TestSchema(storage: UserDefaultsPrefsStorage(suite: testSuite()), isCacheEnabled: false),
-            TestSchema(storage: DictionaryPrefsStorage(), isCacheEnabled: true),
-            TestSchema(storage: DictionaryPrefsStorage(), isCacheEnabled: false)
+            TestSchema(storage: UserDefaultsPrefsStorage(suite: testSuite()), storageMode: .cachedReadStorageWrite),
+            TestSchema(storage: UserDefaultsPrefsStorage(suite: testSuite()), storageMode: .storageOnly),
+            TestSchema(storage: DictionaryPrefsStorage(), storageMode: .cachedReadStorageWrite),
+            TestSchema(storage: DictionaryPrefsStorage(), storageMode: .storageOnly)
         ]
     }
     

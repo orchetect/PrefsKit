@@ -67,19 +67,20 @@ final class MacroTests: XCTestCase {
             var foo: Int? {
                 get {
                     _$observationRegistrar.access(self, keyPath: \\.foo)
-                    if isCacheEnabled {
+                    switch storageMode {
+                    case .cachedReadStorageWrite:
                         if __PrefValue_foo == nil {
                             __PrefValue_foo = storage.value(forKey: __PrefCoding_foo)
                         }
                         return __PrefValue_foo
-                    } else {
+                    case .storageOnly:
                         return storage.value(forKey: __PrefCoding_foo)
                     }
                 }
                 set {
                     withMutation(keyPath: \\.foo) {
                         storage.setValue(forKey: __PrefCoding_foo, to: newValue)
-                        if isCacheEnabled {
+                        if storageMode == .cachedReadStorageWrite {
                             __PrefValue_foo = newValue
                         }
                     }
@@ -90,13 +91,14 @@ final class MacroTests: XCTestCase {
                     defer {
                         _$observationRegistrar.didSet(self, keyPath: \\.foo)
                     }
-                    if isCacheEnabled {
+                    switch storageMode {
+                    case .cachedReadStorageWrite:
                         if __PrefValue_foo == nil {
                             __PrefValue_foo = storage.value(forKey: __PrefCoding_foo)
                         }
                         yield &__PrefValue_foo
                         storage.setValue(forKey: __PrefCoding_foo, to: __PrefValue_foo)
-                    } else {
+                    case .storageOnly:
                         var val = storage.value(forKey: __PrefCoding_foo)
                         yield &val
                         storage.setValue(forKey: __PrefCoding_foo, to: val)
@@ -121,19 +123,20 @@ final class MacroTests: XCTestCase {
             var bar: String {
                 get {
                     _$observationRegistrar.access(self, keyPath: \\.bar)
-                    if isCacheEnabled {
+                    switch storageMode {
+                    case .cachedReadStorageWrite:
                         if __PrefValue_bar == nil {
                             __PrefValue_bar = storage.value(forKey: __PrefCoding_bar)
                         }
                         return __PrefValue_bar ?? __PrefCoding_bar.defaultValue
-                    } else {
+                    case .storageOnly:
                         return storage.value(forKey: __PrefCoding_bar)
                     }
                 }
                 set {
                     withMutation(keyPath: \\.bar) {
                         storage.setValue(forKey: __PrefCoding_bar, to: newValue)
-                        if isCacheEnabled {
+                        if storageMode == .cachedReadStorageWrite {
                             __PrefValue_bar = newValue
                         }
                     }
@@ -144,13 +147,14 @@ final class MacroTests: XCTestCase {
                     defer {
                         _$observationRegistrar.didSet(self, keyPath: \\.bar)
                     }
-                    if isCacheEnabled {
+                    switch storageMode {
+                    case .cachedReadStorageWrite:
                         if __PrefValue_bar == nil {
                             __PrefValue_bar = storage.value(forKey: __PrefCoding_bar)
                         }
                         yield &__PrefValue_bar!
                         storage.setValue(forKey: __PrefCoding_bar, to: __PrefValue_bar)
-                    } else {
+                    case .storageOnly:
                         var val = storage.value(forKey: __PrefCoding_bar)
                         yield &val
                         storage.setValue(forKey: __PrefCoding_bar, to: val)

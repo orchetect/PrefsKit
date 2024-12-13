@@ -46,12 +46,13 @@ extension PrefMacro /* : AccessorMacro */ {
             """
             get {
                 _$observationRegistrar.access(self, keyPath: \(raw: keyPath))
-                if isCacheEnabled {
+                switch storageMode {
+                case .cachedReadStorageWrite:
                     if \(raw: privateValueVarName) == nil {
                         \(raw: privateValueVarName) = storage.value(forKey: \(raw: privateKeyVarName))
                     }
                     return \(raw: privateValueVarName)\(raw: hasDefault ? " ?? \(privateKeyVarName).defaultValue" : "")
-                } else {
+                case .storageOnly:
                     return storage.value(forKey: \(raw: privateKeyVarName))
                 }
             }
@@ -60,7 +61,7 @@ extension PrefMacro /* : AccessorMacro */ {
             set {
                 withMutation(keyPath: \(raw: keyPath)) {
                     storage.setValue(forKey: \(raw: privateKeyVarName), to: newValue)
-                    if isCacheEnabled {
+                    if storageMode == .cachedReadStorageWrite {
                         \(raw: privateValueVarName) = newValue
                     }
                 }
@@ -73,13 +74,14 @@ extension PrefMacro /* : AccessorMacro */ {
                 defer {
                     _$observationRegistrar.didSet(self, keyPath: \(raw: keyPath))
                 }
-                if isCacheEnabled {
+                switch storageMode {
+                case .cachedReadStorageWrite:
                     if \(raw: privateValueVarName) == nil {
                         \(raw: privateValueVarName) = storage.value(forKey: \(raw: privateKeyVarName))
                     }
                     yield &\(raw: privateValueVarName)\(raw: hasDefault ? "!" : "")
                     storage.setValue(forKey: \(raw: privateKeyVarName), to: \(raw: privateValueVarName))
-                } else {
+                case .storageOnly:
                     var val = storage.value(forKey: \(raw: privateKeyVarName))
                     yield &val
                     storage.setValue(forKey: \(raw: privateKeyVarName), to: val)

@@ -16,11 +16,6 @@ public protocol PrefsSchema /* where Self: Sendable */ {
     /// Storage provider for prefs.
     var storage: Storage { get }
     
-    /// Enable or disable internal cache of prefs values.
-    ///
-    /// This is safe (and more performant) to enable when you know that the prefs storage provider (``storage``) will
-    /// either:
-    /// - never change externally, or
-    /// - may change externally but external changes are safe to discard/overwrite with local cached values.
-    var isCacheEnabled: Bool { get }
+    /// Storage mode for prefs.
+    var storageMode: PrefsSchemaMode { get }
 }

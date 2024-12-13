@@ -50,7 +50,7 @@ struct CustomEncodingTests {
 //    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
 //    final class TestSchema: PrefsSchema, @unchecked Sendable {
 //        let storage = DictionaryPrefsStorage()
-//        let isCacheEnabled: Bool = true
+//        let storageMode: PrefsSchemaMode = .cachedReadStorageWrite
 //
 //        enum Key: String, CaseIterable {
 //            case custom
