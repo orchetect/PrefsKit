@@ -18,41 +18,41 @@ public final class AnyPrefsStorage: PrefsStorage {
 extension AnyPrefsStorage {
     // MARK: - Set
     
-    public func setValue<Value: PrefStorageValue>(forKey key: String, to value: Value?) {
-        wrapped.setValue(forKey: key, to: value)
+    public func setStorageValue<StorageValue: PrefStorageValue>(forKey key: String, to value: StorageValue?) {
+        wrapped.setStorageValue(forKey: key, to: value)
     }
     
     // MARK: - Get
     
-    public func value(forKey key: String) -> Int? {
-        wrapped.value(forKey: key)
+    public func storageValue(forKey key: String) -> Int? {
+        wrapped.storageValue(forKey: key)
     }
     
-    public func value(forKey key: String) -> String? {
-        wrapped.value(forKey: key)
+    public func storageValue(forKey key: String) -> String? {
+        wrapped.storageValue(forKey: key)
     }
     
-    public func value(forKey key: String) -> Bool? {
-        wrapped.value(forKey: key)
+    public func storageValue(forKey key: String) -> Bool? {
+        wrapped.storageValue(forKey: key)
     }
     
-    public func value(forKey key: String) -> Double? {
-        wrapped.value(forKey: key)
+    public func storageValue(forKey key: String) -> Double? {
+        wrapped.storageValue(forKey: key)
     }
     
-    public func value(forKey key: String) -> Float? {
-        wrapped.value(forKey: key)
+    public func storageValue(forKey key: String) -> Float? {
+        wrapped.storageValue(forKey: key)
     }
     
-    public func value(forKey key: String) -> Data? {
-        wrapped.value(forKey: key)
+    public func storageValue(forKey key: String) -> Data? {
+        wrapped.storageValue(forKey: key)
     }
     
-    public func value(forKey key: String) -> [any PrefStorageValue]? {
-        wrapped.value(forKey: key)
+    public func storageValue(forKey key: String) -> [any PrefStorageValue]? {
+        wrapped.storageValue(forKey: key)
     }
     
-    public func value(forKey key: String) -> [String: any PrefStorageValue]? {
-        wrapped.value(forKey: key)
+    public func storageValue(forKey key: String) -> [String: any PrefStorageValue]? {
+        wrapped.storageValue(forKey: key)
     }
 }

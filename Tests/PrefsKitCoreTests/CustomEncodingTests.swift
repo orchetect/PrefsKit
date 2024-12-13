@@ -38,16 +38,12 @@ struct CustomEncodingTests {
         typealias Value = NonCodableNonRawRepresentable
         typealias StorageValue = String
         
-        func getValue(forKey key: String, in storage: any PrefsStorage) -> NonCodableNonRawRepresentable? {
-            guard let rawValue: StorageValue = storage.value(forKey: key),
-                  let instance = NonCodableNonRawRepresentable(encoded: rawValue)
-            else { return nil }
-            
-            return instance
+        func decode(prefsValue: StorageValue) -> Value? {
+            NonCodableNonRawRepresentable(encoded: prefsValue)
         }
         
-        func setValue(forKey key: String, to newValue: NonCodableNonRawRepresentable?, in storage: any PrefsStorage) {
-            storage.setValue(forKey: key, to: newValue?.encoded())
+        func encode(prefsValue: Value) -> StorageValue? {
+            prefsValue.encoded()
         }
     }
     

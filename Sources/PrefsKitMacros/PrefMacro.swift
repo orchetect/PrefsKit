@@ -87,8 +87,8 @@ extension PrefMacro {
     struct TypeBindingInfo {
         let isOptional: Bool
         let typeName: String
-        let keyStructName: String
-        let keyDeclaration: String
+        let keyAndCodingStructName: String
+        let keyAndCodingStructDeclaration: String
         let getValueSyntax: String
         let privateVarDeclaration: String
         
@@ -110,16 +110,16 @@ extension PrefMacro {
                 guard (try? defaultValue(from: varDec)) == nil else {
                     throw PrefMacroError.noDefaultValueAllowed
                 }
-                keyStructName = "\(moduleNamePrefix)AnyAtomicPrefsCoding<\(typeName)>"
-                keyDeclaration = keyStructName + "(key: \(keyName))"
-                getValueSyntax = "getValue(forKey: \(keyName), in: storage)"
+                keyAndCodingStructName = "\(moduleNamePrefix)AnyAtomicPrefsKey<\(typeName)>"
+                keyAndCodingStructDeclaration = keyAndCodingStructName + "(key: \(keyName))"
+                getValueSyntax = "storage.value(forKey: \(keyName), using: coding)"
                 privateVarDeclaration = "\(typeName)?"
             } else {
                 // must have a default value
                 let defaultValue = try defaultValue(from: varDec)
-                keyStructName = "\(moduleNamePrefix)AnyDefaultedAtomicPrefsCoding<\(typeName)>"
-                keyDeclaration = keyStructName + "(key: \(keyName), defaultValue: \(defaultValue))"
-                getValueSyntax = "getDefaultedValue(forKey: \(keyName), in: storage)"
+                keyAndCodingStructName = "\(moduleNamePrefix)AnyDefaultedAtomicPrefsKey<\(typeName)>"
+                keyAndCodingStructDeclaration = keyAndCodingStructName + "(key: \(keyName), defaultValue: \(defaultValue))"
+                getValueSyntax = "storage.value(forKey: \(keyName), using: coding)"
                 privateVarDeclaration = "\(typeName) = \(defaultValue)"
             }
         }
@@ -217,7 +217,7 @@ extension PrefMacro: PeerMacro {
         
         return [
             """
-            private let \(raw: privateKeyVarName) = \(raw: typeInfo.keyDeclaration)
+            private let \(raw: privateKeyVarName) = \(raw: typeInfo.keyAndCodingStructDeclaration)
             """,
             """
             private var \(raw: privateValueVarName): \(raw: typeInfo.privateVarDeclaration)

@@ -28,41 +28,41 @@ extension DictionaryPrefsStorage: @unchecked Sendable { }
 extension DictionaryPrefsStorage: PrefsStorage {
     // MARK: - Set
     
-    public func setValue<Value: PrefStorageValue>(forKey key: String, to value: Value?) {
+    public func setStorageValue<StorageValue: PrefStorageValue>(forKey key: String, to value: StorageValue?) {
         root[key] = value
     }
     
     // MARK: - Get
     
-    public func value(forKey key: String) -> Int? {
+    public func storageValue(forKey key: String) -> Int? {
         root[key] as? Int
     }
     
-    public func value(forKey key: String) -> String? {
+    public func storageValue(forKey key: String) -> String? {
         root[key] as? String
     }
     
-    public func value(forKey key: String) -> Bool? {
+    public func storageValue(forKey key: String) -> Bool? {
         root[key] as? Bool
     }
     
-    public func value(forKey key: String) -> Double? {
+    public func storageValue(forKey key: String) -> Double? {
         root[key] as? Double
     }
     
-    public func value(forKey key: String) -> Float? {
+    public func storageValue(forKey key: String) -> Float? {
         root[key] as? Float
     }
     
-    public func value(forKey key: String) -> Data? {
+    public func storageValue(forKey key: String) -> Data? {
         root[key] as? Data
     }
     
-    public func value(forKey key: String) -> [any PrefStorageValue]? {
+    public func storageValue(forKey key: String) -> [any PrefStorageValue]? {
         root[key] as? [any PrefStorageValue]
     }
     
-    public func value(forKey key: String) -> [String: any PrefStorageValue]? {
+    public func storageValue(forKey key: String) -> [String: any PrefStorageValue]? {
         root[key] as? [String: any PrefStorageValue]
     }
 }

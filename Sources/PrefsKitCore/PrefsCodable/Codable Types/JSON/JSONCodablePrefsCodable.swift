@@ -17,11 +17,11 @@ public protocol JSONCodablePrefsCodable: CodablePrefsCodable
 where Encoder == JSONEncoder, Decoder == JSONDecoder, StorageValue == Data { }
 
 extension JSONCodablePrefsCodable {
-    public func prefEncoder() -> JSONEncoder {
+    public func prefsEncoder() -> JSONEncoder {
         JSONEncoder()
     }
 
-    public func prefDecoder() -> JSONDecoder {
+    public func prefsDecoder() -> JSONDecoder {
         JSONDecoder()
     }
 }

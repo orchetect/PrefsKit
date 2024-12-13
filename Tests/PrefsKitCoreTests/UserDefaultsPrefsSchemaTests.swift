@@ -43,7 +43,7 @@ struct UserDefaultsPrefsSchemaTests {
         typealias Value = Bool
     }
     
-    struct MockAtomicDefaultedPrefsCoding: AtomicDefaultedPrefsCodable {
+    struct MockAtomicDefaultedPrefsCoding: AtomicPrefsCodable {
         let key: String = "bar"
         
         typealias Value = Bool
@@ -57,7 +57,7 @@ struct UserDefaultsPrefsSchemaTests {
         // typealias StorageValue = RawEnum.RawValue // inferred
     }
     
-    struct MockDefaultedRawRepresentablePrefsCoding: DefaultedRawRepresentablePrefsCodable {
+    struct MockDefaultedRawRepresentablePrefsCoding: RawRepresentablePrefsCodable {
         let key: String = "rawBar"
         
         typealias Value = RawEnum
@@ -71,19 +71,19 @@ struct UserDefaultsPrefsSchemaTests {
         typealias Value = CodableEnum
         // typealias StorageValue // inferred from encoder/decoder
         
-        func prefEncoder() -> JSONEncoder { JSONEncoder() }
-        func prefDecoder() -> JSONDecoder { JSONDecoder() }
+        func prefsEncoder() -> JSONEncoder { JSONEncoder() }
+        func prefsDecoder() -> JSONDecoder { JSONDecoder() }
     }
     
-    struct MockDefaultedCodablePrefsCoding: DefaultedCodablePrefsCodable {
+    struct MockDefaultedCodablePrefsCoding: CodablePrefsCodable {
         let key: String = "codableBar"
         
         typealias Value = CodableEnum
         // typealias StorageValue // inferred from encoder/decoder
         let defaultValue: Value = .one
         
-        func prefEncoder() -> JSONEncoder { JSONEncoder() }
-        func prefDecoder() -> JSONDecoder { JSONDecoder() }
+        func prefsEncoder() -> JSONEncoder { JSONEncoder() }
+        func prefsDecoder() -> JSONDecoder { JSONDecoder() }
     }
     
     struct MockJSONCodablePrefsCoding: JSONCodablePrefsCodable {
@@ -92,7 +92,7 @@ struct UserDefaultsPrefsSchemaTests {
         typealias Value = CodableEnum
     }
     
-    struct MockDefaultedJSONCodablePrefsCoding: DefaultedJSONCodablePrefsCodable {
+    struct MockDefaultedJSONCodablePrefsCoding: JSONCodablePrefsCodable {
         let key: String = "jsonCodableBar"
         
         typealias Value = CodableEnum

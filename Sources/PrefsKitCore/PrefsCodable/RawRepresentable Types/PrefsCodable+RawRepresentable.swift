@@ -7,12 +7,11 @@
 import Foundation
 
 extension PrefsCodable where Value: RawRepresentable, Value.RawValue == StorageValue {
-    public func getValue(forKey key: String, in storage: PrefsStorage) -> Value? {
-        guard let rawValue = getStorageValue(forKey: key, in: storage) else { return nil }
-        return Value(rawValue: rawValue)
+    public func decode(prefsValue: StorageValue) -> Value? {
+        Value(rawValue: prefsValue)
     }
     
-    public func setValue(forKey key: String, to newValue: Value?, in storage: PrefsStorage) {
-        setStorageValue(forKey: key, to: newValue?.rawValue, in: storage)
+    public func encode(prefsValue: Value) -> StorageValue? {
+        prefsValue.rawValue
     }
 }

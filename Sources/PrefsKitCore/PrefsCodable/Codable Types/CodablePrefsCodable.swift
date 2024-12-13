@@ -25,29 +25,22 @@ public protocol CodablePrefsCodable<Encoder, Decoder>: PrefsCodable
     associatedtype Decoder: TopLevelDecoder
     
     /// Return a new instance of the encoder used to encode the type for prefs storage.
-    func prefEncoder() -> Encoder
+    func prefsEncoder() -> Encoder
     
     /// Return a new instance of the decoder used to decode the type from prefs storage.
-    func prefDecoder() -> Decoder
+    func prefsDecoder() -> Decoder
 }
 
 extension CodablePrefsCodable {
-    public func getValue(forKey key: String, in storage: PrefsStorage) -> Value? {
-        guard let rawValue = getStorageValue(forKey: key, in: storage) else { return nil }
-        
-        let decoder = prefDecoder()
-        guard let value = try? decoder.decode(Value.self, from: rawValue) else { return nil }
+    public func decode(prefsValue: StorageValue) -> Value? {
+        let decoder = prefsDecoder()
+        guard let value = try? decoder.decode(Value.self, from: prefsValue) else { return nil }
         return value
     }
     
-    public func setValue(forKey key: String, to newValue: Value?, in storage: PrefsStorage) {
-        guard let newValue else {
-            storage.setValue(forKey: key, to: StorageValue?.none)
-            return
-        }
-        
-        let encoder = prefEncoder()
-        guard let encoded = try? encoder.encode(newValue) else { return }
-        setStorageValue(forKey: key, to: encoded, in: storage)
+    public func encode(prefsValue: Value) -> StorageValue? {
+        let encoder = prefsEncoder()
+        guard let encoded = try? encoder.encode(prefsValue) else { return nil }
+        return encoded
     }
 }

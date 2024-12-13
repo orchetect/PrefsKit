@@ -19,43 +19,43 @@ extension UserDefaultsPrefsStorage: @unchecked Sendable { }
 extension UserDefaultsPrefsStorage: PrefsStorage {
     // MARK: - Set
     
-    public func setValue<Value: PrefStorageValue>(forKey key: String, to value: Value?) {
+    public func setStorageValue<StorageValue: PrefStorageValue>(forKey key: String, to value: StorageValue?) {
         suite.set(value?.prefStorageValue, forKey: key)
     }
     
     // MARK: - Get
     
-    public func value(forKey key: String) -> Int? {
+    public func storageValue(forKey key: String) -> Int? {
         suite.integerOptional(forKey: key)
     }
     
-    public func value(forKey key: String) -> String? {
+    public func storageValue(forKey key: String) -> String? {
         suite.string(forKey: key)
     }
     
-    public func value(forKey key: String) -> Bool? {
+    public func storageValue(forKey key: String) -> Bool? {
         suite.boolOptional(forKey: key)
     }
     
-    public func value(forKey key: String) -> Double? {
+    public func storageValue(forKey key: String) -> Double? {
         suite.doubleOptional(forKey: key)
     }
     
-    public func value(forKey key: String) -> Float? {
+    public func storageValue(forKey key: String) -> Float? {
         suite.floatOptional(forKey: key)
     }
     
-    public func value(forKey key: String) -> Data? {
+    public func storageValue(forKey key: String) -> Data? {
         suite.data(forKey: key)
     }
     
-    public func value(forKey key: String) -> [any PrefStorageValue]? {
+    public func storageValue(forKey key: String) -> [any PrefStorageValue]? {
         guard let rawArray = suite.array(forKey: key) else { return nil }
         let typedArray = rawArray.convertToAnyPrefArray()
         return typedArray.content.map(\.value)
     }
     
-    public func value(forKey key: String) -> [String: any PrefStorageValue]? {
+    public func storageValue(forKey key: String) -> [String: any PrefStorageValue]? {
         guard let rawDict = suite.dictionary(forKey: key) else { return nil }
         let typedDict = rawDict.convertToAnyPrefDict()
         return typedDict.content.mapValues(\.value)
@@ -64,28 +64,28 @@ extension UserDefaultsPrefsStorage: PrefsStorage {
     // MARK: - Additional type conversions
     // TODO: Implement these in library or refactor to somewhere elsewhere
     
-    public func value<Element: PrefStorageValue>(forKey key: String) -> [Element]? {
+    public func storageValue<Element: PrefStorageValue>(forKey key: String) -> [Element]? {
         guard let rawArray = suite.array(forKey: key) else { return nil }
         let typedArray = rawArray.compactMap { $0 as? Element }
         assert(typedArray.count == rawArray.count)
         return typedArray
     }
     
-    public func value<Element: PrefStorageValue>(forKey key: String) -> [String: Element]? {
+    public func storageValue<Element: PrefStorageValue>(forKey key: String) -> [String: Element]? {
         guard let rawDict = suite.dictionary(forKey: key) else { return nil }
         let typedDict = rawDict.compactMapValues { $0 as? Element }
         assert(typedDict.count == rawDict.count)
         return typedDict
     }
     
-    public func value(forKey key: String) -> AnyPrefArray? {
+    public func storageValue(forKey key: String) -> AnyPrefArray? {
         guard let rawArray = suite.array(forKey: key) else { return nil }
         let typedArray = rawArray.convertToAnyPrefArray()
         assert(typedArray.content.count == rawArray.count)
         return typedArray
     }
     
-    public func value(forKey key: String) -> AnyPrefDictionary? {
+    public func storageValue(forKey key: String) -> AnyPrefDictionary? {
         guard let rawDict = suite.dictionary(forKey: key) else { return nil }
         let typedDict = rawDict.convertToAnyPrefDict()
         assert(typedDict.content.count == rawDict.count)
