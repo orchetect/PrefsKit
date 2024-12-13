@@ -1,0 +1,30 @@
+//
+//  PrefsKey.swift
+//  PrefsKit • https://github.com/orchetect/PrefsKit
+//  © 2024 Steffan Andrews • Licensed under MIT License
+//
+
+public protocol PrefsKey where Coding.Value == Value, Coding.StorageValue == StorageValue {
+    associatedtype Value: Sendable
+    associatedtype StorageValue: PrefsStorageValue
+    associatedtype Coding: PrefsCodable
+    
+    var key: String { get }
+    var coding: Coding { get }
+    func encode(_ value: Value) -> StorageValue?
+    func decode(_ storageValue: StorageValue) -> Value?
+}
+
+extension PrefsKey where Value == StorageValue {
+    public func encode(_ value: Value) -> StorageValue? { value }
+    public func decode(_ storageValue: StorageValue) -> Value? { storageValue }
+}
+
+extension PrefsKey {
+    public func encode(_ value: Value) -> StorageValue? {
+        coding.encode(prefsValue: value)
+    }
+    public func decode(_ storageValue: StorageValue) -> Value? {
+        coding.decode(prefsValue: storageValue)
+    }
+}

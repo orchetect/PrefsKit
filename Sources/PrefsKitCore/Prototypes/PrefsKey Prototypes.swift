@@ -10,9 +10,11 @@ import Foundation
 // MARK: - Atomic
 
 /// Generic concrete pref key with an atomic value type.
-public struct AnyAtomicPrefsKey<Value>
+public struct AnyAtomicPrefsKey<Value>: PrefsKey
     where Value: Sendable, Value: PrefsStorageValue
 {
+    public typealias StorageValue = Value
+    
     public let key: String
     public let coding = AtomicPrefsCoding<Value>()
     
@@ -22,9 +24,11 @@ public struct AnyAtomicPrefsKey<Value>
 }
 
 /// Generic concrete pref key with an atomic value type and a default value.
-public struct AnyDefaultedAtomicPrefsKey<Value>
+public struct AnyDefaultedAtomicPrefsKey<Value>: PrefsKey
     where Value: Sendable, Value: PrefsStorageValue
 {
+    public typealias StorageValue = Value
+    
     public let key: String
     public let defaultValue: Value
     public let coding = AtomicPrefsCoding<Value>()
@@ -38,7 +42,7 @@ public struct AnyDefaultedAtomicPrefsKey<Value>
 // MARK: - Base
 
 /// Generic concrete pref key with a different value type from its raw storage type.
-public struct AnyPrefsKey<Value, StorageValue>
+public struct AnyPrefsKey<Value, StorageValue>: PrefsKey
     where Value: RawRepresentable, Value.RawValue == StorageValue, Value: Sendable,
     StorageValue: PrefsStorageValue
 {
@@ -61,7 +65,7 @@ public struct AnyPrefsKey<Value, StorageValue>
 }
 
 /// Generic concrete pref key with a different value type from its raw storage type and a default value.
-public struct AnyDefaultedPrefsKey<Value, StorageValue>
+public struct AnyDefaultedPrefsKey<Value, StorageValue>: PrefsKey
     where Value: RawRepresentable, Value.RawValue == StorageValue, Value: Sendable,
     StorageValue: PrefsStorageValue
 {
@@ -94,7 +98,7 @@ public struct AnyDefaultedPrefsKey<Value, StorageValue>
 // MARK: - RawRepresentable
 
 /// Generic concrete pref key with a `RawRepresentable` value type.
-public struct AnyRawRepresentablePrefsKey<Value, StorageValue>
+public struct AnyRawRepresentablePrefsKey<Value, StorageValue>: PrefsKey
     where Value: RawRepresentable, Value.RawValue == StorageValue, Value: Sendable,
     StorageValue: PrefsStorageValue
 {
@@ -107,7 +111,7 @@ public struct AnyRawRepresentablePrefsKey<Value, StorageValue>
 }
 
 /// Generic concrete pref key with a `RawRepresentable` value type and a default value.
-public struct AnyDefaultedRawRepresentablePrefsKey<Value, StorageValue>
+public struct AnyDefaultedRawRepresentablePrefsKey<Value, StorageValue>: PrefsKey
     where Value: RawRepresentable, Value: Sendable, StorageValue: PrefsStorageValue,
     Value.RawValue == StorageValue
 {
@@ -124,7 +128,7 @@ public struct AnyDefaultedRawRepresentablePrefsKey<Value, StorageValue>
 // MARK: - Codable
 
 /// Generic concrete pref key with a `Codable` value type.
-public struct AnyCodablePrefsKey<Value, StorageValue, Encoder, Decoder>
+public struct AnyCodablePrefsKey<Value, StorageValue, Encoder, Decoder>: PrefsKey
     where Value: Codable, Value: Sendable,
     StorageValue: PrefsStorageValue, StorageValue == Encoder.Output,
     Encoder: TopLevelEncoder, Encoder: Sendable, Encoder.Output: PrefsStorageValue,
@@ -150,7 +154,7 @@ public struct AnyCodablePrefsKey<Value, StorageValue, Encoder, Decoder>
 }
 
 /// Generic concrete pref key with a `Codable` value type and a default value.
-public struct AnyDefaultedCodablePrefsKey<Value, StorageValue, Encoder, Decoder>
+public struct AnyDefaultedCodablePrefsKey<Value, StorageValue, Encoder, Decoder>: PrefsKey
     where Value: Codable, Value: Sendable,
     StorageValue: PrefsStorageValue, StorageValue == Encoder.Output,
     Encoder: TopLevelEncoder, Encoder: Sendable, Encoder.Output: PrefsStorageValue,
@@ -186,7 +190,9 @@ public struct AnyDefaultedCodablePrefsKey<Value, StorageValue, Encoder, Decoder>
 // MARK: - JSON Codable
 
 /// Generic concrete pref key with a `Codable` value type using JSON encoding.
-public struct AnyJSONCodablePrefsKey<Value> where Value: Codable, Value: Sendable {
+public struct AnyJSONCodablePrefsKey<Value>: PrefsKey
+    where Value: Codable, Value: Sendable
+{
     public let key: String
     public let coding = JSONCodablePrefsCoding<Value>()
     
@@ -196,7 +202,9 @@ public struct AnyJSONCodablePrefsKey<Value> where Value: Codable, Value: Sendabl
 }
 
 /// Generic concrete pref key with a `Codable` value type using JSON encoding and a default value.
-public struct AnyDefaultedJSONCodablePrefsKey<Value> where Value: Codable, Value: Sendable {
+public struct AnyDefaultedJSONCodablePrefsKey<Value>: PrefsKey
+    where Value: Codable, Value: Sendable
+{
     public let key: String
     public let defaultValue: Value
     public let coding = JSONCodablePrefsCoding<Value>()
