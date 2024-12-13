@@ -7,21 +7,23 @@
 import Combine
 import Foundation
 
-public struct AtomicPrefsCoding<Value>: AtomicPrefsCodable where Value: PrefsStorageValue {
+public struct AtomicPrefsCoding<Value>: AtomicPrefsCodable
+where Value: PrefsStorageValue {
     public typealias Value = Value
 }
 
-public struct PrefsCoding<Value>: PrefsCodable where Value: PrefsStorageValue {
-    public typealias Value = Value
+public struct PrefsCoding<Value, StorageValue>: PrefsCodable
+    where Value: Sendable, StorageValue: PrefsStorageValue
+{
     let encodeBlock: @Sendable (Value) -> StorageValue?
     let decodeBlock: @Sendable (StorageValue) -> Value?
     
     init(
-        encodeBlock: @escaping @Sendable (Value) -> StorageValue?,
-        decodeBlock: @escaping @Sendable (StorageValue) -> Value?
+        encode: @escaping @Sendable (Value) -> StorageValue?,
+        decode: @escaping @Sendable (StorageValue) -> Value?
     ) {
-        self.encodeBlock = encodeBlock
-        self.decodeBlock = decodeBlock
+        self.encodeBlock = encode
+        self.decodeBlock = decode
     }
     
     public func decode(prefsValue: StorageValue) -> Value? {
@@ -34,17 +36,18 @@ public struct PrefsCoding<Value>: PrefsCodable where Value: PrefsStorageValue {
 }
 
 public struct RawRepresentablePrefsCoding<Value>: RawRepresentablePrefsCodable
-where Value: Sendable, Value: RawRepresentable, Value.RawValue: PrefsStorageValue {
+    where Value: Sendable, Value: RawRepresentable, Value.RawValue: PrefsStorageValue
+{
     public typealias Value = Value
     public typealias StorageValue = Value.RawValue
 }
 
 public struct CodablePrefsCoding<Value, StorageValue, Encoder, Decoder>: CodablePrefsCodable
-where Value: Codable, Value: Sendable,
-      StorageValue: PrefsStorageValue, StorageValue == Encoder.Output,
-      Encoder: TopLevelEncoder, Encoder: Sendable, Encoder.Output: PrefsStorageValue,
-      Decoder: TopLevelDecoder, Decoder: Sendable, Decoder.Input: PrefsStorageValue,
-      Encoder.Output == Decoder.Input
+    where Value: Codable, Value: Sendable,
+    StorageValue: PrefsStorageValue, StorageValue == Encoder.Output,
+    Encoder: TopLevelEncoder, Encoder: Sendable, Encoder.Output: PrefsStorageValue,
+    Decoder: TopLevelDecoder, Decoder: Sendable, Decoder.Input: PrefsStorageValue,
+    Encoder.Output == Decoder.Input
 {
     public typealias Value = Value
     public typealias StorageValue = StorageValue
@@ -65,6 +68,8 @@ where Value: Codable, Value: Sendable,
     public func prefsDecoder() -> Decoder { decoder }
 }
 
-public struct JSONCodablePrefsCoding<Value>: JSONCodablePrefsCodable where Value: Codable, Value: Sendable {
+public struct JSONCodablePrefsCoding<Value>: JSONCodablePrefsCodable
+    where Value: Codable, Value: Sendable
+{
     public typealias Value = Value
 }
