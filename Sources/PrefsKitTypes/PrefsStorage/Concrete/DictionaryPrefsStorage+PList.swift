@@ -1,10 +1,36 @@
 //
-//  Dictionary Extensions.swift
+//  DictionaryPrefsStorage+PList.swift
 //  PrefsKit • https://github.com/orchetect/PrefsKit
 //  © 2024 Steffan Andrews • Licensed under MIT License
 //
 
 import Foundation
+
+// MARK: - PList Interchange
+
+extension DictionaryPrefsStorage {
+    /// Replaces the local ``root`` dictionary with the contents of a plist file.
+    public func load(plist url: URL) throws {
+        root = try .init(plist: url)
+    }
+    
+    /// Replaces the local ``root`` dictionary with the raw contents of a plist file.
+    public func load(plist data: Data) throws {
+        root = try .init(plist: data)
+    }
+    
+    /// Saves the local ``root`` dictionary to a plist file.
+    public func save(plist url: URL) throws {
+        try root.plistData().write(to: url)
+    }
+    
+    /// Returns the local ``root`` dictionary as raw plist file data.
+    public func plistData(format: PropertyListSerialization.PropertyListFormat = .xml) throws -> Data {
+        try root.plistData(format: format)
+    }
+}
+
+// MARK: - Utilities
 
 extension [String: any PrefsStorageValue] {
     public init(plist url: URL) throws {

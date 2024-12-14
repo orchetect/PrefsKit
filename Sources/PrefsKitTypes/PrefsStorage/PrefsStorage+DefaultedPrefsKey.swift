@@ -8,6 +8,8 @@ import Foundation
 
 // swiftformat:disable wrap
 
+// MARK: - Get Value
+
 extension PrefsStorage {
     public func value<Key: DefaultedPrefsKey>(forKey key: Key) -> Key.Value where Key.StorageValue == Int {
         key.decodeDefaulted(storageValue(forKey: key))
