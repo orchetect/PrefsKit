@@ -14,7 +14,8 @@ struct PrefsKitMacrosPlugin: CompilerPlugin {
     let providingMacros: [Macro.Type] = [
         PrefsSchemaMacro.self,
         AtomicPrefMacro.self,
-        CustomPrefMacro.self,
+        CodingPrefMacro.self,
+        InlinePrefMacro.self,
         RawRepresentablePrefMacro.self,
         JSONCodablePrefMacro.self
     ]

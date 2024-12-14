@@ -10,6 +10,8 @@ import Foundation
 public struct AtomicPrefsCoding<Value>: AtomicPrefsCodable
 where Value: PrefsStorageValue {
     public typealias Value = Value
+    
+    public init() { }
 }
 
 public struct PrefsCoding<Value, StorageValue>: PrefsCodable
@@ -18,7 +20,7 @@ public struct PrefsCoding<Value, StorageValue>: PrefsCodable
     let encodeBlock: @Sendable (Value) -> StorageValue?
     let decodeBlock: @Sendable (StorageValue) -> Value?
     
-    init(
+    public init(
         encode: @escaping @Sendable (Value) -> StorageValue?,
         decode: @escaping @Sendable (StorageValue) -> Value?
     ) {
@@ -40,6 +42,8 @@ public struct RawRepresentablePrefsCoding<Value>: RawRepresentablePrefsCodable
 {
     public typealias Value = Value
     public typealias StorageValue = Value.RawValue
+    
+    public init() { }
 }
 
 public struct CodablePrefsCoding<Value, StorageValue, Encoder, Decoder>: CodablePrefsCodable
@@ -74,4 +78,6 @@ public struct JSONCodablePrefsCoding<Value>: JSONCodablePrefsCodable
     where Value: Codable, Value: Sendable
 {
     public typealias Value = Value
+    
+    public init() { }
 }

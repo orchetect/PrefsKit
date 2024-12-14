@@ -14,6 +14,7 @@ public protocol PrefMacro: AccessorMacro, PeerMacro {
     static var keyStructName: String { get }
     static var defaultedKeyStructName: String { get }
     static var hasCustomCoding: Bool { get }
+    static var hasInlineCoding: Bool { get }
 }
 
 extension PrefMacro /* : AccessorMacro */ {
@@ -108,7 +109,7 @@ extension PrefMacro /* : PeerMacro */ {
         let privateKeyVarName = "\(privateCodingVarPrefix)\(varName)"
         let privateValueVarName = "\(privateValueVarPrefix)\(varName)"
         
-        let (keyArg, codingArg) = try args(from: node)
+        let (keyArg, codingArg, encodeArg, decodeArg) = try args(from: node)
         // use variable name as the key name if key was not supplied
         let keyName = keyArg?.expression.description ?? "\"\(varName)\""
         
@@ -118,6 +119,11 @@ extension PrefMacro /* : PeerMacro */ {
                 throw PrefMacroError.missingCodingArgument
             }
             customCodingDecl = codingArg.expression.description
+        } else if hasInlineCoding {
+            guard let encodeArg, let decodeArg else {
+                throw PrefMacroError.missingCodingArgument
+            }
+            customCodingDecl = "PrefCoding(encode: \(encodeArg.expression.description), decode: \(decodeArg.expression.description))"
         }
         
         let typeInfo = try TypeBindingInfo(
@@ -150,81 +156,102 @@ extension PrefMacro {
 }
 
 extension PrefMacro {
-    static func args(from node: AttributeSyntax) throws -> (key: LabeledExprSyntax?, coding: LabeledExprSyntax?) {
+    static func args(from node: AttributeSyntax) throws -> (
+        key: LabeledExprSyntax?,
+        coding: LabeledExprSyntax?,
+        encode: LabeledExprSyntax?,
+        decode: LabeledExprSyntax?
+    ) {
         guard node.arguments != nil else {
-            // no `key:` or `coding:` arg. we'll derive key name from variable name upon return.
-            return (key: nil, coding: nil)
+            // no `key:`, or subsequent `coding:` / `encode:`/`decode:`
+            // we'll derive key name from variable name upon return.
+            return (key: nil, coding: nil, encode: nil, decode: nil)
         }
         
         guard let args = node.arguments?.as(LabeledExprListSyntax.self)
         else {
             throw PrefMacroError.incorrectSyntax
         }
-        guard !args.isEmpty else {
-            // no `key:` or `coding:` arg. we'll derive key name from variable name upon return.
-            return (key: nil, coding: nil)
+        
+        var remainingArgs = args
+        
+        func nextArg() throws -> (LabeledExprSyntax, label: String)? {
+            guard !remainingArgs.isEmpty else { return nil }
+            let idx = remainingArgs.startIndex
+            let arg = remainingArgs[idx]
+            remainingArgs.remove(at: idx)
+            
+            guard let label = arg.label?.trimmedDescription else { throw PrefMacroError.invalidArgumentLabel }
+            return (arg, label)
         }
         
-        // arg could be `key:` or could be `coding:`
-        let arg1 = args[args.startIndex]
+        var key: LabeledExprSyntax?
+        var coding: LabeledExprSyntax?
+        var encode: LabeledExprSyntax?
+        var decode: LabeledExprSyntax?
         
-        guard let arg1Label = arg1.label?.trimmedDescription else {
-            throw PrefMacroError.incorrectSyntax
+        var tuple: (
+            key: LabeledExprSyntax?,
+            coding: LabeledExprSyntax?,
+            encode: LabeledExprSyntax?,
+            decode: LabeledExprSyntax?
+        ) { (key, coding, encode, decode) }
+        
+        var currentArg: LabeledExprSyntax
+        var currentArgLabel: String
+        
+        // arg could be `key:`, or `coding:`, or `encode:`
+        guard let (a, l) = try nextArg() else {
+            // no `key:`, or subsequent `coding:` / `encode:`/`decode:`
+            // we'll derive key name from variable name upon return.
+            return tuple
         }
+        currentArg = a; currentArgLabel = l
         
-        func parseKey(from arg: LabeledExprSyntax) throws -> LabeledExprSyntax? {
-            var key: LabeledExprSyntax? = arg
-            
-            guard let label = key?.label?.trimmedDescription,
-                  label == "key"
-            else {
-                throw PrefMacroError.incorrectSyntax
-            }
-            
-            // probably skip this check since we don't require key name to be a string literal,
-            // and it's difficult/impossible to know whether an expression evaluates to
-            // a String output value. we'll just take the syntax as-is and leave that up to the compiler.
-            // guard arg.expression.syntaxNodeType == StringLiteralExprSyntax.self
-            // else {
-            //     throw PrefMacroError.invalidKeyArgumentType
-            // }
+        if currentArgLabel == "key" {
+            key = currentArg
             
             // we can accept a `nil` literal as equivalent to the argument not being found (if it was defaulted to `nil`)
-            if key?.expression.description == "nil" { key = nil }
+            if currentArg.expression.description == "nil" { key = nil }
             
-            return key
+            guard let (a, l) = try nextArg() else {
+                // no subsequent `coding:` / `encode:`/`decode:`
+                return tuple
+            }
+            currentArg = a; currentArgLabel = l
+            currentArg = a; currentArgLabel = l
         }
         
-        func parseCoding(from arg: LabeledExprSyntax) throws -> LabeledExprSyntax? {
-            let coding: LabeledExprSyntax? = arg
+        switch currentArgLabel {
+        case "coding":
+            coding = currentArg
             
-            guard let label = coding?.label?.trimmedDescription,
-                  label == "coding"
-            else {
-                throw PrefMacroError.incorrectSyntax
+            guard (try? nextArg()) == nil else {
+                throw PrefMacroError.tooManyArguments
             }
             
-            return coding
-        }
-        
-        switch arg1Label {
-        case "key":
-            let key = try parseKey(from: arg1)
+            return tuple
+        case "encode":
+            encode = currentArg
             
-            let coding: LabeledExprSyntax? = args.count > 1
-                ? try parseCoding(from: args[args.index(args.startIndex, offsetBy: 1)])
-                : nil
+            guard let (a, l) = try nextArg() else {
+                throw PrefMacroError.missingCodingArgument
+            }
+            currentArg = a; currentArgLabel = l
             
-            return (key: key, coding: coding)
-        case "coding":
-            // user omitted/defaulted the `key` argument but supplied a `coding` argument.
-            // we'll derive key name from variable name upon return.
-            
-            let coding = try parseCoding(from: arg1)
-            
-            return (key: nil, coding: coding)
+            if currentArgLabel == "decode" {
+                decode = currentArg
+                
+                guard (try? nextArg()) == nil else {
+                    throw PrefMacroError.tooManyArguments
+                }
+                
+                return tuple
+            } else {
+                throw PrefMacroError.incorrectSyntax
+            }
         default:
-            throw PrefMacroError.invalidArgumentLabel
+            throw PrefMacroError.incorrectSyntax
         }
     }
     

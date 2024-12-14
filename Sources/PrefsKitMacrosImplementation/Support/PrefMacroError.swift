@@ -9,6 +9,7 @@ import Foundation
 public enum PrefMacroError: LocalizedError {
     case missingKeyArgument
     case missingCodingArgument
+    case missingDecodeArgument
     case incorrectSyntax
     case invalidArgumentLabel
     case invalidKeyArgumentType
@@ -18,6 +19,7 @@ public enum PrefMacroError: LocalizedError {
     case missingOrInvalidTypeAnnotation
     case modifiersNotAllowed
     case noDefaultValueAllowed
+    case tooManyArguments
     
     public var errorDescription: String? {
         switch self {
@@ -25,6 +27,8 @@ public enum PrefMacroError: LocalizedError {
             "Missing value for key argument."
         case .missingCodingArgument:
             "Missing value for coding argument."
+        case .missingDecodeArgument:
+            "Missing value for decode argument."
         case .incorrectSyntax:
             "Incorrect syntax."
         case .invalidArgumentLabel:
@@ -43,6 +47,8 @@ public enum PrefMacroError: LocalizedError {
             "Modifiers are not allowed."
         case .noDefaultValueAllowed:
             "No default value allowed."
+        case .tooManyArguments:
+            "Too many arguments."
         }
     }
 }
