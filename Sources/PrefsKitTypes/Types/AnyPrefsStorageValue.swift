@@ -24,20 +24,16 @@ public enum AnyPrefsStorageValue {
         switch value {
         case let value as String:
             self = .string(value as String)
-        case let value as Bool:
-            self = .bool(value)
         case let value as Int:
             self = .number(value as NSNumber)
+        case let value as Bool:
+            self = .bool(value)
         case let value as Double:
             self = .number(value as NSNumber)
         case let value as Float:
             self = .number(value as NSNumber)
         case let value as NSData:
             self = .data(value as Data)
-        case let value as [Any]:
-            self = .array(value.convertToAnyPrefsArray())
-        case let value as [String: Any]:
-            self = .dictionary(value.convertToAnyPrefDict())
         case let value as [any PrefsStorageValue]:
             self = .array(AnyPrefsArray(value))
         case let value as [String: any PrefsStorageValue]:
@@ -46,6 +42,10 @@ public enum AnyPrefsStorageValue {
             self = .array(value)
         case let value as AnyPrefsDictionary:
             self = .dictionary(value)
+        case let value as [Any]:
+            self = .array(value.convertUserDefaultsToAnyPrefsArray())
+        case let value as [String: Any]:
+            self = .dictionary(value.convertUserDefaultsToAnyPrefDict())
         default:
             print("Unhandled pref storage value type: \(type(of: value))")
             return nil
@@ -68,9 +68,9 @@ public enum AnyPrefsStorageValue {
         case let value as NSData:
             self = .data(value as Data)
         case let value as [Any]:
-            self = .array(value.convertToAnyPrefsArray())
+            self = .array(value.convertUserDefaultsToAnyPrefsArray())
         case let value as [String: Any]:
-            self = .dictionary(value.convertToAnyPrefDict())
+            self = .dictionary(value.convertUserDefaultsToAnyPrefDict())
         // case let value as any PrefsStorageValue:
         //     self = value
         default:
@@ -93,6 +93,23 @@ public enum AnyPrefsStorageValue {
             anyPrefsArray
         case let .dictionary(anyPrefsDictionary):
             anyPrefsDictionary
+        }
+    }
+    
+    public var userDefaultsValue: Any {
+        switch self {
+        case let .number(nsNumber):
+            nsNumber
+        case let .string(string):
+            string
+        case let .bool(bool):
+            bool
+        case let .data(data):
+            data
+        case let .array(anyPrefsArray):
+            anyPrefsArray.prefsStorageValue
+        case let .dictionary(anyPrefsDictionary):
+            anyPrefsDictionary.prefsStorageValue
         }
     }
 }

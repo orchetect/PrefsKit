@@ -15,6 +15,13 @@ public struct AnyPrefsDictionary {
     
     @inlinable
     public init(_ content: [String: any PrefsStorageValue]) {
+        let converted = content.compactMapValues(AnyPrefsStorageValue.init(_:))
+        assert(converted.count == content.count)
+        self.content = converted
+    }
+    
+    @inlinable
+    public init(userDefaultsValue content: [String: any PrefsStorageValue]) {
         let converted = content.compactMapValues(AnyPrefsStorageValue.init(userDefaultsValue:))
         assert(converted.count == content.count)
         self.content = converted

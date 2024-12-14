@@ -32,6 +32,22 @@ extension DictionaryPrefsStorage: PrefsStorage {
         root[key] = value
     }
     
+    public func setStorageValue(forKey key: String, to value: [any PrefsStorageValue]?) {
+        if let value {
+            root[key] = AnyPrefsArray(value)
+        } else {
+            root[key] = nil
+        }
+    }
+    
+    public func setStorageValue(forKey key: String, to value: [String: any PrefsStorageValue]?) {
+        if let value {
+            root[key] = AnyPrefsDictionary(value)
+        } else {
+            root[key] = nil
+        }
+    }
+    
     // MARK: - Get
     
     public func storageValue(forKey key: String) -> Int? {
@@ -64,6 +80,24 @@ extension DictionaryPrefsStorage: PrefsStorage {
     
     public func storageValue(forKey key: String) -> [String: any PrefsStorageValue]? {
         root[key] as? [String: any PrefsStorageValue]
+    }
+    
+    // MARK: - Additional type conversions
+    
+    public func storageValue<Element: PrefsStorageValue>(forKey key: String) -> [Element]? {
+        root[key] as? [Element]
+    }
+    
+    public func storageValue<Element: PrefsStorageValue>(forKey key: String) -> [String: Element]? {
+        root[key] as? [String: Element]
+    }
+    
+    public func storageValue(forKey key: String) -> AnyPrefsArray? {
+        root[key] as? AnyPrefsArray
+    }
+    
+    public func storageValue(forKey key: String) -> AnyPrefsDictionary? {
+        root[key] as? AnyPrefsDictionary
     }
 }
 

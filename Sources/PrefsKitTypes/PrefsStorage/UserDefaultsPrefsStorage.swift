@@ -16,11 +16,29 @@ open class UserDefaultsPrefsStorage {
 
 extension UserDefaultsPrefsStorage: @unchecked Sendable { }
 
+extension UserDefaultsPrefsStorage {
+    public func setStorageValue(forKey key: String, to value: AnyPrefsArray?) {
+        setStorageValue(forKey: key, to: value?.prefsStorageValue)
+    }
+    
+    public func setStorageValue(forKey key: String, to value: AnyPrefsDictionary?) {
+        setStorageValue(forKey: key, to: value?.prefsStorageValue)
+    }
+}
+
 extension UserDefaultsPrefsStorage: PrefsStorage {
     // MARK: - Set
     
     public func setStorageValue<StorageValue: PrefsStorageValue>(forKey key: String, to value: StorageValue?) {
-        suite.set(value?.prefsStorageValue, forKey: key)
+        suite.set(value?.userDefaultsStorageValue, forKey: key)
+    }
+    
+    public func setStorageValue(forKey key: String, to value: [any PrefsStorageValue]?) {
+        suite.set(value, forKey: key)
+    }
+    
+    public func setStorageValue(forKey key: String, to value: [String: any PrefsStorageValue]?) {
+        suite.set(value, forKey: key)
     }
     
     // MARK: - Get
@@ -51,43 +69,44 @@ extension UserDefaultsPrefsStorage: PrefsStorage {
     
     public func storageValue(forKey key: String) -> [any PrefsStorageValue]? {
         guard let rawArray = suite.array(forKey: key) else { return nil }
-        let typedArray = rawArray.convertToAnyPrefsArray()
+        let typedArray = rawArray.convertUserDefaultsToAnyPrefsArray()
         return typedArray.content.map(\.value)
     }
     
     public func storageValue(forKey key: String) -> [String: any PrefsStorageValue]? {
         guard let rawDict = suite.dictionary(forKey: key) else { return nil }
-        let typedDict = rawDict.convertToAnyPrefDict()
+        let typedDict = rawDict.convertUserDefaultsToAnyPrefDict()
         return typedDict.content.mapValues(\.value)
     }
     
     // MARK: - Additional type conversions
-    // TODO: Implement these in library or refactor to somewhere elsewhere
     
     public func storageValue<Element: PrefsStorageValue>(forKey key: String) -> [Element]? {
         guard let rawArray = suite.array(forKey: key) else { return nil }
-        let typedArray = rawArray.compactMap { $0 as? Element }
+        let typedArray = rawArray
+            .compactMap { $0 as? Element }
         assert(typedArray.count == rawArray.count)
         return typedArray
     }
     
     public func storageValue<Element: PrefsStorageValue>(forKey key: String) -> [String: Element]? {
         guard let rawDict = suite.dictionary(forKey: key) else { return nil }
-        let typedDict = rawDict.compactMapValues { $0 as? Element }
+        let typedDict = rawDict
+            .compactMapValues { $0 as? Element }
         assert(typedDict.count == rawDict.count)
         return typedDict
     }
     
     public func storageValue(forKey key: String) -> AnyPrefsArray? {
         guard let rawArray = suite.array(forKey: key) else { return nil }
-        let typedArray = rawArray.convertToAnyPrefsArray()
+        let typedArray = rawArray.convertUserDefaultsToAnyPrefsArray()
         assert(typedArray.content.count == rawArray.count)
         return typedArray
     }
     
     public func storageValue(forKey key: String) -> AnyPrefsDictionary? {
         guard let rawDict = suite.dictionary(forKey: key) else { return nil }
-        let typedDict = rawDict.convertToAnyPrefDict()
+        let typedDict = rawDict.convertUserDefaultsToAnyPrefDict()
         assert(typedDict.content.count == rawDict.count)
         return typedDict
     }
@@ -97,8 +116,8 @@ extension UserDefaultsPrefsStorage: PrefsStorage {
 
 /// Convert a raw array from UserDefaults to a one that conforms to ``PrefsStorageValue``.
 extension [Any] {
-    func convertToAnyPrefsArray() -> AnyPrefsArray {
-        let converted = compactMap { AnyPrefsStorageValue(userDefaultsValue: $0) }
+    func convertUserDefaultsToAnyPrefsArray() -> AnyPrefsArray {
+        let converted = compactMap(AnyPrefsStorageValue.init(userDefaultsValue:))
         assert(converted.count == count)
         return AnyPrefsArray(converted)
     }
@@ -106,8 +125,8 @@ extension [Any] {
 
 /// Convert a raw dictionary from UserDefaults to a one that conforms to ``PrefsStorageValue``.
 extension [String: Any] {
-    func convertToAnyPrefDict() -> AnyPrefsDictionary {
-        let converted = compactMapValues { AnyPrefsStorageValue(userDefaultsValue: $0) }
+    func convertUserDefaultsToAnyPrefDict() -> AnyPrefsDictionary {
+        let converted = compactMapValues(AnyPrefsStorageValue.init(userDefaultsValue:))
         assert(converted.count == count)
         return AnyPrefsDictionary(converted)
     }

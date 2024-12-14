@@ -12,6 +12,8 @@ public protocol PrefsStorage: AnyObject where Self: Sendable {
     // MARK: - Set
     
     func setStorageValue<StorageValue: PrefsStorageValue>(forKey key: String, to value: StorageValue?)
+    func setStorageValue(forKey key: String, to value: [any PrefsStorageValue]?)
+    func setStorageValue(forKey key: String, to value: [String: any PrefsStorageValue]?)
     
     // MARK: - Get
     
@@ -23,8 +25,40 @@ public protocol PrefsStorage: AnyObject where Self: Sendable {
     func storageValue(forKey key: String) -> Data?
     func storageValue(forKey key: String) -> [any PrefsStorageValue]?
     func storageValue(forKey key: String) -> [String: any PrefsStorageValue]?
-    // func storageValue<Element: PrefsStorageValue>(forKey key: String) -> [Element]?
-    // func storageValue<Element: PrefsStorageValue>(forKey key: String) -> [String: Element]?
-    // func storageValue(forKey key: String) -> AnyPrefsArray?
-    // func storageValue(forKey key: String) -> AnyPrefsDictionary?
+    
+    // Additional type conversions with default implementations
+    func storageValue<Element: PrefsStorageValue>(forKey key: String) -> [Element]?
+    func storageValue<Element: PrefsStorageValue>(forKey key: String) -> [String: Element]?
+    func storageValue(forKey key: String) -> AnyPrefsArray?
+    func storageValue(forKey key: String) -> AnyPrefsDictionary?
+}
+
+// MARK: - Additional type conversions
+
+extension PrefsStorage {
+    public func storageValue<Element: PrefsStorageValue>(forKey key: String) -> [Element]? {
+        guard let storageValue: [any PrefsStorageValue] = storageValue(forKey: key) else { return nil }
+        let cast = storageValue.compactMap { $0 as? Element }
+        assert(storageValue.count == cast.count)
+        return cast
+    }
+    
+    public func storageValue<Element: PrefsStorageValue>(forKey key: String) -> [String: Element]? {
+        guard let storageValue: [String: any PrefsStorageValue] = storageValue(forKey: key) else { return nil }
+        let cast = storageValue.compactMapValues { $0 as? Element }
+        assert(storageValue.count == cast.count)
+        return cast
+    }
+    
+    public func storageValue(forKey key: String) -> AnyPrefsArray? {
+        guard let storageValue: [any PrefsStorageValue] = storageValue(forKey: key) else { return nil }
+        let anyArray = AnyPrefsArray(storageValue)
+        return anyArray
+    }
+    
+    public func storageValue(forKey key: String) -> AnyPrefsDictionary? {
+        guard let storageValue: [String: any PrefsStorageValue] = storageValue(forKey: key) else { return nil }
+        let anyDict = AnyPrefsDictionary(storageValue)
+        return anyDict
+    }
 }

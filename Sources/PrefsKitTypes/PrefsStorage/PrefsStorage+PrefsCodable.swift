@@ -40,6 +40,32 @@ extension PrefsStorage {
     public func storageValue<Coding: PrefsCodable>(forKey key: String, using coding: Coding) -> Coding.StorageValue? where Coding.StorageValue == [String: any PrefsStorageValue] {
         storageValue(forKey: key)
     }
+    
+    // MARK: - Additional type conversions
+    
+    public func storageValue<Coding: PrefsCodable, Element: PrefsStorageValue>(
+        forKey key: String, using coding: Coding
+    ) -> Coding.StorageValue? where Coding.Value == [Element], Coding.StorageValue == Coding.Value {
+        storageValue(forKey: key)
+    }
+    
+    public func storageValue<Coding: PrefsCodable, Element: PrefsStorageValue>(
+        forKey key: String, using coding: Coding
+    ) -> Coding.StorageValue? where Coding.Value == [String: Element], Coding.StorageValue == Coding.Value {
+        storageValue(forKey: key)
+    }
+    
+    public func storageValue<Coding: PrefsCodable>(
+        forKey key: String, using coding: Coding
+    ) -> Coding.StorageValue? where Coding.Value == AnyPrefsArray, Coding.StorageValue == Coding.Value {
+        storageValue(forKey: key)
+    }
+    
+    public func storageValue<Coding: PrefsCodable>(
+        forKey key: String, using coding: Coding
+    ) -> Coding.StorageValue? where Coding.Value == AnyPrefsDictionary, Coding.StorageValue == Coding.Value {
+        storageValue(forKey: key)
+    }
 }
 
 extension PrefsStorage {
@@ -86,6 +112,36 @@ extension PrefsStorage {
     }
     
     public func value<Coding: PrefsCodable>(forKey key: String, using coding: Coding) -> Coding.Value? where Coding.StorageValue == [String: any PrefsStorageValue] {
+        guard let storageValue = storageValue(forKey: key, using: coding) else { return nil }
+        return coding.decode(prefsValue: storageValue)
+    }
+    
+    // MARK: - Additional type conversions
+    
+    public func value<Coding: PrefsCodable, Element: PrefsStorageValue>(
+        forKey key: String, using coding: Coding
+    ) -> Coding.Value? where Coding.Value == [Element], Coding.StorageValue == Coding.Value {
+        guard let storageValue = storageValue(forKey: key, using: coding) else { return nil }
+        return coding.decode(prefsValue: storageValue)
+    }
+    
+    public func value<Coding: PrefsCodable, Element: PrefsStorageValue>(
+        forKey key: String, using coding: Coding
+    ) -> Coding.Value? where Coding.Value == [String: Element], Coding.StorageValue == Coding.Value {
+        guard let storageValue = storageValue(forKey: key, using: coding) else { return nil }
+        return coding.decode(prefsValue: storageValue)
+    }
+    
+    public func value<Coding: PrefsCodable>(
+        forKey key: String, using coding: Coding
+    ) -> Coding.Value? where Coding.Value == AnyPrefsArray, Coding.StorageValue == Coding.Value {
+        guard let storageValue = storageValue(forKey: key, using: coding) else { return nil }
+        return coding.decode(prefsValue: storageValue)
+    }
+    
+    public func value<Coding: PrefsCodable>(
+        forKey key: String, using coding: Coding
+    ) -> Coding.Value? where Coding.Value == AnyPrefsDictionary, Coding.StorageValue == Coding.Value {
         guard let storageValue = storageValue(forKey: key, using: coding) else { return nil }
         return coding.decode(prefsValue: storageValue)
     }

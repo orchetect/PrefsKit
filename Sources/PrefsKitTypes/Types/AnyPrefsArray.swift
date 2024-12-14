@@ -16,7 +16,15 @@ public struct AnyPrefsArray {
     @inlinable
     public init(_ content: [any PrefsStorageValue]) {
         let converted = content
-            .compactMap(AnyPrefsStorageValue.init)
+            .compactMap(AnyPrefsStorageValue.init(_:))
+        assert(converted.count == content.count)
+        self.content = converted
+    }
+    
+    @inlinable
+    public init(userDefaultsValue content: [any PrefsStorageValue]) {
+        let converted = content
+            .compactMap(AnyPrefsStorageValue.init(userDefaultsValue:))
         assert(converted.count == content.count)
         self.content = converted
     }
@@ -29,6 +37,16 @@ extension AnyPrefsArray: Sendable { }
 extension AnyPrefsArray: ExpressibleByArrayLiteral {
     public init(arrayLiteral elements: (any PrefsStorageValue)...) {
         self.init(elements)
+    }
+}
+
+extension AnyPrefsArray: CustomStringConvertible {
+    public var description: String {
+        "[" + content
+            .map { $0.value.prefsStorageValue }
+            .map(String.init(describing:))
+            .joined(separator: ", ")
+        + "]"
     }
 }
 

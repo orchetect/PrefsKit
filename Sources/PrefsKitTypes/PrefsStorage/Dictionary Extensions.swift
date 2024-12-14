@@ -33,8 +33,8 @@ func convertToPrefDict(plist nsDict: NSDictionary) throws -> [String: any PrefsS
         else { throw CocoaError(.coderReadCorrupt) }
         
         switch pair.value {
-        case let v as Bool: base[key] = v
         case let v as String: base[key] = v
+        case let v as Bool: base[key] = v
         case let v as Int: base[key] = v
         case let v as Double: base[key] = v
         case let v as Float: base[key] = v
@@ -49,8 +49,8 @@ func convertToPrefDict(plist nsDict: NSDictionary) throws -> [String: any PrefsS
 func convertToPrefArray(plist nsArray: NSArray) throws -> [any PrefsStorageValue] {
     try nsArray.reduce(into: []) { base, element in
         switch element {
-        case let v as Bool: base.append(v)
         case let v as String: base.append(v)
+        case let v as Bool: base.append(v)
         case let v as Int: base.append(v)
         case let v as Double: base.append(v)
         case let v as Float: base.append(v)
