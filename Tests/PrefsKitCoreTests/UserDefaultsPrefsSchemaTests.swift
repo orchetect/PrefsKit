@@ -72,6 +72,8 @@ struct UserDefaultsPrefsSchemaTests {
         static let jsonCodableDefaulted = "jsonCodableDefaulted"
         static let jsonCodableFoo = "jsonCodableFoo"
         static let jsonCodableBar = "jsonCodableBar"
+        static let url = "url"
+        static let urlDefaulted = "urlDefaulted"
         
         static let int = "int"
         static let string = "string"
@@ -137,6 +139,17 @@ struct UserDefaultsPrefsSchemaTests {
         
         @JSONCodablePref(key: Key.codable2) var jsonCodable2: CodableEnum?
         @JSONCodablePref(key: Key.codable2) var jsonCodableDefaulted2: CodableEnum = .one
+        
+        @Pref(
+            key: Key.url,
+            encode: { $0.absoluteString },
+            decode: { URL(string: $0) }
+        ) var url: URL?
+        @Pref(
+            key: Key.urlDefaulted,
+            encode: { $0.absoluteString },
+            decode: { URL(string: $0) }
+        ) var urlDefaulted: URL = URL(string: "https://example.com")!
         
         // Synthesized Key Implementations
         
@@ -206,6 +219,9 @@ struct UserDefaultsPrefsSchemaTests {
         
         @JSONCodablePref var x_jsonCodable2: CodableEnum?
         @JSONCodablePref var x_jsonCodableDefaulted2: CodableEnum = .one
+        
+        @Pref(encode: { $0.absoluteString }, decode: { URL(string: $0) }) var x_url: URL?
+        @Pref(encode: { $0.absoluteString }, decode: { URL(string: $0) }) var x_urlDefaulted: URL = URL(string: "https://example.com")!
         
         // Synthesized Key Implementations
         @Pref var x_int: Int?
@@ -446,6 +462,35 @@ struct UserDefaultsPrefsSchemaTests {
         
         schema.jsonCodableDefaulted2 = .two
         #expect(schema.jsonCodableDefaulted2 == .two)
+        
+        // can't set nil
+    }
+    
+    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
+    @Test(arguments: schemas)
+    func urlPrefKey(schema: TestSchema) async throws {
+        #expect(schema.url == nil)
+        
+        schema.url = URL(string: "https://apple.com")!
+        #expect(schema.url == URL(string: "https://apple.com")!)
+        
+        schema.url = URL(string: "https://google.com")!
+        #expect(schema.url == URL(string: "https://google.com")!)
+        
+        schema.jsonCodable2 = nil
+        #expect(schema.jsonCodable2 == nil)
+    }
+    
+    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
+    @Test(arguments: schemas)
+    func urlDefaultedPrefKey(schema: TestSchema) async throws {
+        #expect(schema.urlDefaulted == URL(string: "https://example.com")!)
+        
+        schema.urlDefaulted = URL(string: "https://apple.com")!
+        #expect(schema.urlDefaulted == URL(string: "https://apple.com")!)
+        
+        schema.urlDefaulted = URL(string: "https://google.com")!
+        #expect(schema.urlDefaulted == URL(string: "https://google.com")!)
         
         // can't set nil
     }

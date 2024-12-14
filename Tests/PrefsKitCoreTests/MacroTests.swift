@@ -18,16 +18,12 @@ import XCTest
 
 @testable import PrefsKitMacrosImplementation
 
-final class MacroTests: XCTestCase {
+final class PrefsSchemaMacroTests: XCTestCase {
     let testMacros: [String: Macro.Type] = [
-        "PrefsSchema": PrefsSchemaMacro.self,
-        "Pref": AtomicPrefMacro.self,
-        "_Pref": CustomPrefMacro.self, // same name as Pref but with argument overloads
-        "RawRepresentablePref": RawRepresentablePrefMacro.self,
-        "JSONCodablePref": JSONCodablePrefMacro.self
+        "PrefsSchema": PrefsSchemaMacro.self
     ]
     
-    func testPrefsMacro() {
+    func testPrefsSchemaMacro() {
         assertMacroExpansion(
             """
             @PrefsSchema final class Foo {
@@ -62,6 +58,12 @@ final class MacroTests: XCTestCase {
             macros: testMacros
         )
     }
+}
+
+final class AtomicPrefMacroTests: XCTestCase {
+    let testMacros: [String: Macro.Type] = [
+        "Pref": AtomicPrefMacro.self
+    ]
     
     func testPrefMacro_KeyArgument_Optional() {
         assertMacroExpansion(
@@ -286,6 +288,38 @@ final class MacroTests: XCTestCase {
             macros: testMacros
         )
     }
+}
+
+final class CodingPrefMacroTests: XCTestCase {
+    let testMacros: [String: Macro.Type] = [
+        "Pref": CodingPrefMacro.self
+    ]
+    
+    // TODO: Add unit tests
+}
+
+final class InlinePrefMacroTests: XCTestCase {
+    let testMacros: [String: Macro.Type] = [
+        "Pref": InlinePrefMacro.self
+    ]
+    
+    // TODO: Add unit tests
+}
+
+final class RawRepresentablePrefMacroTests: XCTestCase {
+    let testMacros: [String: Macro.Type] = [
+        "Pref": RawRepresentablePrefMacro.self
+    ]
+    
+    // TODO: Add unit tests
+}
+
+final class JSONCodablePrefMacroTests: XCTestCase {
+    let testMacros: [String: Macro.Type] = [
+        "Pref": JSONCodablePrefMacro.self
+    ]
+    
+    // TODO: Add unit tests
 }
 
 #endif
