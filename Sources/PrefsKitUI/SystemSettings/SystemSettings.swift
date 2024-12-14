@@ -43,7 +43,7 @@ public enum SystemSettings {
         }
     }
     
-    #else
+    #elseif !os(watchOS)
     
     @MainActor
     public static func launch() {
