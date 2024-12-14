@@ -57,6 +57,8 @@ public struct CodablePrefsCoding<Value, StorageValue, Encoder, Decoder>: Codable
     let decoder: Decoder
     
     public init(
+        value: Value.Type,
+        storageValue: StorageValue.Type,
         encoder: @escaping @Sendable @autoclosure () -> Encoder,
         decoder: @escaping @Sendable @autoclosure () -> Decoder
     ) {

@@ -33,8 +33,6 @@ struct CustomEncodingTests {
     }
     
     struct CustomPrefCoding: PrefsCodable {
-        var key: String = "customKey"
-        
         typealias Value = NonCodableNonRawRepresentable
         typealias StorageValue = String
         
@@ -47,31 +45,46 @@ struct CustomEncodingTests {
         }
     }
     
-//    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
-//    @Prefs final class TestSchema: PrefsSchema {
-//        let storage = DictionaryPrefsStorage()
-//        let storageMode: PrefsSchemaMode = .cachedReadStorageWrite
-//
-//        enum Key: String, CaseIterable {
-//            case custom
-//        }
-//        
-//        @Pref(key: Key.custom, coding: CustomPrefCoding()) var customKey: NonCodableNonRawRepresentable?
-//    }
+    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
+    @Prefs final class TestSchema: PrefsSchema {
+        let storage = DictionaryPrefsStorage()
+        let storageMode: PrefsSchemaMode = .cachedReadStorageWrite
+
+        enum Key {
+            static let custom = "custom"
+            static let customDefaulted = "customDefaulted"
+        }
+        
+        @Pref(key: Key.custom, coding: CustomPrefCoding()) var custom: NonCodableNonRawRepresentable?
+        @Pref(key: Key.customDefaulted, coding: CustomPrefCoding()) var customDefaulted: NonCodableNonRawRepresentable = .init(value: 1)
+    }
     
-//    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
-//    @Test func customValueEncoding() {
-//        let schema = TestSchema()
-//        
-//        #expect(schema.customKey.value?.value == nil)
-//        
-//        schema.customKey.value = NonCodableNonRawRepresentable(value: 42)
-//        #expect(schema.customKey.value?.value == 42)
-//        
-//        schema.customKey.value?.value = 5
-//        #expect(schema.customKey.value?.value == 5)
-//        
-//        schema.customKey.value = nil
-//        #expect(schema.customKey.value == nil)
-//    }
+    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
+    @Test func customValueEncoding() {
+        let schema = TestSchema()
+        
+        #expect(schema.custom?.value == nil)
+        
+        schema.custom = NonCodableNonRawRepresentable(value: 42)
+        #expect(schema.custom?.value == 42)
+        
+        schema.custom?.value = 5
+        #expect(schema.custom?.value == 5)
+        
+        schema.custom = nil
+        #expect(schema.custom == nil)
+    }
+    
+    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
+    @Test func customDefaultedValueEncoding() {
+        let schema = TestSchema()
+        
+        #expect(schema.customDefaulted == NonCodableNonRawRepresentable(value: 1))
+        
+        schema.customDefaulted = NonCodableNonRawRepresentable(value: 42)
+        #expect(schema.customDefaulted.value == 42)
+        
+        schema.customDefaulted = NonCodableNonRawRepresentable(value: 5)
+        #expect(schema.customDefaulted.value == 5)
+    }
 }

@@ -33,6 +33,8 @@ public struct AnyDefaultedAtomicPrefsKey<Value>: DefaultedPrefsKey
     public let defaultValue: Value
     public let coding = AtomicPrefsCoding<Value>()
     
+    // allows type inference:
+    // let foo = AnyDefaultedAtomicPrefsKey(key: "foo", defaultValue: 1)
     public init(key: String, defaultValue: Value) {
         self.key = key
         self.defaultValue = defaultValue
@@ -42,53 +44,67 @@ public struct AnyDefaultedAtomicPrefsKey<Value>: DefaultedPrefsKey
 // MARK: - Base
 
 /// Generic concrete pref key with a different value type from its raw storage type.
-public struct AnyPrefsKey<Value, StorageValue>: PrefsKey
-    where Value: RawRepresentable, Value.RawValue == StorageValue, Value: Sendable,
-    StorageValue: PrefsStorageValue
+public struct AnyPrefsKey<Coding>: PrefsKey
+    where Coding: PrefsCodable
 {
-    public let key: String
-    public let coding: PrefsCoding<Value, StorageValue>
+    public typealias Value = Coding.Value
+    public typealias StorageValue = Coding.StorageValue
     
-    public init(key: String, coding: PrefsCoding<Value, StorageValue>) {
+    public let key: String
+    public let coding: Coding
+    
+    // allows type inference:
+    // let foo = AnyPrefsKey(key: "foo", coding: MyCustomCoding())
+    // where MyCustomCoding conforms to `PrefsCodable`
+    public init(key: String, coding: Coding) {
         self.key = key
         self.coding = coding
     }
     
-    public init(
+    // allows type inference:
+    // let foo = AnyPrefsKey(key: "foo", encode: { String($0) }, decode: { Int($0) })
+    public init<Value, StorageValue>(
         key: String,
         encode: @escaping @Sendable (Value) -> StorageValue?,
         decode: @escaping @Sendable (StorageValue) -> Value?
-    ) {
+    ) where Coding == PrefsCoding<Value, StorageValue> {
         self.key = key
-        coding = .init(encode: encode, decode: decode)
+        coding = PrefsCoding<Value, StorageValue>(encode: encode, decode: decode)
     }
 }
 
 /// Generic concrete pref key with a different value type from its raw storage type and a default value.
-public struct AnyDefaultedPrefsKey<Value, StorageValue>: DefaultedPrefsKey
-    where Value: RawRepresentable, Value.RawValue == StorageValue, Value: Sendable,
-    StorageValue: PrefsStorageValue
+public struct AnyDefaultedPrefsKey<Coding>: DefaultedPrefsKey
+where Coding: PrefsCodable
 {
+    public typealias Value = Coding.Value
+    public typealias StorageValue = Coding.StorageValue
+    
     public let key: String
     public let defaultValue: Value
-    public let coding: PrefsCoding<Value, StorageValue>
+    public let coding: Coding
     
+    // allows type inference:
+    // let foo = AnyDefaultedPrefsKey(key: "foo", defaultValue: 123, coding: MyCustomCoding())
+    // where MyCustomCoding conforms to `PrefsCodable`
     public init(
         key: String,
         defaultValue: Value,
-        coding: PrefsCoding<Value, StorageValue>
+        coding: Coding
     ) {
         self.key = key
         self.defaultValue = defaultValue
         self.coding = coding
     }
     
-    public init(
+    // allows type inference:
+    // let foo = AnyDefaultedPrefsKey(key: "foo", defaultValue: 123, encode: { String($0) }, decode: { Int($0) })
+    public init<Value, StorageValue>(
         key: String,
         defaultValue: Value,
         encode: @escaping @Sendable (Value) -> StorageValue?,
         decode: @escaping @Sendable (StorageValue) -> Value?
-    ) {
+    ) where Coding == PrefsCoding<Value, StorageValue> {
         self.key = key
         self.defaultValue = defaultValue
         coding = .init(encode: encode, decode: decode)
@@ -121,6 +137,8 @@ public struct AnyDefaultedRawRepresentablePrefsKey<Value>: DefaultedPrefsKey
     public let defaultValue: Value
     public let coding = RawRepresentablePrefsCoding<Value>()
     
+    // allows type inference:
+    // let foo = AnyDefaultedRawRepresentablePrefsKey(key: "foo", defaultValue: MyRawRepEnum.foo)
     public init(key: String, defaultValue: Value) {
         self.key = key
         self.defaultValue = defaultValue
@@ -140,18 +158,24 @@ public struct AnyCodablePrefsKey<Value, StorageValue, Encoder, Decoder>: PrefsKe
     public let key: String
     public let coding: CodablePrefsCoding<Value, StorageValue, Encoder, Decoder>
     
+    // allows type inference:
+    // let foo = AnyCodablePrefsKey(key: "foo", coding: MyCoding())
     public init(key: String, coding: CodablePrefsCoding<Value, StorageValue, Encoder, Decoder>) {
         self.key = key
         self.coding = coding
     }
     
+    // allows type inference:
+    // let foo = AnyCodablePrefsKey(key: "foo", value: Int.self, storageValue: Data.self, encoder: JSONEncoder(), decoder: JSONDecoder())
     public init(
         key: String,
+        value: Value.Type,
+        storageValue: StorageValue.Type,
         encoder: @escaping @Sendable @autoclosure () -> Encoder,
         decoder: @escaping @Sendable @autoclosure () -> Decoder
     ) {
         self.key = key
-        coding = .init(encoder: encoder(), decoder: decoder())
+        coding = CodablePrefsCoding(value: value, storageValue: storageValue, encoder: encoder(), decoder: decoder())
     }
 }
 
@@ -167,6 +191,8 @@ public struct AnyDefaultedCodablePrefsKey<Value, StorageValue, Encoder, Decoder>
     public let defaultValue: Value
     public let coding: CodablePrefsCoding<Value, StorageValue, Encoder, Decoder>
     
+    // allows type inference:
+    // let foo = AnyDefaultedCodablePrefsKey(key: "foo", defaultValue: 123, coding: MyCoding())
     public init(
         key: String,
         defaultValue: Value,
@@ -177,15 +203,18 @@ public struct AnyDefaultedCodablePrefsKey<Value, StorageValue, Encoder, Decoder>
         self.coding = coding
     }
     
+    // allows type inference:
+    // let foo = AnyDefaultedCodablePrefsKey(key: "foo", defaultValue: 123, storageValue: Data.self, encoder: JSONEncoder(), decoder: JSONDecoder())
     public init(
         key: String,
         defaultValue: Value,
+        storageValue: StorageValue.Type,
         encoder: @escaping @Sendable @autoclosure () -> Encoder,
         decoder: @escaping @Sendable @autoclosure () -> Decoder
     ) {
         self.key = key
         self.defaultValue = defaultValue
-        coding = .init(encoder: encoder(), decoder: decoder())
+        coding = CodablePrefsCoding(value: Value.self, storageValue: storageValue, encoder: encoder(), decoder: decoder())
     }
 }
 
@@ -211,6 +240,8 @@ public struct AnyDefaultedJSONCodablePrefsKey<Value>: DefaultedPrefsKey
     public let defaultValue: Value
     public let coding = JSONCodablePrefsCoding<Value>()
     
+    // allows type inference:
+    // let foo = AnyDefaultedJSONCodablePrefsKey(key: "foo", defaultValue: 123)
     public init(key: String, defaultValue: Value) {
         self.key = key
         self.defaultValue = defaultValue

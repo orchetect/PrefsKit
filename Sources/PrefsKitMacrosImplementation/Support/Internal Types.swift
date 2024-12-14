@@ -64,7 +64,8 @@ struct TypeBindingInfo {
         from varDec: VariableDeclSyntax,
         keyName: String,
         privateKeyVarName: String,
-        privateValueVarName: String
+        privateValueVarName: String,
+        customCodingDecl: String?
     ) throws {
         let typeBinding = try macro.typeBinding(from: varDec)
         typeName = typeBinding.description
@@ -75,15 +76,15 @@ struct TypeBindingInfo {
             guard (try? macro.defaultValue(from: varDec)) == nil else {
                 throw PrefMacroError.noDefaultValueAllowed
             }
-            keyAndCodingStructName = "\(macro.moduleNamePrefix)\(macro.keyStructName)<\(typeName)>"
-            keyAndCodingStructDeclaration = keyAndCodingStructName + "(key: \(keyName))"
+            keyAndCodingStructName = "\(macro.moduleNamePrefix)\(macro.keyStructName)\(macro.hasCustomCoding ? "" : "<\(typeName)>")"
+            keyAndCodingStructDeclaration = keyAndCodingStructName + "(key: \(keyName)\(macro.hasCustomCoding ? ", coding: \(customCodingDecl ?? "nil")" : ""))"
             privateKeyVarDeclaration = "private let \(privateKeyVarName) = \(keyAndCodingStructDeclaration)"
             privateValueVarDeclaration = "private var \(privateValueVarName): \(typeName)?"
         } else {
             // must have a default value
             let defaultValue = try macro.defaultValue(from: varDec)
-            keyAndCodingStructName = "\(macro.moduleNamePrefix)\(macro.defaultedKeyStructName)<\(typeName)>"
-            keyAndCodingStructDeclaration = keyAndCodingStructName + "(key: \(keyName), defaultValue: \(defaultValue))"
+            keyAndCodingStructName = "\(macro.moduleNamePrefix)\(macro.defaultedKeyStructName)\(macro.hasCustomCoding ? "" : "<\(typeName)>")"
+            keyAndCodingStructDeclaration = keyAndCodingStructName + "(key: \(keyName), defaultValue: \(defaultValue)\(macro.hasCustomCoding ? ", coding: \(customCodingDecl ?? "nil")" : ""))"
             privateKeyVarDeclaration = "private let \(privateKeyVarName) = \(keyAndCodingStructDeclaration)"
             privateValueVarDeclaration = "private var \(privateValueVarName): \(typeName)?"
         }

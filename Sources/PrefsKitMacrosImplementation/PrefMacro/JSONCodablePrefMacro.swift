@@ -7,4 +7,5 @@
 public struct JSONCodablePrefMacro: PrefMacro {
     public static let keyStructName: String = "AnyJSONCodablePrefsKey"
     public static let defaultedKeyStructName: String = "AnyDefaultedJSONCodablePrefsKey"
+    public static let hasCustomCoding: Bool = false
 }

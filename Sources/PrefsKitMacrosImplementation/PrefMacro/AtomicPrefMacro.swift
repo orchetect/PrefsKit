@@ -7,4 +7,5 @@
 public struct AtomicPrefMacro: PrefMacro {
     public static let keyStructName: String = "AnyAtomicPrefsKey"
     public static let defaultedKeyStructName: String = "AnyDefaultedAtomicPrefsKey"
+    public static let hasCustomCoding: Bool = false
 }

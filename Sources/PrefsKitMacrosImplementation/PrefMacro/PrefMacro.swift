@@ -13,6 +13,7 @@ import SwiftSyntaxMacros
 public protocol PrefMacro: AccessorMacro, PeerMacro {
     static var keyStructName: String { get }
     static var defaultedKeyStructName: String { get }
+    static var hasCustomCoding: Bool { get }
 }
 
 extension PrefMacro /* : AccessorMacro */ {
@@ -101,6 +102,12 @@ extension PrefMacro /* : PeerMacro */ {
         let keyArg = try keyArg(from: node)
         let keyName = keyArg.expression.description
         
+        var customCodingDecl: String? = nil
+        if hasCustomCoding {
+            let customCodingArg = try customCodingArg(from: node)
+            customCodingDecl = customCodingArg.expression.description
+        }
+        
         guard let varDec = declaration.as(VariableDeclSyntax.self)
         else {
             throw PrefMacroError.incorrectSyntax
@@ -115,7 +122,8 @@ extension PrefMacro /* : PeerMacro */ {
             from: varDec,
             keyName: keyName,
             privateKeyVarName: privateKeyVarName,
-            privateValueVarName: privateValueVarName
+            privateValueVarName: privateValueVarName,
+            customCodingDecl: customCodingDecl
         )
         
         return [
@@ -140,22 +148,33 @@ extension PrefMacro {
 
 extension PrefMacro {
     static func keyArg(from node: AttributeSyntax) throws -> LabeledExprSyntax {
-        guard let keyArg = node.arguments?
-            .as(LabeledExprListSyntax.self)?
-            .first
+        guard let args = node.arguments?.as(LabeledExprListSyntax.self),
+              args.count > 0
         else {
             throw PrefMacroError.missingKeyArgument
         }
+        let arg = args[args.startIndex]
         
         // probably skip this check since we don't require key name to be a string literal,
         // and it's difficult/impossible to know whether an expression evaluates to
         // a String output value. we'll just take the syntax as-is and leave that up to the compiler.
-        // guard keyArg.expression.syntaxNodeType == StringLiteralExprSyntax.self
+        // guard arg.expression.syntaxNodeType == StringLiteralExprSyntax.self
         // else {
         //     throw PrefMacroError.invalidKeyArgumentType
         // }
         
-        return keyArg
+        return arg
+    }
+    
+    static func customCodingArg(from node: AttributeSyntax) throws -> LabeledExprSyntax {
+        guard let args = node.arguments?.as(LabeledExprListSyntax.self),
+              args.count > 1
+        else {
+            throw PrefMacroError.missingKeyArgument
+        }
+        let arg = args[args.index(args.startIndex, offsetBy: 1)]
+        
+        return arg
     }
     
     static func varName(from declaration: VariableDeclSyntax) throws -> IdentifierPatternSyntax {
