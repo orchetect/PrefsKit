@@ -97,6 +97,8 @@ struct UserDefaultsPrefsSchemaTests {
             self.storageMode = storageMode
         }
         
+        // MARK: Key names supplied in key argument
+        
         // Defined Key Implementations
         
         @Pref(key: Key.foo, coding: MockAtomicPrefsCoding()) var atomic: Bool?
@@ -165,6 +167,69 @@ struct UserDefaultsPrefsSchemaTests {
         // @Pref(key: Key.dict) var dictDefaulted: [String: any PrefsStorageValue] = ["foo": 123, "bar": "a string"] // can't work with 'any'
         @Pref(key: Key.anyDict) var anyDictDefaulted: AnyPrefsDictionary = ["foo": 123, "bar": "a string"]
         @Pref(key: Key.stringDict) var stringDictDefaulted: [String: String] = ["a": "123", "b": "456"]
+        
+        // MARK: Key names derived from variable names
+        
+        // Defined Key Implementations
+        
+        @Pref(coding: MockAtomicPrefsCoding()) var x_atomic: Bool?
+        @Pref(coding: MockAtomicPrefsCoding()) var x_atomicDefaulted: Bool = true
+        
+        @Pref(coding: MockRawRepresentablePrefsCoding()) var x_rawRep: RawEnum?
+        @Pref(coding: MockRawRepresentablePrefsCoding()) var x_rawRepDefaulted: RawEnum = .one
+        
+        @RawRepresentablePref var x_rawRep2: RawEnum?
+        @RawRepresentablePref var x_rawRepDefaulted2: RawEnum = .one
+        
+        @Pref(coding: MockCodablePrefsCoding()) var x_codable: CodableEnum?
+        @Pref(coding: MockCodablePrefsCoding()) var x_codableDefaulted: CodableEnum = .one
+        
+        @Pref(
+            coding: CodablePrefsCoding(
+                value: CodableEnum.self,
+                storageValue: JSONEncoder.Output.self,
+                encoder: JSONEncoder(),
+                decoder: JSONDecoder()
+            )
+        ) var x_codable2: CodableEnum?
+        @Pref(
+            coding: CodablePrefsCoding(
+                value: CodableEnum.self,
+                storageValue: JSONEncoder.Output.self,
+                encoder: JSONEncoder(),
+                decoder: JSONDecoder()
+            )
+        ) var x_codableDefaulted2: CodableEnum = .one
+        
+        @Pref(coding: MockJSONCodablePrefsCoding()) var x_jsonCodable: CodableEnum?
+        @Pref(coding: MockJSONCodablePrefsCoding()) var x_jsonCodableDefaulted: CodableEnum = .one
+        
+        @JSONCodablePref var x_jsonCodable2: CodableEnum?
+        @JSONCodablePref var x_jsonCodableDefaulted2: CodableEnum = .one
+        
+        // Synthesized Key Implementations
+        @Pref var x_int: Int?
+        @Pref var x_string: String?
+        @Pref var x_bool: Bool?
+        @Pref var x_double: Double?
+        @Pref var x_float: Float?
+        @Pref var x_data: Data?
+        @Pref var x_anyArray: AnyPrefsArray?
+        @Pref var x_stringArray: [String]?
+        @Pref var x_anyDict: AnyPrefsDictionary?
+        @Pref var x_stringDict: [String: String]?
+        
+        // Atomic (Defaulted)
+        @Pref var x_intDefaulted: Int = 1
+        @Pref var x_stringDefaulted: String = "a string"
+        @Pref var x_boolDefaulted: Bool = true
+        @Pref var x_doubleDefaulted: Double = 1.5
+        @Pref var x_floatDefaulted: Float = 2.5
+        @Pref var x_dataDefaulted: Data = Data([0x01, 0x02])
+        @Pref var x_anyArrayDefaulted: AnyPrefsArray = [123, "a string"]
+        @Pref var x_stringArrayDefaulted: [String] = ["a", "b"]
+        @Pref var x_anyDictDefaulted: AnyPrefsDictionary = ["foo": 123, "bar": "a string"]
+        @Pref var x_stringDictDefaulted: [String: String] = ["a": "123", "b": "456"]
     }
     
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
@@ -716,5 +781,29 @@ struct UserDefaultsPrefsSchemaTests {
         schema.stringDictDefaulted = ["c": "789"]
         #expect(schema.stringDictDefaulted.count == 1)
         #expect(schema.stringDictDefaulted["c"] == "789")
+    }
+    
+    // MARK: - Key names derived from variable names
+    
+    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
+    @Test(arguments: schemas)
+    func x_atomicPrefKey(schema: TestSchema) async throws {
+        #expect(schema.x_atomic == nil)
+        
+        schema.x_atomic = false
+        #expect(schema.x_atomic == false)
+        
+        schema.x_atomic = true
+        #expect(schema.x_atomic == true)
+        
+        schema.x_atomic?.toggle()
+        #expect(schema.x_atomic == false)
+        
+        schema.x_atomic = nil
+        #expect(schema.x_atomic == nil)
+        
+        // check storage for correct key name
+        schema.x_atomic = true
+        #expect(schema.storage.storageValue(forKey: "x_atomic") == true)
     }
 }

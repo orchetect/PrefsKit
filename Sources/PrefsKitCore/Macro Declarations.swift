@@ -17,16 +17,16 @@ public macro PrefsSchema() = #externalMacro(module: "PrefsKitMacrosImplementatio
 
 @attached(accessor, names: named(get), named(set), named(_modify))
 @attached(peer, names: /*arbitrary*/ prefixed(__PrefCoding_), prefixed(__PrefValue_))
-public macro Pref(key: String) = #externalMacro(module: "PrefsKitMacrosImplementation", type: "AtomicPrefMacro")
+public macro Pref(key: String? = nil) = #externalMacro(module: "PrefsKitMacrosImplementation", type: "AtomicPrefMacro")
 
 @attached(accessor, names: named(get), named(set), named(_modify))
 @attached(peer, names: /*arbitrary*/ prefixed(__PrefCoding_), prefixed(__PrefValue_))
-public macro Pref(key: String, coding: any PrefsCodable) = #externalMacro(module: "PrefsKitMacrosImplementation", type: "CustomPrefMacro")
+public macro Pref(key: String? = nil, coding: any PrefsCodable) = #externalMacro(module: "PrefsKitMacrosImplementation", type: "CustomPrefMacro")
 
 @attached(accessor, names: named(get), named(set), named(_modify))
 @attached(peer, names: /*arbitrary*/ prefixed(__PrefCoding_), prefixed(__PrefValue_))
-public macro RawRepresentablePref(key: String) = #externalMacro(module: "PrefsKitMacrosImplementation", type: "RawRepresentablePrefMacro")
+public macro RawRepresentablePref(key: String? = nil) = #externalMacro(module: "PrefsKitMacrosImplementation", type: "RawRepresentablePrefMacro")
 
 @attached(accessor, names: named(get), named(set), named(_modify))
 @attached(peer, names: /*arbitrary*/ prefixed(__PrefCoding_), prefixed(__PrefValue_))
-public macro JSONCodablePref(key: String) = #externalMacro(module: "PrefsKitMacrosImplementation", type: "JSONCodablePrefMacro")
+public macro JSONCodablePref(key: String? = nil) = #externalMacro(module: "PrefsKitMacrosImplementation", type: "JSONCodablePrefMacro")

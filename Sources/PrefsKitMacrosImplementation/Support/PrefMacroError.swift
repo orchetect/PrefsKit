@@ -8,7 +8,9 @@ import Foundation
 
 public enum PrefMacroError: LocalizedError {
     case missingKeyArgument
+    case missingCodingArgument
     case incorrectSyntax
+    case invalidArgumentLabel
     case invalidKeyArgumentType
     case invalidVariableName
     case notVarDeclaration
@@ -21,8 +23,12 @@ public enum PrefMacroError: LocalizedError {
         switch self {
         case .missingKeyArgument:
             "Missing value for key argument."
+        case .missingCodingArgument:
+            "Missing value for coding argument."
         case .incorrectSyntax:
             "Incorrect syntax."
+        case .invalidArgumentLabel:
+            "Invalid argument label."
         case .invalidKeyArgumentType:
             "Invalid key argument type."
         case .invalidVariableName:
