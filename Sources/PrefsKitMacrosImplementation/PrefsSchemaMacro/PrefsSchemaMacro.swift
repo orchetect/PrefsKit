@@ -1,5 +1,5 @@
 //
-//  PrefsMacro.swift
+//  PrefsSchemaMacro.swift
 //  PrefsKit • https://github.com/orchetect/PrefsKit
 //  © 2024 Steffan Andrews • Licensed under MIT License
 //
@@ -10,9 +10,9 @@ import SwiftSyntax
 import SwiftSyntaxBuilder
 import SwiftSyntaxMacros
 
-public struct PrefsMacro { }
+public struct PrefsSchemaMacro { }
 
-extension PrefsMacro: MemberMacro {
+extension PrefsSchemaMacro: MemberMacro {
     public static func expansion(
         of node: AttributeSyntax,
         providingMembersOf declaration: some DeclGroupSyntax,
@@ -27,7 +27,7 @@ extension PrefsMacro: MemberMacro {
     }
 }
 
-extension PrefsMacro: ExtensionMacro {
+extension PrefsSchemaMacro: ExtensionMacro {
     public static func expansion(
         of node: SwiftSyntax.AttributeSyntax,
         attachedTo declaration: some SwiftSyntax.DeclGroupSyntax,
@@ -35,7 +35,10 @@ extension PrefsMacro: ExtensionMacro {
         conformingTo protocols: [SwiftSyntax.TypeSyntax],
         in context: some SwiftSyntaxMacros.MacroExpansionContext
     ) throws -> [SwiftSyntax.ExtensionDeclSyntax] {
-        let equatableExtension = try ExtensionDeclSyntax(
+        let prefsSchemaExtension = try ExtensionDeclSyntax(
+            "extension \(type.trimmed): PrefsSchema { }"
+        )
+        let observableExtension = try ExtensionDeclSyntax(
             """
             extension \(type.trimmed): Observable {
                 internal nonisolated func access<Member>(
@@ -53,12 +56,13 @@ extension PrefsMacro: ExtensionMacro {
             }
             """
         )
-        return [equatableExtension]
+        
+        return [prefsSchemaExtension, observableExtension]
     }
 }
 
-extension PrefsMacro {
-    public enum PrefsMacroError: LocalizedError {
+extension PrefsSchemaMacro {
+    public enum PrefsSchemaMacroError: LocalizedError {
         case incorrectSyntax
         
         public var errorDescription: String? {

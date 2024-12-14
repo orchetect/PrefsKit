@@ -10,8 +10,8 @@ import PrefsKitTypes
 // MARK: - Prefs (Class)
 
 @attached(member, names: named(_$observationRegistrar))
-@attached(extension, names: named(access), named(withMutation), conformances: Observable)
-public macro Prefs() = #externalMacro(module: "PrefsKitMacrosImplementation", type: "PrefsMacro")
+@attached(extension, names: named(access), named(withMutation), conformances: Observable & PrefsSchema)
+public macro PrefsSchema() = #externalMacro(module: "PrefsKitMacrosImplementation", type: "PrefsSchemaMacro")
 
 // MARK: - *Pref (Variable-Attached)
 

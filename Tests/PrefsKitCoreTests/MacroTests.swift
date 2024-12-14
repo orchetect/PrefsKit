@@ -20,15 +20,17 @@ import XCTest
 
 final class MacroTests: XCTestCase {
     let testMacros: [String: Macro.Type] = [
-        "Prefs": PrefsMacro.self,
+        "PrefsSchema": PrefsSchemaMacro.self,
         "Pref": AtomicPrefMacro.self,
-        "RawRepresentablePref": RawRepresentablePrefMacro.self
+        "_Pref": CustomPrefMacro.self, // same name as Pref but with argument overloads
+        "RawRepresentablePref": RawRepresentablePrefMacro.self,
+        "JSONCodablePref": JSONCodablePrefMacro.self
     ]
     
     func testPrefsMacro() {
         assertMacroExpansion(
             """
-            @Prefs final class Foo {
+            @PrefsSchema final class Foo {
                 var foo: Int?
             }
             """,
@@ -37,6 +39,9 @@ final class MacroTests: XCTestCase {
                 var foo: Int?
             
                 @ObservationIgnored private let _$observationRegistrar = Observation.ObservationRegistrar()
+            }
+            
+            extension Foo: PrefsSchema {
             }
             
             extension Foo: Observable {
