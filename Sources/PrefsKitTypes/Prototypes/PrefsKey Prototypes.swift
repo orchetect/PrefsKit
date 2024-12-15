@@ -218,9 +218,9 @@ public struct AnyDefaultedCodablePrefsKey<Value, StorageValue, Encoder, Decoder>
     }
 }
 
-// MARK: - JSON Codable
+// MARK: - JSON Data Codable
 
-/// Generic concrete pref key with a `Codable` value type using JSON encoding.
+/// Generic concrete pref key with a `Codable` value type using JSON `Data` encoding.
 public struct AnyJSONDataCodablePrefsKey<Value>: PrefsKey
     where Value: Codable, Value: Sendable
 {
@@ -232,7 +232,7 @@ public struct AnyJSONDataCodablePrefsKey<Value>: PrefsKey
     }
 }
 
-/// Generic concrete pref key with a `Codable` value type using JSON encoding and a default value.
+/// Generic concrete pref key with a `Codable` value type using JSON `Data` encoding and a default value.
 public struct AnyDefaultedJSONDataCodablePrefsKey<Value>: DefaultedPrefsKey
     where Value: Codable, Value: Sendable
 {
@@ -241,7 +241,37 @@ public struct AnyDefaultedJSONDataCodablePrefsKey<Value>: DefaultedPrefsKey
     public let coding = JSONDataCodablePrefsCoding<Value>()
     
     // allows type inference:
-    // let foo = AnyDefaultedJSONCodablePrefsKey(key: "foo", defaultValue: 123)
+    // let foo = AnyDefaultedJSONDataCodablePrefsKey(key: "foo", defaultValue: 123)
+    public init(key: String, defaultValue: Value) {
+        self.key = key
+        self.defaultValue = defaultValue
+    }
+}
+
+// MARK: - JSON String Codable
+
+/// Generic concrete pref key with a `Codable` value type using JSON `String` (UTF-8) encoding.
+public struct AnyJSONStringCodablePrefsKey<Value>: PrefsKey
+where Value: Codable, Value: Sendable
+{
+    public let key: String
+    public let coding = JSONStringCodablePrefsCoding<Value>()
+    
+    public init(key: String) {
+        self.key = key
+    }
+}
+
+/// Generic concrete pref key with a `Codable` value type using JSON `String` (UTF-8) encoding and a default value.
+public struct AnyDefaultedJSONStringCodablePrefsKey<Value>: DefaultedPrefsKey
+where Value: Codable, Value: Sendable
+{
+    public let key: String
+    public let defaultValue: Value
+    public let coding = JSONStringCodablePrefsCoding<Value>()
+    
+    // allows type inference:
+    // let foo = AnyDefaultedJSONStringCodablePrefsKey(key: "foo", defaultValue: 123)
     public init(key: String, defaultValue: Value) {
         self.key = key
         self.defaultValue = defaultValue

@@ -42,9 +42,16 @@ public macro Pref<Value, StorageValue>(
 public macro RawRepresentablePref(key: String? = nil)
     = #externalMacro(module: "PrefsKitMacrosImplementation", type: "RawRepresentablePrefMacro")
 
-// MARK: - JSONCodablePref
+// MARK: - JSONDataCodablePref
 
 @attached(accessor, names: named(get), named(set), named(_modify))
 @attached(peer, names: /* arbitrary */ prefixed(__PrefCoding_), prefixed(__PrefValue_))
-public macro JSONCodablePref(key: String? = nil)
+public macro JSONDataCodablePref(key: String? = nil)
     = #externalMacro(module: "PrefsKitMacrosImplementation", type: "JSONDataCodablePrefMacro")
+
+// MARK: - JSONStringCodablePref
+
+@attached(accessor, names: named(get), named(set), named(_modify))
+@attached(peer, names: /* arbitrary */ prefixed(__PrefCoding_), prefixed(__PrefValue_))
+public macro JSONStringCodablePref(key: String? = nil)
+= #externalMacro(module: "PrefsKitMacrosImplementation", type: "JSONStringCodablePrefMacro")

@@ -309,7 +309,7 @@ final class InlinePrefMacroTests: XCTestCase {
 
 final class RawRepresentablePrefMacroTests: XCTestCase {
     let testMacros: [String: Macro.Type] = [
-        "Pref": RawRepresentablePrefMacro.self
+        "RawRepresentablePref": RawRepresentablePrefMacro.self
     ]
     
     // TODO: Add unit tests
@@ -317,7 +317,15 @@ final class RawRepresentablePrefMacroTests: XCTestCase {
 
 final class JSONDataCodablePrefMacroTests: XCTestCase {
     let testMacros: [String: Macro.Type] = [
-        "Pref": JSONDataCodablePrefMacro.self
+        "JSONDataCodablePref": JSONDataCodablePrefMacro.self
+    ]
+    
+    // TODO: Add unit tests
+}
+
+final class JSONStringCodablePrefMacroTests: XCTestCase {
+    let testMacros: [String: Macro.Type] = [
+        "JSONStringCodablePref": JSONStringCodablePrefMacro.self
     ]
     
     // TODO: Add unit tests
