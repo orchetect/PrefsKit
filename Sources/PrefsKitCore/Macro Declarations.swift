@@ -23,7 +23,7 @@ public macro Pref(key: String? = nil)
 
 @attached(accessor, names: named(get), named(set), named(_modify))
 @attached(peer, names: /* arbitrary */ prefixed(__PrefCoding_), prefixed(__PrefValue_))
-public macro Pref(key: String? = nil, coding: any PrefsCodable)
+public macro Pref<Coding: PrefsCodable>(key: String? = nil, coding: Coding)
     = #externalMacro(module: "PrefsKitMacrosImplementation", type: "CodingPrefMacro")
 
 @attached(accessor, names: named(get), named(set), named(_modify))
