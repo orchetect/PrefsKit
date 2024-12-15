@@ -125,14 +125,14 @@ enum Fruit: String {
     case apple, banana, orange
 }
 ```
-#### `@JSONCodablePref`
+#### `@JSONDataCodablePref` / `@JSONStringCodablePref`
 
-Convenience to encode and decode any `Codable` type as JSON `Data`.
+Convenience to encode and decode any `Codable` type as JSON using either `Data` or `String` raw storage.
 
 ```swift
 @PrefsSchema final class Prefs {
-    @JSONCodablePref var device: Device?
-    @JSONCodablePref var deviceID: UUID? // UUID natively conforms to Codable
+    @JSONDataCodablePref var device: Device?
+    @JSONDataCodablePref var deviceID: UUID? // UUID natively conforms to Codable
 }
   
 struct Device: Codable {
