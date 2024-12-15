@@ -15,11 +15,7 @@ import Foundation
 /// > for all non-defaulted `Codable` prefs and then implement `prefEncoder()` and `prefDecoder()` to return
 /// > the same instances. These types can then adopt this new protocol.
 public protocol CodablePrefsCodable<Encoder, Decoder>: PrefsCodable
-    where Value: Codable,
-    StorageValue == Encoder.Output,
-    Encoder.Output: PrefsStorageValue,
-    Decoder.Input: PrefsStorageValue,
-    Encoder.Output == Decoder.Input
+    where Value: Codable
 {
     associatedtype Encoder: TopLevelEncoder
     associatedtype Decoder: TopLevelDecoder
@@ -31,7 +27,10 @@ public protocol CodablePrefsCodable<Encoder, Decoder>: PrefsCodable
     func prefsDecoder() -> Decoder
 }
 
-extension CodablePrefsCodable {
+extension CodablePrefsCodable where StorageValue == Encoder.Output,
+                                    Encoder.Output: PrefsStorageValue,
+                                    Decoder.Input: PrefsStorageValue,
+                                    Encoder.Output == Decoder.Input {
     public func decode(prefsValue: StorageValue) -> Value? {
         let decoder = prefsDecoder()
         guard let value = try? decoder.decode(Value.self, from: prefsValue) else { return nil }
