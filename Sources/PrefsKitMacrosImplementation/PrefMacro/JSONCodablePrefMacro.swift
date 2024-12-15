@@ -5,8 +5,8 @@
 //
 
 public struct JSONCodablePrefMacro: PrefMacro {
-    public static let keyStructName: String = "AnyJSONCodablePrefsKey"
-    public static let defaultedKeyStructName: String = "AnyDefaultedJSONCodablePrefsKey"
+    public static let keyStructName: String = "AnyJSONDataCodablePrefsKey"
+    public static let defaultedKeyStructName: String = "AnyDefaultedJSONDataCodablePrefsKey"
     public static let hasCustomCoding: Bool = false
     public static let hasInlineCoding: Bool = false
 }
