@@ -8,4 +8,4 @@ import Foundation
 
 /// Protocol for prefs schema containing type-erased prefs storage.
 @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
-public protocol AnyPrefsSchema: PrefsSchema where Storage == AnyPrefsStorage { }
+public protocol AnyPrefsSchema: PrefsSchema where SchemaStorage == AnyPrefsStorage { }
