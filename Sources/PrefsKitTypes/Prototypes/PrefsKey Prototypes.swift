@@ -225,7 +225,7 @@ public struct AnyJSONCodablePrefsKey<Value>: PrefsKey
     where Value: Codable, Value: Sendable
 {
     public let key: String
-    public let coding = JSONCodablePrefsCoding<Value>()
+    public let coding = JSONDataCodablePrefsCoding<Value>()
     
     public init(key: String) {
         self.key = key
@@ -238,7 +238,7 @@ public struct AnyDefaultedJSONCodablePrefsKey<Value>: DefaultedPrefsKey
 {
     public let key: String
     public let defaultValue: Value
-    public let coding = JSONCodablePrefsCoding<Value>()
+    public let coding = JSONDataCodablePrefsCoding<Value>()
     
     // allows type inference:
     // let foo = AnyDefaultedJSONCodablePrefsKey(key: "foo", defaultValue: 123)
