@@ -24,7 +24,7 @@ struct PrefsSchemaStorageMacroTests {
         @Storage public var storage = .dictionary
         @StorageMode public var storageMode = .cachedReadStorageWrite
         
-        // @Pref public var foo: Int? // TODO: fix this. need to be able to add access levels.
+        @Pref public var foo: Int?
     }
     
     /// No logic testing. Just ensure compiler is happy.
