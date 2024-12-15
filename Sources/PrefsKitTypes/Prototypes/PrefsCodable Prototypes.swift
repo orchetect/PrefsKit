@@ -81,3 +81,11 @@ public struct JSONDataCodablePrefsCoding<Value>: JSONDataCodablePrefsCodable
     
     public init() { }
 }
+
+public struct JSONStringCodablePrefsCoding<Value>: JSONStringCodablePrefsCodable
+where Value: Codable, Value: Sendable
+{
+    public typealias Value = Value
+    
+    public init() { }
+}
