@@ -16,7 +16,7 @@ A modern Swift library for reading & writing app preferences:
 1. Add PrefsKit to your app or package
 2. Create a schema that defines the backing storage and preference key/value types.
    - Apply the `@PrefsSchema` attribute to the class.
-   - Define your `storage` and `storageMode`. (These may also be passed in later via an init if desired.)
+   - Define your `storage` and `storageMode` using the corresponding `@Storage` and `@StorageMode` attributes.
    - Use the `@Pref` attribute to declare individual preference keys and their value type.
      Value types may be `Optional` or have a default value.
    ```swift
@@ -24,8 +24,8 @@ A modern Swift library for reading & writing app preferences:
    import PrefsKit
    
    @PrefsSchema final class Prefs {
-       let storage = UserDefaultsPrefsStorage()
-       let storageMode: PrefsSchemaMode = .cachedReadStorageWrite
+       @Storage var storage = .userDefaults
+       @StorageMode var storageMode = .cachedReadStorageWrite
        
        @Pref var foo: String?
        @Pref var bar: Int = 123
@@ -64,6 +64,40 @@ A modern Swift library for reading & writing app preferences:
    ```
 
 ## Advanced Concepts
+
+### Defining Member Requirements Through Injection
+
+For more complex scenarios, a `@PrefsSchema` class can have its storage backend and/or storage mode set at class init.
+
+One method is by way of type-erasure using the concrete type `AnyPrefsStorage` and passing your storage of choice in.
+
+```swift
+@PrefsSchema final class Prefs {
+    @Storage var storage: AnyPrefsStorage
+    @StorageMode var storageMode: PrefsSchemaMode
+    
+    init(storage: any PrefsStorage, storageMode: PrefsSchemaMode) {
+        self.storage = AnyPrefsStorage(storage)
+        self.storageMode = storageMode
+    }
+}
+```
+
+Another method is by way of generics if, for example, you know the storage backend will always be a dictionary.
+
+The benefit of this approach is that it gives access to type-specific members of the concrete storage type instead of only protocolized `PrefsStorage` members.
+
+```swift
+@PrefsSchema final class PrefsB {
+    @Storage var storage: DictionaryPrefsStorage
+    @StorageMode var storageMode: PrefsSchemaMode
+    
+    init(storage: DictionaryPrefsStorage, mode: PrefsSchemaMode) {
+        self.storage = storage
+        storageMode = mode
+    }
+}
+```
 
 ### Key Names
 
@@ -124,23 +158,75 @@ Supports custom *value ←→ storage value* encoding implementation.
 }
 ```
 
+### Dynamic Key Access
+
+In complex projects it may be necessary to access the prefs storage directly using preference key(s) that may only be known at runtime.
+
+The storage property may be accessed directly using `value(forKey:)` and `setValue(forKey:to:)` methods.
+
+Note that mutating storage directly does not inherit the `@Observable` behavior of `@Pref`-defined keys, and of course they cannot be directly used in a SwiftUI Binding / Bindable context.
+
+```swift
+@PrefsSchema final class Prefs {
+    // @Pref vars are Observable and Bindable in SwiftUI views
+    @Pref var foo: Int?
+    
+    // `storage` acces is NOT Observable or Bindable in SwiftUI views
+    func fruit(name: String) -> String? {
+        storage.value(forKey: "fruit-\(name)")
+    }
+    func setFruit(name: String, to newValue: String?) {
+        storage.setValue(forKey: "fruit-\(name)", to: newValue)
+    }
+}
+```
+
+In consideration of the aforementioned drawbacks, it is ideal to whatever extent possible, have a prefs schema that contains root-level preference keys that are known at compile time. A possible alternative would be to create a root-level `@Pref` key that contains an array or dictionary which can then be used for dynamic access. For example:
+
+```swift
+@PrefsSchema final class Prefs {
+    @Pref var fruit: [String: String] = [:]
+    
+    // this method is an unnecessary proxy, but WILL be Observable
+    func fruit(name: String) -> String? {
+        fruit[name]
+    }
+}
+
+struct ContentView: View {
+    @Environment(Prefs.self) private var prefs
+    
+    var body: some View {
+        Text("Apple's value: \(prefs.fruit["apple"] ?? "Missing."))
+    }
+}
+```
+
 ## FAQ
 
-- Why not use `@AppStorage`?
+- Why?
+
+  Preferences are an oft-relegated piece of minutiae of almost every project that is considered not worthy of much attention, which usually goes something like "just use `UserDefaults`, and move on" or "`@AppStorage` is good enough." The danger of this low-hanging and tempting fruit is the tech debt that it inevitably creates over the long-term as a project grows changes shape, and its automated testing requirements broaden.
+
+  By then, large portions of the codebase are tightly coupled with specific implementation details (ie: `UserDefaults` access).
+
+  So, tired of every project having an often half-baked roll-your-own preferences architecture, and inspired by patterns in 1st-party Apple packages such as SwiftData, a one-stop-shop solution was built that is simple, powerful, and uses modern Swift language features for declarative preferences. It can minimal so it's easy to set up for small projects, but can also scale for projects with larger demands.
+
+- Why not just use `@AppStorage`?
 
   The 1st-party provided `@AppStorage` property wrapper is convenient and perfectly fine for small apps that do not require robust storage flexibility or prefs isolation / mocking for integration testing or unit testing.
 
   It also is fairly limited in the value types it supports. PrefsKit offers an easy to use, extensible blueprint for defining and using encoding strategies for any value type.
 
-- Why not use SwiftData?
+- Why not just use SwiftData?
 
   SwiftData is more oriented towards data models and user document content. It requires some adaptation and boilerplate to shoehorn it into the role of application preferences storage. It also has a somewhat steep learning curve and may contain more features than are necessary.
 
   PrefsKit is purpose-built for preference storage.
 
-- Why not use UserDefaults directly?
+- Why not just use `UserDefaults` directly?
 
-  For small apps this approach may be adequate. However it forms tight coupling to UserDefaults as a storage backend. This means automated integration testing can't as easily be performed with isolated/mocked preferences. Even if the approach of using separate UserDefaults suites for testing is employed, the coupling makes changing storage backend in the future more time-intensive.
+  For small apps this approach may be adequate. However it forms tight coupling to `UserDefaults` as a storage backend. This means automated integration testing can't as easily be performed with isolated/mocked preferences. Even if the approach of using separate `UserDefaults` suites for testing is employed, the coupling makes changing storage backend in the future more time-intensive.
 
   PrefsKit adds the ability to swap out the storage backend at any time in the future, in addition to its easy to use, extensible blueprints for defining and using encoding strategies for value types.
 
