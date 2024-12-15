@@ -74,9 +74,9 @@ One method is by way of type-erasure using the concrete type `AnyPrefsStorage` a
 ```swift
 @PrefsSchema final class Prefs {
     @Storage var storage: AnyPrefsStorage
-    @StorageMode var storageMode: PrefsSchemaMode
+    @StorageMode var storageMode: PrefsStorageMode
     
-    init(storage: any PrefsStorage, storageMode: PrefsSchemaMode) {
+    init(storage: any PrefsStorage, storageMode: PrefsStorageMode) {
         self.storage = AnyPrefsStorage(storage)
         self.storageMode = storageMode
     }
@@ -90,9 +90,9 @@ The benefit of this approach is that it gives access to type-specific members of
 ```swift
 @PrefsSchema final class PrefsB {
     @Storage var storage: DictionaryPrefsStorage
-    @StorageMode var storageMode: PrefsSchemaMode
+    @StorageMode var storageMode: PrefsStorageMode
     
-    init(storage: DictionaryPrefsStorage, mode: PrefsSchemaMode) {
+    init(storage: DictionaryPrefsStorage, mode: PrefsStorageMode) {
         self.storage = storage
         storageMode = mode
     }
@@ -171,7 +171,7 @@ Note that mutating storage directly does not inherit the `@Observable` behavior 
     // @Pref vars are Observable and Bindable in SwiftUI views
     @Pref var foo: Int?
     
-    // `storage` acces is NOT Observable or Bindable in SwiftUI views
+    // `storage` access is NOT Observable or Bindable in SwiftUI views
     func fruit(name: String) -> String? {
         storage.value(forKey: "fruit-\(name)")
     }
@@ -232,7 +232,7 @@ struct ContentView: View {
 
 ## Swift Package Manager (SPM)
 
-Add the package to your project or Swift package using  `https://github.com/orchetect/PrefsKit` as the URL.
+Add the package to your project or Swift package using `https://github.com/orchetect/PrefsKit` as the URL.
 
 ## Author
 
