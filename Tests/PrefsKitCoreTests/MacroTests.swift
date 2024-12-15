@@ -315,9 +315,9 @@ final class RawRepresentablePrefMacroTests: XCTestCase {
     // TODO: Add unit tests
 }
 
-final class JSONCodablePrefMacroTests: XCTestCase {
+final class JSONDataCodablePrefMacroTests: XCTestCase {
     let testMacros: [String: Macro.Type] = [
-        "Pref": JSONCodablePrefMacro.self
+        "Pref": JSONDataCodablePrefMacro.self
     ]
     
     // TODO: Add unit tests
