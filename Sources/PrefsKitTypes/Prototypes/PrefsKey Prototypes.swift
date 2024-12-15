@@ -75,7 +75,7 @@ public struct AnyPrefsKey<Coding>: PrefsKey
 
 /// Generic concrete pref key with a different value type from its raw storage type and a default value.
 public struct AnyDefaultedPrefsKey<Coding>: DefaultedPrefsKey
-where Coding: PrefsCodable
+    where Coding: PrefsCodable
 {
     public typealias Value = Coding.Value
     public typealias StorageValue = Coding.StorageValue

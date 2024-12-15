@@ -24,8 +24,8 @@ public struct PrefsCoding<Value, StorageValue>: PrefsCodable
         encode: @escaping @Sendable (Value) -> StorageValue?,
         decode: @escaping @Sendable (StorageValue) -> Value?
     ) {
-        self.encodeBlock = encode
-        self.decodeBlock = decode
+        encodeBlock = encode
+        decodeBlock = decode
     }
     
     public func decode(prefsValue: StorageValue) -> Value? {

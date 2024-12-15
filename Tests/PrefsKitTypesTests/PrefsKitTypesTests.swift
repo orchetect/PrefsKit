@@ -9,4 +9,5 @@ import Testing
 
 // no tests here yet
 
-@Test func empty() { }
+@Test
+func empty() { }

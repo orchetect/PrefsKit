@@ -19,7 +19,7 @@ extension PrefsSchemaMacro: MemberMacro {
         conformingTo protocols: [TypeSyntax],
         in context: some MacroExpansionContext
     ) throws -> [DeclSyntax] {
-        return [
+        [
             """
             @ObservationIgnored private let _$observationRegistrar = Observation.ObservationRegistrar()
             """
@@ -46,7 +46,7 @@ extension PrefsSchemaMacro: ExtensionMacro {
                 ) {
                     _$observationRegistrar.access(self, keyPath: keyPath)
                 }
-                
+            
                 internal nonisolated func withMutation<Member, MutationResult>(
                     keyPath: KeyPath<\(type.trimmed), Member>,
                     _ mutation: () throws -> MutationResult

@@ -40,6 +40,7 @@ extension AnyPrefsArray: PrefsStorageValue {
     public var prefsStorageValue: [any PrefsStorageValue] {
         content.map { $0.value }
     }
+
     public var userDefaultsStorageValue: Any {
         content.map { $0.userDefaultsValue }
     }
@@ -49,6 +50,7 @@ extension AnyPrefsDictionary: PrefsStorageValue {
     public var prefsStorageValue: [String: any PrefsStorageValue] {
         content.mapValues { $0.value }
     }
+
     public var userDefaultsStorageValue: Any {
         content.mapValues { $0.userDefaultsValue }
     }

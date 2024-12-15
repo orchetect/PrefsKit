@@ -46,7 +46,7 @@ extension AnyPrefsArray: CustomStringConvertible {
             .map { $0.value.prefsStorageValue }
             .map(String.init(describing:))
             .joined(separator: ", ")
-        + "]"
+            + "]"
     }
 }
 

@@ -4,15 +4,16 @@
 //  © 2024 Steffan Andrews • Licensed under MIT License
 //
 
+import PrefsKitCore
 import SwiftSyntax
 import SwiftSyntaxBuilder
 import SwiftSyntaxMacros
 import SwiftSyntaxMacrosTestSupport
-
-import PrefsKitCore
 import XCTest
 
 // MARK: - Macro Implementation Testing
+
+// swiftformat:disable indent
 
 #if canImport(PrefsKitMacrosImplementation)
 

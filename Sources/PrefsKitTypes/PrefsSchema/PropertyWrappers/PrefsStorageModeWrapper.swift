@@ -14,7 +14,7 @@ public struct PrefsStorageModeWrapper {
     }
     
     public init(_ mode: PrefsStorageMode) {
-        self.wrappedValue = mode
+        wrappedValue = mode
     }
 }
 

@@ -44,7 +44,7 @@ extension PrefMacro /* : AccessorMacro */ {
         
         let keyPath = #"\."# + varName.description
         
-        let hasDefault = (try? self.defaultValue(from: varDec)) != nil
+        let hasDefault = (try? defaultValue(from: varDec)) != nil
         
         return [
             """
@@ -115,7 +115,7 @@ extension PrefMacro /* : PeerMacro */ {
         // use variable name as the key name if key was not supplied
         let keyName = keyArg?.expression.description ?? "\"\(varName)\""
         
-        var customCodingDecl: String? = nil
+        var customCodingDecl: String?
         if hasCustomCoding {
             guard let codingArg else {
                 throw PrefMacroError.missingCodingArgument

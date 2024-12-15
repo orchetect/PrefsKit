@@ -20,6 +20,7 @@ extension PrefsKey {
         guard let value else { return nil }
         return encode(value)
     }
+
     public func decode(_ storageValue: StorageValue?) -> Value? {
         guard let storageValue else { return nil }
         return decode(storageValue)
@@ -35,6 +36,7 @@ extension PrefsKey {
     public func encode(_ value: Value) -> StorageValue? {
         coding.encode(prefsValue: value)
     }
+
     public func decode(_ storageValue: StorageValue) -> Value? {
         coding.decode(prefsValue: storageValue)
     }

@@ -14,7 +14,7 @@ public struct PrefsStorageWrapper<S> where S: PrefsStorage {
     }
     
     public init(_ storage: S) {
-        self.wrappedValue = storage
+        wrappedValue = storage
     }
 }
 

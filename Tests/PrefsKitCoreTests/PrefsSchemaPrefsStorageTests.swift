@@ -29,8 +29,9 @@ struct PrefsSchemaStorageMacroTests {
     
     /// No logic testing. Just ensure compiler is happy.
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
-    @Test func instantiate() {
-        let _ = TestSchemaA()
-        let _ = TestSchemaB()
+    @Test
+    func instantiate() {
+        _ = TestSchemaA()
+        _ = TestSchemaB()
     }
 }

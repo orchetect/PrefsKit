@@ -60,7 +60,8 @@ struct CustomEncodingTests {
     }
     
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
-    @Test func customValueEncoding() {
+    @Test
+    func customValueEncoding() {
         let schema = TestSchema()
         
         #expect(schema.custom?.value == nil)
@@ -76,7 +77,8 @@ struct CustomEncodingTests {
     }
     
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
-    @Test func customDefaultedValueEncoding() {
+    @Test
+    func customDefaultedValueEncoding() {
         let schema = TestSchema()
         
         #expect(schema.customDefaulted == NonCodableNonRawRepresentable(value: 1))
