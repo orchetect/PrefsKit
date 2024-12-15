@@ -92,9 +92,9 @@ struct UserDefaultsPrefsSchemaTests {
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
     @PrefsSchema final class TestSchema: @unchecked Sendable {
         let storage: AnyPrefsStorage
-        let storageMode: PrefsSchemaMode
+        let storageMode: PrefsStorageMode
         
-        init(storage: any PrefsStorage, storageMode: PrefsSchemaMode) {
+        init(storage: any PrefsStorage, storageMode: PrefsStorageMode) {
             self.storage = AnyPrefsStorage(storage)
             self.storageMode = storageMode
         }

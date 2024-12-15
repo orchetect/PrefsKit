@@ -17,5 +17,5 @@ public protocol PrefsSchema /* where Self: Sendable */ {
     var storage: SchemaStorage { get }
     
     /// Storage mode for prefs.
-    var storageMode: PrefsSchemaMode { get }
+    var storageMode: PrefsStorageMode { get }
 }
