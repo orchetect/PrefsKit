@@ -4,7 +4,7 @@
 //  © 2024 Steffan Andrews • Licensed under MIT License
 //
 
-/// Pref property access storage mode for ``PrefsSchema`` implementations.
+/// Pref schema property access storage mode for ``PrefsSchema`` implementations.
 public enum PrefsSchemaMode {
     /// Directly read and write from prefs schema `storage` on every access to pref properties without cacheing.
     /// This may have performance impacts on frequent accesses or for data types with expensive decoding operations.

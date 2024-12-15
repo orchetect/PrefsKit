@@ -7,7 +7,7 @@
 import Foundation
 import PrefsKitTypes
 
-// MARK: - Prefs (Class)
+// MARK: - PrefsSchema (Class)
 
 @attached(member, names: named(_$observationRegistrar))
 @attached(extension, names: named(access), named(withMutation), conformances: Observable & PrefsSchema)

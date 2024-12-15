@@ -100,7 +100,7 @@ extension PrefMacro /* : PeerMacro */ {
         providingPeersOf declaration: some DeclSyntaxProtocol,
         in context: some MacroExpansionContext
     ) throws -> [DeclSyntax] {
-       guard let varDec = declaration.as(VariableDeclSyntax.self)
+        guard let varDec = declaration.as(VariableDeclSyntax.self)
         else {
             throw PrefMacroError.incorrectSyntax
         }
@@ -156,7 +156,7 @@ extension PrefMacro {
 }
 
 extension PrefMacro {
-    static func args(from node: AttributeSyntax) throws -> (
+    static func args(from node: AttributeSyntax) throws(PrefMacroError) -> (
         key: LabeledExprSyntax?,
         coding: LabeledExprSyntax?,
         encode: LabeledExprSyntax?,
@@ -170,18 +170,18 @@ extension PrefMacro {
         
         guard let args = node.arguments?.as(LabeledExprListSyntax.self)
         else {
-            throw PrefMacroError.incorrectSyntax
+            throw .incorrectSyntax
         }
         
         var remainingArgs = args
         
-        func nextArg() throws -> (LabeledExprSyntax, label: String)? {
+        func nextArg() throws(PrefMacroError) -> (LabeledExprSyntax, label: String)? {
             guard !remainingArgs.isEmpty else { return nil }
             let idx = remainingArgs.startIndex
             let arg = remainingArgs[idx]
             remainingArgs.remove(at: idx)
             
-            guard let label = arg.label?.trimmedDescription else { throw PrefMacroError.invalidArgumentLabel }
+            guard let label = arg.label?.trimmedDescription else { throw .invalidArgumentLabel }
             return (arg, label)
         }
         
@@ -227,7 +227,7 @@ extension PrefMacro {
             coding = currentArg
             
             guard (try? nextArg()) == nil else {
-                throw PrefMacroError.tooManyArguments
+                throw .tooManyArguments
             }
             
             return tuple
@@ -235,7 +235,7 @@ extension PrefMacro {
             encode = currentArg
             
             guard let (a, l) = try nextArg() else {
-                throw PrefMacroError.missingCodingArgument
+                throw .missingCodingArgument
             }
             currentArg = a; currentArgLabel = l
             
@@ -243,33 +243,33 @@ extension PrefMacro {
                 decode = currentArg
                 
                 guard (try? nextArg()) == nil else {
-                    throw PrefMacroError.tooManyArguments
+                    throw .tooManyArguments
                 }
                 
                 return tuple
             } else {
-                throw PrefMacroError.incorrectSyntax
+                throw .incorrectSyntax
             }
         default:
-            throw PrefMacroError.incorrectSyntax
+            throw .incorrectSyntax
         }
     }
     
-    static func varName(from declaration: VariableDeclSyntax) throws -> IdentifierPatternSyntax {
+    static func varName(from declaration: VariableDeclSyntax) throws(PrefMacroError) -> IdentifierPatternSyntax {
         guard let val = declaration.bindings.first?.pattern
             .as(IdentifierPatternSyntax.self)
         else {
-            throw PrefMacroError.invalidVariableName
+            throw .invalidVariableName
         }
         return val
     }
 }
 
 extension PrefMacro {
-    static func typeBinding(from declaration: VariableDeclSyntax) throws -> TypeBinding {
+    static func typeBinding(from declaration: VariableDeclSyntax) throws(PrefMacroError) -> TypeBinding {
         guard let val = declaration.bindings.first?.typeAnnotation?.type
         else {
-            throw PrefMacroError.missingOrInvalidTypeAnnotation
+            throw .missingOrInvalidTypeAnnotation
         }
         
         if let optionalTypeBinding = val.as(OptionalTypeSyntax.self) {
@@ -281,10 +281,10 @@ extension PrefMacro {
 }
 
 extension PrefMacro {
-    static func defaultValue(from declaration: VariableDeclSyntax) throws -> ExprSyntax {
+    static func defaultValue(from declaration: VariableDeclSyntax) throws(PrefMacroError) -> ExprSyntax {
         guard let val = declaration.bindings.first?.initializer?.value
         else {
-            throw PrefMacroError.missingDefaultValue
+            throw .missingDefaultValue
         }
         return val
     }
