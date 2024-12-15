@@ -32,9 +32,11 @@ extension PrefMacro /* : AccessorMacro */ {
             throw PrefMacroError.notVarDeclaration
         }
         
-        guard varDec.modifiers.isEmpty else {
-            throw PrefMacroError.modifiersNotAllowed
-        }
+        // bypass this, because we want to allow access level attributes.
+        // TODO: see if we can filter out access level attributes while throwing an error on other attributes
+        // guard varDec.modifiers.isEmpty else {
+        //     throw PrefMacroError.modifiersNotAllowed
+        // }
         
         let varName = try varName(from: varDec)
         let privateKeyVarName = "\(privateCodingVarPrefix)\(varName)"
