@@ -137,8 +137,8 @@ struct UserDefaultsPrefsSchemaTests {
         @Pref(key: Key.jsonCodable, coding: MockJSONCodablePrefsCoding()) var jsonCodable: CodableEnum?
         @Pref(key: Key.jsonCodableDefaulted, coding: MockJSONCodablePrefsCoding()) var jsonCodableDefaulted: CodableEnum = .one
         
-        @JSONCodablePref(key: Key.codable2) var jsonCodable2: CodableEnum?
-        @JSONCodablePref(key: Key.codable2) var jsonCodableDefaulted2: CodableEnum = .one
+        @JSONStringCodablePref(key: Key.codable2) var jsonCodable2: CodableEnum?
+        @JSONDataCodablePref(key: Key.codable2) var jsonCodableDefaulted2: CodableEnum = .one
         
         @Pref(
             key: Key.url,
@@ -217,8 +217,8 @@ struct UserDefaultsPrefsSchemaTests {
         @Pref(coding: MockJSONCodablePrefsCoding()) var x_jsonCodable: CodableEnum?
         @Pref(coding: MockJSONCodablePrefsCoding()) var x_jsonCodableDefaulted: CodableEnum = .one
         
-        @JSONCodablePref var x_jsonCodable2: CodableEnum?
-        @JSONCodablePref var x_jsonCodableDefaulted2: CodableEnum = .one
+        @JSONStringCodablePref var x_jsonCodable2: CodableEnum?
+        @JSONDataCodablePref var x_jsonCodableDefaulted2: CodableEnum = .one
         
         @Pref(encode: { $0.absoluteString }, decode: { URL(string: $0) }) var x_url: URL?
         @Pref(encode: { $0.absoluteString }, decode: { URL(string: $0) }) var x_urlDefaulted: URL = URL(string: "https://example.com")!
