@@ -52,7 +52,7 @@ struct UserDefaultsPrefsSchemaTests {
         func prefsDecoder() -> JSONDecoder { JSONDecoder() }
     }
     
-    struct MockJSONCodablePrefsCoding: JSONCodablePrefsCodable {
+    struct MockJSONCodablePrefsCoding: JSONDataCodablePrefsCodable {
         typealias Value = CodableEnum
     }
     

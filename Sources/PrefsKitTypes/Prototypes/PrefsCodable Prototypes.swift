@@ -74,7 +74,7 @@ public struct CodablePrefsCoding<Value, StorageValue, Encoder, Decoder>: Codable
     public func prefsDecoder() -> Decoder { decoder }
 }
 
-public struct JSONCodablePrefsCoding<Value>: JSONCodablePrefsCodable
+public struct JSONCodablePrefsCoding<Value>: JSONDataCodablePrefsCodable
     where Value: Codable, Value: Sendable
 {
     public typealias Value = Value
