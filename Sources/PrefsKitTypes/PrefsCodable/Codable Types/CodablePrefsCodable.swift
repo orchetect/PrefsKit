@@ -27,10 +27,7 @@ public protocol CodablePrefsCodable<Encoder, Decoder>: PrefsCodable
     func prefsDecoder() -> Decoder
 }
 
-extension CodablePrefsCodable where StorageValue == Encoder.Output,
-                                    Encoder.Output: PrefsStorageValue,
-                                    Decoder.Input: PrefsStorageValue,
-                                    Encoder.Output == Decoder.Input {
+extension CodablePrefsCodable where StorageValue == Encoder.Output, Encoder.Output == Decoder.Input {
     public func decode(prefsValue: StorageValue) -> Value? {
         let decoder = prefsDecoder()
         guard let value = try? decoder.decode(Value.self, from: prefsValue) else { return nil }
