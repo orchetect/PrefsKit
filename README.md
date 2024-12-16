@@ -46,9 +46,9 @@ A modern Swift library for reading & writing app preferences:
        @Pref var dict: [String: Int]?
    }
    ```
-   > [!TIP]
-   >
-   > For a list of available storage value types, see [Storage Value Types](#Storage-Value-Types).
+> [!TIP]
+>
+> For a list of available storage value types, see [Storage Value Types](#Storage-Value-Types).
 3. Instantiate the class in the appropriate scope. If you are defining application preferences, the App struct is a good place to store it. It may be passed into the environment so that any subview can access it.
    ```swift
    struct MyApp: App {
