@@ -49,7 +49,7 @@ A modern Swift library for reading & writing app preferences:
 > [!TIP]
 >
 > For a list of available storage value types, see [Storage Value Types](#Storage-Value-Types).
-3. Instantiate the class in the appropriate scope. If you are defining application preferences, the App struct is a good place to store it. It may be passed into the environment so that any subview can access it.
+3. Instantiate the class in the appropriate scope. If you are defining application preferences, the `App` struct is a good place to store it. It may be passed into the environment so that any subview can access it.
    ```swift
    struct MyApp: App {
        @State private var prefs = Prefs()
@@ -81,18 +81,18 @@ A modern Swift library for reading & writing app preferences:
 
 These are the atomic value types supported:
 
-| Atomic Type               | Usage                                     | Description                                                  |
-| ------------------------- | ----------------------------------------- | ------------------------------------------------------------ |
-| `String`                  | `@Pref var foo: String = ""`              | An atomic String value                                       |
-| `Bool`                    | `@Pref var foo: Bool = true`              | An atomic `Bool` value                                       |
-| `Int`                     | `@Pref var foo: Int = 1`                  | An atomic `Int` value                                        |
-| `Double`                  | `@Pref var foo: Double = 1.0`             | An atomic `Double` value                                     |
-| `Float`                   | `@Pref var foo: Float = 1.0`              | An atomic `Float` value                                      |
-| `Data`                    | `@Pref var foo: Data = Data()`            | An atomic `Data` value                                       |
-| Array                     | `@Pref var foo: [String] = []`            | Array of a single atomic value type. ie: `[String]` or `[Int]` |
-| Array (Mixed)             | `@Pref var foo: AnyPrefsArray = []`       | Array of a mixture of atomic value types.                    |
-| Dictionary                | `@Pref var foo: [String: String] = [:]`   | Dictionary keyed by `String` with values of a single atomic value type. |
-| Dictionary (Mixed Values) | `@Pref var foo: AnyPrefsDictionary = [:]` | Dictionary keyed by `String` with values of a mixture of atomic value types. |
+| Atomic Type        | Usage                                   | Description                                            |
+| ------------------ | --------------------------------------- | ------------------------------------------------------ |
+| `String`           | `@Pref var x: String = ""`              | An atomic `String` value                               |
+| `Bool`             | `@Pref var x: Bool = true`              | An atomic `Bool` value                                 |
+| `Int`              | `@Pref var x: Int = 1`                  | An atomic `Int` value                                  |
+| `Double`           | `@Pref var x: Double = 1.0`             | An atomic `Double` value                               |
+| `Float`            | `@Pref var x: Float = 1.0`              | An atomic `Float` value                                |
+| `Data`             | `@Pref var x: Data = Data()`            | An atomic `Data` value                                 |
+| Array              | `@Pref var x: [String] = []`            | Array of a single atomic value type                    |
+| Array (Mixed)      | `@Pref var x: AnyPrefsArray = []`       | Array of a mixture of atomic value types               |
+| Dictionary         | `@Pref var x: [String: String] = [:]`   | Keyed by `String` with a single atomic value type      |
+| Dictionary (Mixed) | `@Pref var x: AnyPrefsDictionary = [:]` | Keyed by `String` with a mixture of atomic value types |
 
 > [!NOTE]
 >
