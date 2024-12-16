@@ -289,6 +289,8 @@ Actors may, however, be attached to individual `@Pref` preference declarations.
 
 Add the package to your project or Swift package using `https://github.com/orchetect/PrefsKit` as the URL.
 
+Note that PrefsKit makes use of [Swift Macros](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/macros/) and because of this, Xcode will prompt you to allow macros for this package. It will ask again any time a new release of the package is available and you update to it.
+
 ## Author
 
 Coded by a bunch of 🐹 hamsters in a trench coat that calls itself [@orchetect](https://github.com/orchetect).
