@@ -55,8 +55,10 @@ A modern Swift library for reading & writing app preferences:
        @State private var prefs = Prefs()
        
        var body: some Scene {
-           ContentView()
-               .environment(prefs)
+           WindowGroup {
+               ContentView()
+                   .environment(prefs)
+           }
        }
    }
    ```
