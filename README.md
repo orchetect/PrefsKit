@@ -8,7 +8,7 @@ A modern Swift library for reading & writing app preferences:
 
 - simple but powerful declarative DSL
 - swappable/mockable storage backend (UserDefaults, Dictionary, PList file, and more)
-- keys are `Observable` for effortless integration in modern SwiftUI apps
+- keys are implicitly `@Observable` and `@Bindable` for effortless integration in modern SwiftUI apps
 - built from the ground up for Swift 6
 
 ## Table of Contents
