@@ -14,7 +14,8 @@ A modern Swift library for reading & writing app preferences:
 ## Table of Contents
 
 - [Quick Start](#Quick-Start)
-- [Advanced Concepts](#Advanced-Concepts)
+- [Documentation](#Documentation)
+  - [Storage Value Types](#Storage-Value-Types)
   - [Storage Injection](#Storage-Injection)
   - [Key Naming](#Key-Naming)
   - [Custom Value Coding](#Custom-Value-Coding)
@@ -45,11 +46,9 @@ A modern Swift library for reading & writing app preferences:
        @Pref var dict: [String: Int]?
    }
    ```
-   > Atomic value types available: 
+   > [!TIP]
    >
-   > - `String`, `Bool`, `Int`, `Double`, `Float`, `Data`
-   > - `Array` containing values of the above atomic types
-   > - `Dictionary` keyed by `String` containing values of the above atomic types
+   > For a list of available storage value types, see [Storage Value Types](#Storage-Value-Types).
 3. Instantiate the class in the appropriate scope. If you are defining application preferences, the App struct is a good place to store it. It may be passed into the environment so that any subview can access it.
    ```swift
    struct MyApp: App {
@@ -67,6 +66,8 @@ A modern Swift library for reading & writing app preferences:
        @Environment(Prefs.self) private var prefs
        
        var body: some View {
+           @Bindable var prefs = prefs
+           
            Text("String: \(prefs.foo ?? "Not yet set.")")
            Text("Int: \(prefs.bar)")
            Toggle("State", isOn: $prefs.bool)
@@ -74,7 +75,30 @@ A modern Swift library for reading & writing app preferences:
    }
    ```
 
-## Advanced Concepts
+## Documentation
+
+### Storage Value Types
+
+These are the atomic value types supported:
+
+| Atomic Type               | Usage                                     | Description                                                  |
+| ------------------------- | ----------------------------------------- | ------------------------------------------------------------ |
+| `String`                  | `@Pref var foo: String = ""`              | An atomic String value                                       |
+| `Bool`                    | `@Pref var foo: Bool = true`              | An atomic `Bool` value                                       |
+| `Int`                     | `@Pref var foo: Int = 1`                  | An atomic `Int` value                                        |
+| `Double`                  | `@Pref var foo: Double = 1.0`             | An atomic `Double` value                                     |
+| `Float`                   | `@Pref var foo: Float = 1.0`              | An atomic `Float` value                                      |
+| `Data`                    | `@Pref var foo: Data = Data()`            | An atomic `Data` value                                       |
+| Array                     | `@Pref var foo: [String] = []`            | Array of a single atomic value type. ie: `[String]` or `[Int]` |
+| Array (Mixed)             | `@Pref var foo: AnyPrefsArray = []`       | Array of a mixture of atomic value types.                    |
+| Dictionary                | `@Pref var foo: [String: String] = [:]`   | Dictionary keyed by `String` with values of a single atomic value type. |
+| Dictionary (Mixed Values) | `@Pref var foo: AnyPrefsDictionary = [:]` | Dictionary keyed by `String` with values of a mixture of atomic value types. |
+
+> [!NOTE]
+>
+> Instead of `[Any]`, the custom `AnyPrefsArray` type ensures type safety for its elements.
+>
+> Likewise, instead of `[String: Any]`, the custom `AnyPrefsDictionary` type ensures type safety for its key values.
 
 ### Storage Injection
 
@@ -299,10 +323,6 @@ Actors may, however, be attached to individual `@Pref` preference declarations.
 Add the package to your project or Swift package using `https://github.com/orchetect/PrefsKit` as the URL.
 
 Note that PrefsKit makes use of [Swift Macros](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/macros/) and because of this, Xcode will prompt you to allow macros for this package. It will ask again any time a new release of the package is available and you update to it.
-
-## Documentation
-
-This README serves as documentation until formal DocC documentation becomes available.
 
 ## Author
 
