@@ -11,6 +11,17 @@ A modern Swift library for reading & writing app preferences:
 - keys are `Observable` for effortless integration in modern SwiftUI apps
 - built from the ground up for Swift 6
 
+## Table of Contents
+
+- [Quick Start](#Quick-Start)
+- [Advanced Concepts](#Advanced-Concepts)
+  - [Storage Injection](#Storage-Injection)
+  - [Key Naming](#Key-Naming)
+  - [Custom Value Coding](#Custom-Value-Coding)
+  - [Dynamic Key Access](#Dynamic-Key-Access)
+  - [Using Actors](#Using-Actors)
+- [FAQ](#FAQ)
+
 ## Quick Start
 
 1. Add PrefsKit to your app or package
@@ -58,14 +69,14 @@ A modern Swift library for reading & writing app preferences:
        var body: some View {
            Text("String: \(prefs.foo ?? "Not yet set.")")
            Text("Int: \(prefs.bar)")
-           Toggle("Toggle State", isOn: $prefs.bool)
+           Toggle("State", isOn: $prefs.bool)
        }
    }
    ```
 
 ## Advanced Concepts
 
-### Defining Member Requirements Through Injection
+### Storage Injection
 
 For more complex scenarios, a `@PrefsSchema` class can have its storage backend and/or storage mode set at class init.
 
@@ -99,16 +110,17 @@ The benefit of this approach is that it gives access to type-specific members of
 }
 ```
 
-### Key Names
+### Key Naming
 
 Key names are synthesized from the var name unless specified:
 
 ```swift
 @Pref var foo: String? // storage key name is "foo"
-@Pref(key: "bar") var foo: String? // storage key name is "Bar"
+
+@Pref(key: "bar") var foo: String? // storage key name is "bar"
 ```
 
-### Complex Value Types
+### Custom Value Coding
 
 Alternative macros are available for more complex types such as:
 
@@ -131,8 +143,11 @@ Convenience to encode and decode any `Codable` type as JSON using either `Data` 
 
 ```swift
 @PrefsSchema final class Prefs {
+    // encode Device as JSON using Data storage
     @JSONDataCodablePref var device: Device?
-    @JSONDataCodablePref var deviceID: UUID? // UUID natively conforms to Codable
+    
+    // encode UUID as JSON using String storage
+    @JSONStringCodablePref var deviceID: UUID? // UUID natively conforms to Codable
 }
   
 struct Device: Codable {
@@ -144,17 +159,34 @@ struct Device: Codable {
 
 Supports custom *value ←→ storage value* encoding implementation.
 
+It can be done inline:
+
 ```swift
 @PrefsSchema final class Prefs {
-    // can be defined inline
     @Pref(encode: { $0.absoluteString }, decode: { URL(string: $0) })
     var url: URL?
-    
-    // or coding can be defined once and used multiple times
-    let urlCoding = PrefsCoding(encode: { $0.absoluteString },
-                                decode: { URL(string: $0) })
-    @Pref(coding: urlCoding) var foo: URL?
-    @Pref(coding: urlCoding) var bar: URL?
+}
+```
+
+Or if a coding implementation needs to be reused, it can be defined and specified in each preference declaration:
+
+```swift
+@PrefsSchema final class Prefs {
+    @Pref(coding: .urlString) var foo: URL?
+    @Pref(coding: .urlString) var bar: URL?
+}
+
+struct URLStringPrefsCoding: PrefsCodable {
+    func encode(prefsValue: URL) -> String? {
+        prefsValue.absoluteString
+    }
+    func decode(prefsValue: String) -> URL? {
+        URL(string: prefsValue)
+    }
+}
+
+extension PrefsCoding where Self == URLStringPrefsCoding {
+    static var urlString: URLStringPrefsCoding { URLStringPrefsCoding() }
 }
 ```
 
