@@ -60,16 +60,3 @@ extension PrefsSchemaMacro: ExtensionMacro {
         return [prefsSchemaExtension, observableExtension]
     }
 }
-
-extension PrefsSchemaMacro {
-    public enum PrefsSchemaMacroError: LocalizedError {
-        case incorrectSyntax
-        
-        public var errorDescription: String? {
-            switch self {
-            case .incorrectSyntax:
-                "Incorrect syntax."
-            }
-        }
-    }
-}
