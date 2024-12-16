@@ -52,3 +52,7 @@ public enum PrefMacroError: LocalizedError {
         }
     }
 }
+
+extension PrefMacroError: CustomStringConvertible {
+    public var description: String { errorDescription ?? localizedDescription }
+}
