@@ -202,6 +202,29 @@ struct ContentView: View {
 }
 ```
 
+### Using Actors
+
+Because of internal protocol requirements, actors (such as `@MainActor`) cannot be directly attached to the `@PrefsSchema` class declaration.
+
+```swift
+@MainActor // <-- ❌ not possible
+@PrefsSchema final class Prefs { /* ... */ }
+```
+
+Actors may, however, be attached to individual `@Pref` preference declarations.
+
+```swift
+@PrefsSchema final class Prefs {
+    @Storage var storage = .userDefaults
+    @StorageMode var storageMode = .cachedReadStorageWrite
+    
+    @MainActor // <-- ✅ possible
+    @Pref var foo: Int?
+    
+    @Pref var bar: String?
+}
+```
+
 ## FAQ
 
 - Why?
