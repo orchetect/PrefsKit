@@ -6,7 +6,7 @@
 
 A modern Swift library for reading & writing app preferences:
 
-- simple but powerful DSL
+- simple but powerful declarative DSL
 - swappable/mockable storage backend (UserDefaults, Dictionary, PList file, and more)
 - keys are `Observable` for effortless integration in modern SwiftUI apps
 - built from the ground up for Swift 6
@@ -259,27 +259,27 @@ Actors may, however, be attached to individual `@Pref` preference declarations.
 
 ## FAQ
 
-- Why?
+- **Why?**
 
-  Preferences are an oft-relegated piece of minutiae of almost every project that is considered not worthy of much attention, which usually goes something like "just use `UserDefaults`, and move on" or "`@AppStorage` is good enough." The danger of this low-hanging and tempting fruit is the tech debt that it inevitably creates over the long-term as a project grows changes shape, and its automated testing requirements broaden.
+  We all know how it goes - whether you get a spark of an idea for a new app or have been working on a larger codebase - preferences are a necessary but rudimentary part of building an application. But they're not the main event. And so often the problem is solved by way of path of least resistance, which usually goes something like "just use `UserDefaults` and move on" or "`@AppStorage` is good enough."
 
-  By then, large portions of the codebase are tightly coupled with specific implementation details (ie: `UserDefaults` access).
+  The danger of this convenient low-hanging fruit is the tech debt it inevitably creates over time. As a project grows and changes shape, its needs increase, and its automated testing requirements broaden. By then, large portions of the codebase are tightly coupled with specific implementation details (ie: `UserDefaults` access) and refactors to allow modular preferences become increasingly daunting.
 
-  So, tired of every project having an often half-baked roll-your-own preferences architecture, and inspired by patterns in 1st-party Apple packages such as SwiftData, a one-stop-shop solution was built that is simple, powerful, and uses modern Swift language features for declarative preferences. It can minimal so it's easy to set up for small projects, but can also scale for projects with larger demands.
+  So, tired of every project having a haphazard approach to handling preferences — and inspired by patterns in first-party Apple packages such as SwiftData — a one-stop shop solution was built. It's simple, powerful, and uses modern Swift language features to allow preferences to be declarative while hiding implementation details so you can get on with the important stuff - like building features users care about. It can be minimal so it's easy to set up for small projects, but it can also scale for projects with larger demands.
 
-- Why not just use `@AppStorage`?
+- **Why not just use `@AppStorage`?**
 
   The 1st-party provided `@AppStorage` property wrapper is convenient and perfectly fine for small apps that do not require robust storage flexibility or prefs isolation / mocking for integration testing or unit testing.
 
   It also is fairly limited in the value types it supports. PrefsKit offers an easy to use, extensible blueprint for defining and using encoding strategies for any value type.
 
-- Why not just use SwiftData?
+- **Why not just use SwiftData?**
 
   SwiftData is more oriented towards data models and user document content. It requires some adaptation and boilerplate to shoehorn it into the role of application preferences storage. It also has a somewhat steep learning curve and may contain more features than are necessary.
 
   PrefsKit is purpose-built for preference storage.
 
-- Why not just use `UserDefaults` directly?
+- **Why not just use `UserDefaults` directly?**
 
   For small apps this approach may be adequate. However it forms tight coupling to `UserDefaults` as a storage backend. This means automated integration testing can't as easily be performed with isolated/mocked preferences. Even if the approach of using separate `UserDefaults` suites for testing is employed, the coupling makes changing storage backend in the future more time-intensive.
 
