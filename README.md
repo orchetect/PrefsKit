@@ -99,7 +99,7 @@ Another method is by way of generics if, for example, you know the storage backe
 The benefit of this approach is that it gives access to type-specific members of the concrete storage type instead of only protocolized `PrefsStorage` members.
 
 ```swift
-@PrefsSchema final class PrefsB {
+@PrefsSchema final class Prefs {
     @Storage var storage: DictionaryPrefsStorage
     @StorageMode var storageMode: PrefsStorageMode
     
@@ -168,7 +168,7 @@ It can be done inline:
 }
 ```
 
-Or if a coding implementation needs to be reused, it can be defined and specified in each preference declaration:
+Or if a coding implementation needs to be reused, it can be defined once and specified in each preference declaration:
 
 ```swift
 @PrefsSchema final class Prefs {
@@ -189,6 +189,15 @@ extension PrefsCoding where Self == URLStringPrefsCoding {
     static var urlString: URLStringPrefsCoding { URLStringPrefsCoding() }
 }
 ```
+
+> [!NOTE]
+>
+> The approach of defining a custom `PrefsCodable` implementation is ideal when it is either:
+> - a type that you do not own (ie: from another framework), or
+> - when the type may have more than one possible encoding format, or
+> - a type whose encoding format has changed over time and multiple formats need to be maintained (ie: for legacy preferences migration)
+>
+> If it is for a custom type that is one you own and there is only one encoding format for it, an alternative approach could be to conform it to Swift's `Codable` instead and use `@JSONDataCodablePref` or `@JSONStringCodablePref` to store it.
 
 ### Dynamic Key Access
 
@@ -290,6 +299,10 @@ Actors may, however, be attached to individual `@Pref` preference declarations.
 Add the package to your project or Swift package using `https://github.com/orchetect/PrefsKit` as the URL.
 
 Note that PrefsKit makes use of [Swift Macros](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/macros/) and because of this, Xcode will prompt you to allow macros for this package. It will ask again any time a new release of the package is available and you update to it.
+
+## Documentation
+
+This README serves as documentation until formal DocC documentation becomes available.
 
 ## Author
 
