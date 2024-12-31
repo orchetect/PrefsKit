@@ -247,7 +247,7 @@ The storage property may be accessed directly using `value(forKey:)` and `setVal
 ```
 
 > [!NOTE]
-> Mutating storage directly does not inherit the `@Observable` behavior of `@Pref`-defined keys, which inherently means this type of access cannot be used in a SwiftUI Binding. For these reasons it is ideal for the prefs schema contain root-level preference keys that are known at compile time where possible.
+> Mutating storage directly does not inherit the `@Observable` behavior of `@Pref`-defined keys, which inherently means this type of access cannot be used in a SwiftUI Binding. For these reasons it is ideal that the prefs schema contain root-level preference keys that are known at compile time where possible.
 
 ### Using Actors
 
@@ -271,6 +271,9 @@ Actors may, however, be attached to individual `@Pref` preference declarations.
     @Pref var bar: String?
 }
 ```
+
+> [!NOTE]
+> This may be subject to change in future versions of PrefsKit.
 
 ## FAQ
 
