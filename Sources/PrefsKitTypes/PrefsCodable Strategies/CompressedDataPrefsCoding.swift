@@ -1,0 +1,45 @@
+//
+//  CompressedDataPrefsCoding.swift
+//  PrefsKit • https://github.com/orchetect/PrefsKit
+//  © 2024 Steffan Andrews • Licensed under MIT License
+//
+
+import Foundation
+
+extension PrefsCodable where Self == CompressedDataPrefsCoding {
+    /// Coding strategy for `Data` using data compression. Compresses when storing and decompresses when reading.
+    ///
+    /// > Note:
+    /// >
+    /// > Due to inherent computational overhead with compression and decompression, this strategy is not recommended
+    /// > for use with data that has frequent access or requires low-latency access times.
+    public static func compressedData(
+        algorithm: NSData.CompressionAlgorithm
+    ) -> CompressedDataPrefsCoding {
+        CompressedDataPrefsCoding(algorithm: algorithm)
+    }
+}
+
+/// Coding strategy for `Data` using data compression. Compresses when storing and decompresses when reading.
+///
+/// > Note:
+/// >
+/// > Due to inherent computational overhead with compression and decompression, this strategy is not recommended
+/// > for use with data that has frequent access or requires low-latency access times.
+public struct CompressedDataPrefsCoding: PrefsCodable {
+    let algorithm: NSData.CompressionAlgorithm
+    
+    public init(algorithm: NSData.CompressionAlgorithm) {
+        self.algorithm = algorithm
+    }
+    
+    public func encode(prefsValue: Data) -> Data? {
+        try? (prefsValue as NSData)
+            .compressed(using: algorithm) as Data
+    }
+
+    public func decode(prefsValue: Data) -> Data? {
+        try? (prefsValue as NSData)
+            .decompressed(using: algorithm) as Data
+    }
+}
