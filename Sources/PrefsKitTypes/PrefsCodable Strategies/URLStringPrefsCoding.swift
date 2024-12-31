@@ -9,7 +9,7 @@ import Foundation
 extension PrefsCodable where Self == URLStringPrefsCoding {
     /// Coding strategy for `URL` using absolute `String` as the encoded storage value type.
     ///
-    /// > Note:
+    /// > Tip:
     /// >
     /// > `URL` has native `Codable` conformance, which means it may also be used directly with
     /// > `@JSONDataCodablePref` or `@JSONStringCodablePref`.
@@ -18,7 +18,7 @@ extension PrefsCodable where Self == URLStringPrefsCoding {
 
 /// Coding strategy for `URL` using absolute `String` as the encoded storage value type.
 ///
-/// > Note:
+/// > Tip:
 /// >
 /// > `URL` has native `Codable` conformance, which means it may also be used directly with
 /// > `@JSONDataCodablePref` or `@JSONStringCodablePref`.

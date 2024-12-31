@@ -21,7 +21,7 @@ extension PrefsCodable where Self == ISO8601DateStringPrefsCoding {
     /// > This format includes date and time with a resolution of 1 second. Any sub-second time information is truncated
     /// > and discarded.
     ///
-    /// > Note:
+    /// > Tip:
     /// >
     /// > `Date` has native `Codable` conformance, which means it may also be used directly with
     /// > `@JSONDataCodablePref` or `@JSONStringCodablePref`.
@@ -41,7 +41,7 @@ extension PrefsCodable where Self == ISO8601DateStringPrefsCoding {
 /// > This format includes date and time with a resolution of 1 second. Any sub-second time information is truncated
 /// > and discarded.
 ///
-/// > Note:
+/// > Tip:
 /// >
 /// > `Date` has native `Codable` conformance, which means it may also be used directly with
 /// > `@JSONDataCodablePref` or `@JSONStringCodablePref`.
