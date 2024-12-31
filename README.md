@@ -172,8 +172,8 @@ Convenience to encode and decode any `Codable` type as JSON using either `Data` 
     // encode Device as JSON using Data storage
     @JSONDataCodablePref var device: Device?
     
-    // encode UUID as JSON using String storage
-    @JSONStringCodablePref var deviceID: UUID? // UUID natively conforms to Codable
+    // encode Device as JSON using String storage
+    @JSONStringCodablePref var device: Device?
 }
   
 struct Device: Codable {
@@ -194,7 +194,7 @@ It can be done inline:
 }
 ```
 
-Or if a coding implementation needs to be reused, it can be defined once and specified in each preference declaration:
+Or if a coding implementation needs to be reused, it can be defined once by creating a new type that conforms to `PrefsCodable`, then supply an instance of the type in each `@Pref` declaration's `coding` parameter:
 
 ```swift
 @PrefsSchema final class Prefs {
@@ -218,20 +218,18 @@ extension PrefsCoding where Self == URLStringPrefsCoding {
 
 > [!NOTE]
 >
-> The approach of defining a custom `PrefsCodable` implementation is ideal when it is either:
+> This approach of defining a custom `PrefsCodable` implementation is ideal when the type being encoded is either:
 > - a type that you do not own (ie: from another framework), or
 > - when the type may have more than one possible encoding format, or
-> - a type whose encoding format has changed over time and multiple formats need to be maintained (ie: for legacy preferences migration)
+> - a type whose encoding format has changed over time and generational formats need to be maintained (ie: for legacy preferences migration)
 >
-> If it is for a custom type that is one you own and there is only one encoding format for it, an alternative approach could be to conform it to Swift's `Codable` instead and use `@JSONDataCodablePref` or `@JSONStringCodablePref` to store it.
+> If it is for a custom type that is one you own and there is only one encoding format for it, one alternative approach is to conform it to Swift's `Codable` instead and use `@JSONDataCodablePref` or `@JSONStringCodablePref` to store it.
 
 ### Dynamic Key Access
 
 In complex projects it may be necessary to access the prefs storage directly using preference key(s) that may only be known at runtime.
 
 The storage property may be accessed directly using `value(forKey:)` and `setValue(forKey:to:)` methods.
-
-Note that mutating storage directly does not inherit the `@Observable` behavior of `@Pref`-defined keys, and of course they cannot be directly used in a SwiftUI Binding / Bindable context.
 
 ```swift
 @PrefsSchema final class Prefs {
@@ -248,30 +246,12 @@ Note that mutating storage directly does not inherit the `@Observable` behavior 
 }
 ```
 
-In consideration of the aforementioned drawbacks, it is ideal to whatever extent possible, have a prefs schema that contains root-level preference keys that are known at compile time. A possible alternative would be to create a root-level `@Pref` key that contains an array or dictionary which can then be used for dynamic access. For example:
-
-```swift
-@PrefsSchema final class Prefs {
-    @Pref var fruit: [String: String] = [:]
-    
-    // this method is an unnecessary proxy, but WILL be Observable
-    func fruit(name: String) -> String? {
-        fruit[name]
-    }
-}
-
-struct ContentView: View {
-    @Environment(Prefs.self) private var prefs
-    
-    var body: some View {
-        Text("Apple's value: \(prefs.fruit["apple"] ?? "Missing."))
-    }
-}
-```
+> [!NOTE]
+> Mutating storage directly does not inherit the `@Observable` behavior of `@Pref`-defined keys, which inherently means this type of access cannot be used in a SwiftUI Binding. For these reasons it is ideal for the prefs schema contain root-level preference keys that are known at compile time where possible.
 
 ### Using Actors
 
-Because of internal protocol requirements, actors (such as `@MainActor`) cannot be directly attached to the `@PrefsSchema` class declaration.
+Because of internal protocol requirements of `@PrefsSchema`, actors (such as `@MainActor`) cannot be directly attached to the class declaration.
 
 ```swift
 @MainActor // <-- ❌ not possible
@@ -294,11 +274,11 @@ Actors may, however, be attached to individual `@Pref` preference declarations.
 
 ## FAQ
 
-- **Why?**
+- **Why use PrefsKit?**
 
-  We all know how it goes - whether you get a spark of an idea for a new app or have been working on a larger codebase - preferences are a necessary but rudimentary part of building an application. But they're not the main event. And so often the problem is solved by way of path of least resistance, which usually goes something like "just use `UserDefaults` and move on" or "`@AppStorage` is good enough."
+  Offering users customization points in your software is a foundational way to offer a great user experience — but it's not the main event. You'd rather be putting time and resources into developing the actual features users are customizing than dealing with the overhead of how these options are stored and handled. And so often the problem is handled by way of path of least resistance, which usually goes something like "just use `UserDefaults` and move on" or "`@AppStorage` is good enough, right?"
 
-  The danger of this convenient low-hanging fruit is the tech debt it inevitably creates over time. As a project grows and changes shape, its needs increase, and its automated testing requirements broaden. By then, large portions of the codebase are tightly coupled with specific implementation details (ie: `UserDefaults` access) and refactors to allow modular preferences become increasingly daunting.
+  The danger of this convenient low-hanging fruit is the tech debt it inevitably creates over time. As a project grows and changes shape, its needs increase, and its automated testing requirements broaden. By then, large portions of the codebase are tightly coupled with implementation details (ie: `UserDefaults` access) and refactors to allow modular preferences become increasingly expensive.
 
   So, tired of every project having a haphazard approach to handling preferences — and inspired by patterns in first-party Apple packages such as SwiftData — a one-stop shop solution was built. It's simple, powerful, and uses modern Swift language features to allow preferences to be declarative while hiding implementation details so you can get on with the important stuff - like building features users care about. It can be minimal so it's easy to set up for small projects, but it can also scale for projects with larger demands.
 
