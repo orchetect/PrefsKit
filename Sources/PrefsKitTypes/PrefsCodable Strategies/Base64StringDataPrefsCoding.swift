@@ -16,6 +16,19 @@ extension PrefsCodable where Self == Base64StringDataPrefsCoding {
     }
 }
 
+extension PrefsCodable where StorageValue == Base64StringDataPrefsCoding.Value {
+    /// Coding strategy for `Data` using base-64 encoded `String` as the encoded storage value.
+    public func base64DataString(
+        encodingOptions: Data.Base64EncodingOptions = [],
+        decodingOptions: Data.Base64DecodingOptions = []
+    ) -> PrefsCodingTuple<Self, Base64StringDataPrefsCoding> {
+        PrefsCodingTuple(
+            self,
+            Base64StringDataPrefsCoding(encodingOptions: encodingOptions, decodingOptions: decodingOptions)
+        )
+    }
+}
+
 /// Coding strategy for `Data` using base-64 encoded `String` as the encoded storage value.
 public struct Base64StringDataPrefsCoding: PrefsCodable {
     public let encodingOptions: Data.Base64EncodingOptions

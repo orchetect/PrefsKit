@@ -25,8 +25,12 @@ extension PrefsCodable where Self == ISO8601DateStringPrefsCoding {
     /// >
     /// > `Date` has native `Codable` conformance, which means it may also be used directly with
     /// > `@JSONDataCodablePref` or `@JSONStringCodablePref`.
-    public static var iso8601DateString: ISO8601DateStringPrefsCoding { .init() }
+    public static var iso8601DateString: ISO8601DateStringPrefsCoding {
+        ISO8601DateStringPrefsCoding()
+    }
 }
+
+// note: `Date` does not conform to PrefsStorageValue so we can't offer a coding strategy chaining method.
 
 /// Coding strategy for `Date` using standard ISO-8601 format `String` as the encoded storage value.
 ///

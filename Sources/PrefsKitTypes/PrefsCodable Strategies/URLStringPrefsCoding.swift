@@ -16,6 +16,8 @@ extension PrefsCodable where Self == URLStringPrefsCoding {
     public static var urlString: URLStringPrefsCoding { .init() }
 }
 
+// note: `URL` does not conform to PrefsStorageValue so we can't offer a coding strategy chaining method.
+
 /// Coding strategy for `URL` using absolute `String` as the encoded storage value type.
 ///
 /// > Tip:

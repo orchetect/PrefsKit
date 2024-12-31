@@ -20,6 +20,23 @@ extension PrefsCodable where Self == CompressedDataPrefsCoding {
     }
 }
 
+extension PrefsCodable where StorageValue == CompressedDataPrefsCoding.Value {
+    /// Coding strategy for `Data` using data compression. Compresses when storing and decompresses when reading.
+    ///
+    /// > Note:
+    /// >
+    /// > Due to inherent computational overhead with compression and decompression, this strategy is not recommended
+    /// > for use with data that has frequent access or requires low-latency access times.
+    public func compressedData(
+        algorithm: NSData.CompressionAlgorithm
+    ) -> PrefsCodingTuple<Self, CompressedDataPrefsCoding> {
+        PrefsCodingTuple(
+            self,
+            CompressedDataPrefsCoding(algorithm: algorithm)
+        )
+    }
+}
+
 /// Coding strategy for `Data` using data compression. Compresses when storing and decompresses when reading.
 ///
 /// > Note:
