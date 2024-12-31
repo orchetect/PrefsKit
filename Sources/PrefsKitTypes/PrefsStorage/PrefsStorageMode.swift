@@ -10,14 +10,14 @@ public enum PrefsStorageMode {
     /// This may have performance impacts on frequent accesses or for data types with expensive decoding operations.
     case storageOnly
     
-    /// Reads property values from storage on initialization, but caches subsequent writes locally in addition to
-    /// writing them to storage for improved read performance thereafter.
+    /// Reads property values from storage on initialization, then utilizes an internal local cache for improved read
+    /// performance thereafter. All writes are always written to storage immediately.
     ///
-    /// This mode is recommended for improved performance.
+    /// This mode is recommended in most use cases for improved performance.
     ///
     /// > Note:
     /// > This mode is suitable for storage that cannot or will not change externally. Changes made externally
-    /// > will not be reflected within the schema and will be overwritten with cached values.
+    /// > will not be reflected within the schema during its lifespan and will be overwritten with cached values.
     case cachedReadStorageWrite
     
     // TODO: could implement this feature in future if there is a way to enumerate all prefs in a PrefsSchema
@@ -28,6 +28,9 @@ public enum PrefsStorageMode {
     // /// `commit()` on the prefs schema which writes all cached pref values to storage. It is recommended to do this
     // /// only periodically or upon context switches (such as when the user invokes a Save Settings command, or your
     // /// application quits).
+    // ///
+    // /// This storage mode is preferable for rare use cases where performance is critical, allowing storage commits
+    // /// to be invoked electively only during optimal conditions.
     // ///
     // /// > Note:
     // /// > This mode is suitable for storage that cannot or will not change externally. Changes made externally
