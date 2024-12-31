@@ -6,10 +6,14 @@
 
 /// Pref schema property access storage mode for ``PrefsSchema`` implementations.
 public enum PrefsStorageMode {
+    /// Storage-backed only with no intermediate cache.
+    ///
     /// Directly read and write from prefs schema `storage` on every access to pref properties without cacheing.
     /// This may have performance impacts on frequent accesses or for data types with expensive decoding operations.
     case storageOnly
     
+    /// Cache-backed read, storage-backed write.
+    /// 
     /// Reads property values from storage on initialization, then utilizes an internal local cache for improved read
     /// performance thereafter. All writes are always written to storage immediately.
     ///
@@ -21,6 +25,7 @@ public enum PrefsStorageMode {
     case cachedReadStorageWrite
     
     // TODO: could implement this feature in future if there is a way to enumerate all prefs in a PrefsSchema
+    // /// Cache only.
     // /// Reads property values from storage on initialization, then operates exclusively from cache for reads and
     // /// writes.
     // ///
