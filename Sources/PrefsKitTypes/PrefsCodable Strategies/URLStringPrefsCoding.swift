@@ -23,6 +23,8 @@ extension PrefsCodable where Self == URLStringPrefsCoding {
 /// > `URL` has native `Codable` conformance, which means it may also be used directly with
 /// > `@JSONDataCodablePref` or `@JSONStringCodablePref`.
 public struct URLStringPrefsCoding: PrefsCodable {
+    public init() { }
+    
     public func encode(prefsValue: URL) -> String? {
         prefsValue.absoluteString
     }

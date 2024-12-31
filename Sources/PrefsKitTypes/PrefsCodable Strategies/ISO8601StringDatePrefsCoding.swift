@@ -47,6 +47,8 @@ extension PrefsCodable where Self == ISO8601DateStringPrefsCoding {
 /// > `@JSONDataCodablePref` or `@JSONStringCodablePref`.
 @available(macOS 12.0, iOS 15.0, tvOS 15.0, watchOS 8.0, *)
 public struct ISO8601DateStringPrefsCoding: PrefsCodable {
+    public init() { }
+    
     public func encode(prefsValue: Date) -> String? {
         prefsValue.ISO8601Format()
     }
