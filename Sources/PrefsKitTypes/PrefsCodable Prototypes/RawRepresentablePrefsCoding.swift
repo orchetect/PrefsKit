@@ -24,3 +24,14 @@ extension RawRepresentable where Self: Sendable, Self.RawValue: PrefsStorageValu
         RawRepresentablePrefsCoding()
     }
 }
+
+// MARK: - Chaining Constructor
+
+extension PrefsCodable where StorageValue: RawRepresentable, StorageValue.RawValue: PrefsStorageValue {
+    // (Note that the availability of this chaining property is very rare, but still technically possible)
+    
+    /// A prefs value coding strategy which uses a `RawRepresentable` type's `RawValue` as its storage value.
+    public var rawRepresentablePrefsCoding: RawRepresentablePrefsCoding<StorageValue> {
+        RawRepresentablePrefsCoding()
+    }
+}
