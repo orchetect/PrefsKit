@@ -9,6 +9,7 @@ A modern Swift library for reading & writing app preferences:
 - simple but powerful declarative DSL
 - swappable/mockable storage backend (UserDefaults, Dictionary, PList file, and more)
 - keys are implicitly `@Observable` and `@Bindable` for effortless integration in modern SwiftUI apps
+- composable, chainable encoding strategies
 - built from the ground up for Swift 6
 
 ## Table of Contents
@@ -20,6 +21,7 @@ A modern Swift library for reading & writing app preferences:
   - [Key Naming](#Key-Naming)
   - [Custom Value Coding](#Custom-Value-Coding)
   - [Dynamic Key Access](#Dynamic-Key-Access)
+  - [Composing Value Coding Strategies](#Composing-Value-Coding-Strategies)
   - [Using Actors](#Using-Actors)
 - [FAQ](#FAQ)
 
@@ -165,7 +167,16 @@ enum Fruit: String {
 ```
 #### `@JSONDataCodablePref` / `@JSONStringCodablePref`
 
-Convenience to encode and decode any `Codable` type as JSON using either `Data` or `String` raw storage.
+Several syntax options are available to encode and decode any `Codable` type as JSON using either `Data` or `String` raw storage.
+
+```swift
+struct Device: Codable {
+    var name: String
+    var manufacturer: String
+}
+```
+
+Convenience macros:
 
 ```swift
 @PrefsSchema final class Prefs {
@@ -175,12 +186,19 @@ Convenience to encode and decode any `Codable` type as JSON using either `Data` 
     // encode Device as JSON using String storage
     @JSONStringCodablePref var device: Device?
 }
-  
-struct Device: Codable {
-    var name: String
-    var manufacturer: String
+```
+Or using `Pref(coding:)` which also allows for chaining of coding strategies. The initial coding strategy must be specified by using the synthesized extension property on its concrete type, as shown:
+
+```swift
+@PrefsSchema final class Prefs {
+    // encode Device as JSON using Data storage
+    @Pref(coding: Device.jsonDataPrefsCoding) var device: Device?
+    
+    // encode Device as JSON using String storage
+    @Pref(coding: Device.jsonStringPrefsCoding) var device: Device?
 }
 ```
+
 #### `@Pref(encode:decode:)` and `@Pref(coding:)`
 
 Supports custom *value ←→ storage value* encoding implementation.
@@ -189,8 +207,13 @@ It can be done inline:
 
 ```swift
 @PrefsSchema final class Prefs {
-    @Pref(encode: { $0.absoluteString }, decode: { URL(string: $0) })
-    var url: URL?
+    @Pref(encode: { $0.rawValue }, decode: { MyType(rawValue: $0) })
+    var url: MyType?
+}
+
+struct MyType {
+    var rawValue: String
+    init?(rawValue: String) { /* ... */ }
 }
 ```
 
@@ -198,21 +221,21 @@ Or if a coding implementation needs to be reused, it can be defined once by crea
 
 ```swift
 @PrefsSchema final class Prefs {
-    @Pref(coding: .urlString) var foo: URL?
-    @Pref(coding: .urlString) var bar: URL?
+    @Pref(coding: .myType) var foo: MyType?
+    @Pref(coding: .myType) var bar: MyType?
 }
 
-struct URLStringPrefsCoding: PrefsCodable {
-    func encode(prefsValue: URL) -> String? {
-        prefsValue.absoluteString
+struct MyTypePrefsCoding: PrefsCodable {
+    func encode(prefsValue: MyType) -> String? {
+        prefsValue.rawValue
     }
-    func decode(prefsValue: String) -> URL? {
-        URL(string: prefsValue)
+    func decode(prefsValue: String) -> MyType? {
+        MyType(rawValue: prefsValue)
     }
 }
 
-extension PrefsCoding where Self == URLStringPrefsCoding {
-    static var urlString: URLStringPrefsCoding { URLStringPrefsCoding() }
+extension PrefsCoding where Self == MyTypePrefsCoding {
+    static var myType: MyTypePrefsCoding { MyTypePrefsCoding() }
 }
 ```
 
@@ -224,6 +247,26 @@ extension PrefsCoding where Self == URLStringPrefsCoding {
 > - a type whose encoding format has changed over time and generational formats need to be maintained (ie: for legacy preferences migration)
 >
 > If it is for a custom type that is one you own and there is only one encoding format for it, one alternative approach is to conform it to Swift's `Codable` instead and use `@JSONDataCodablePref` or `@JSONStringCodablePref` to store it.
+
+### Composing Value Coding Strategies
+
+For more complex preference value coding scenarios, two or more coding strategies may be chained in series in order to compose multiple steps in the encoding/decoding process.
+
+By way of example, a custom type that conforms to `Codable` could be first encoded to its data representation, then compressed, then encoded to a base-64 encoded `String` as its final preferences storage format. When the value is read back from storage, the decoding process naturally occurs in the reverse order.
+
+```swift
+@PrefsSchema final class Prefs {
+    @Pref(coding: MyType.jsonDataPrefsCoding
+                        .compressedData(algorithm: .lzfse)
+                        .base64DataString()
+    ) var foo: MyType?
+}
+
+struct MyType: Codable {
+    var id: Int
+    var content: String
+}
+```
 
 ### Dynamic Key Access
 
