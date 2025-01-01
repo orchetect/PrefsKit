@@ -70,10 +70,10 @@ A modern Swift library for reading & writing app preferences:
        @Environment(Prefs.self) private var prefs
        
        var body: some View {
-           @Bindable var prefs = prefs
-           
            Text("String: \(prefs.foo ?? "Not yet set.")")
            Text("Int: \(prefs.bar)")
+           
+           @Bindable var prefs = prefs
            Toggle("State", isOn: $prefs.bool)
        }
    }
@@ -93,9 +93,9 @@ These are the atomic value types supported:
 | `Double`           | `@Pref var x: Double = 1.0`             | An atomic `Double` value                               |
 | `Float`            | `@Pref var x: Float = 1.0`              | An atomic `Float` value                                |
 | `Data`             | `@Pref var x: Data = Data()`            | An atomic `Data` value                                 |
-| Array              | `@Pref var x: [String] = []`            | Array of a single atomic value type                    |
+| Array              | `@Pref var x: [Int] = []`               | Array of a single atomic value type                    |
 | Array (Mixed)      | `@Pref var x: AnyPrefsArray = []`       | Array of a mixture of atomic value types               |
-| Dictionary         | `@Pref var x: [String: String] = [:]`   | Keyed by `String` with a single atomic value type      |
+| Dictionary         | `@Pref var x: [String: Int] = [:]`      | Keyed by `String` with a single atomic value type      |
 | Dictionary (Mixed) | `@Pref var x: AnyPrefsDictionary = [:]` | Keyed by `String` with a mixture of atomic value types |
 
 > [!NOTE]
@@ -143,29 +143,42 @@ The benefit of this approach is that it gives access to type-specific members of
 Key names are synthesized from the var name unless specified:
 
 ```swift
-@Pref var foo: String? // storage key name is "foo"
+// storage key name is "foo"
+@Pref var foo: String?
 
-@Pref(key: "bar") var foo: String? // storage key name is "bar"
+// storage key name is "bar"
+@Pref(key: "bar") var foo: String?
 ```
 
 ### Custom Value Coding
 
-Alternative macros are available for more complex types such as:
-
-#### `@RawRepresentablePref`
+#### RawRepresentable Types
 
 Allows using a `RawRepresentable` type with a `RawValue` that is one of the supported atomic storage value types.
 
 ```swift
-@PrefsSchema final class Prefs {
-    @RawRepresentablePref var fruit: Fruit?
-}
-  
 enum Fruit: String {
     case apple, banana, orange
 }
 ```
-#### `@JSONDataCodablePref` / `@JSONStringCodablePref`
+
+1. Using convenience macro:
+   ```swift
+   @PrefsSchema final class Prefs {
+       @RawRepresentablePref var fruit: Fruit?
+   }
+   ```
+2. Using the `Pref(coding:)` macro, which also allows for chaining of coding strategies.
+   
+   The initial coding strategy must be specified by using the synthesized extension property on its concrete type, as shown:
+   
+   ```swift
+   @PrefsSchema final class Prefs {
+       @Pref(coding: Fruit.rawRepresentablePrefsCoding) var fruit: Fruit?
+   }
+   ```
+
+#### Codable Types
 
 Several syntax options are available to encode and decode any `Codable` type as JSON using either `Data` or `String` raw storage.
 
@@ -176,68 +189,74 @@ struct Device: Codable {
 }
 ```
 
-Convenience macros:
+1. Using convenience macros:
+   ```swift
+   @PrefsSchema final class Prefs {
+       // encode Device as JSON using Data storage
+       @JSONDataCodablePref var device: Device?
+       
+       // encode Device as JSON using String storage
+       @JSONStringCodablePref var device: Device?
+   }
+   ```
+2. Using the `Pref(coding:)` macro, which also allows for chaining of coding strategies.
+   
+   The initial coding strategy must be specified by using the synthesized extension property on its concrete type, as shown:
+   
+   ```swift
+   @PrefsSchema final class Prefs {
+       // encode Device as JSON using Data storage
+       @Pref(coding: Device.jsonDataPrefsCoding) var device: Device?
+       
+       // encode Device as JSON using String storage
+       @Pref(coding: Device.jsonStringPrefsCoding) var device: Device?
+   }
+   ```
+
+#### Implementing Custom Coding Strategies
+
+For more advanced coding requirements, PrefsKit supports defining custom *value ←→ storage value* encoding implementations.
 
 ```swift
-@PrefsSchema final class Prefs {
-    // encode Device as JSON using Data storage
-    @JSONDataCodablePref var device: Device?
-    
-    // encode Device as JSON using String storage
-    @JSONStringCodablePref var device: Device?
-}
-```
-Or using `Pref(coding:)` which also allows for chaining of coding strategies. The initial coding strategy must be specified by using the synthesized extension property on its concrete type, as shown:
-
-```swift
-@PrefsSchema final class Prefs {
-    // encode Device as JSON using Data storage
-    @Pref(coding: Device.jsonDataPrefsCoding) var device: Device?
-    
-    // encode Device as JSON using String storage
-    @Pref(coding: Device.jsonStringPrefsCoding) var device: Device?
-}
-```
-
-#### `@Pref(encode:decode:)` and `@Pref(coding:)`
-
-Supports custom *value ←→ storage value* encoding implementation.
-
-It can be done inline:
-
-```swift
-@PrefsSchema final class Prefs {
-    @Pref(encode: { $0.rawValue }, decode: { MyType(rawValue: $0) })
-    var url: MyType?
-}
-
 struct MyType {
-    var rawValue: String
-    init?(rawValue: String) { /* ... */ }
+    var value: String
+    init?(value: String) { /* ... */ }
 }
 ```
 
-Or if a coding implementation needs to be reused, it can be defined once by creating a new type that conforms to `PrefsCodable`, then supply an instance of the type in each `@Pref` declaration's `coding` parameter:
-
-```swift
-@PrefsSchema final class Prefs {
-    @Pref(coding: .myType) var foo: MyType?
-    @Pref(coding: .myType) var bar: MyType?
-}
-
-struct MyTypePrefsCoding: PrefsCodable {
-    func encode(prefsValue: MyType) -> String? {
-        prefsValue.rawValue
-    }
-    func decode(prefsValue: String) -> MyType? {
-        MyType(rawValue: prefsValue)
-    }
-}
-
-extension PrefsCoding where Self == MyTypePrefsCoding {
-    static var myType: MyTypePrefsCoding { MyTypePrefsCoding() }
-}
-```
+1. Simple ad-hoc coding logic can be done inline:
+   ```swift
+   @PrefsSchema final class Prefs {
+       @Pref(encode: { $0.value }, decode: { MyType(value: $0) })
+       var foo: MyType?
+   }
+   ```
+2. If coding implementation is more complex and/or will be reused with multiple preference keys, it can be defined once by creating a new type that conforms to `PrefsCodable`, then supplied to each `@Pref` declaration using the `coding` parameter:
+   ```swift
+   @PrefsSchema final class Prefs {
+       // coding instance may be supplied directly, or...
+       @Pref(coding: MyTypePrefsCoding()) var foo: MyType?
+       
+       // ...static constructor may be used, if defined (see extension below)
+       @Pref(coding: .myType) var bar: MyType?
+   }
+   
+   // Type defining coding logic
+   struct MyTypePrefsCoding: PrefsCodable {
+       func encode(prefsValue: MyType) -> Data? {
+           prefsValue.value.data(using: .utf8)
+       }
+       func decode(prefsValue: Data) -> MyType? {
+           guard let string = String(data: prefsValue, encoding: .utf8) else { return nil }
+           return MyType(value: string)
+       }
+   }
+   
+   // Static constructor (for syntactic sugar / convenience)
+   extension PrefsCodable where Self == MyTypePrefsCoding {
+       static var myType: MyTypePrefsCoding { MyTypePrefsCoding() }
+   }
+   ```
 
 > [!NOTE]
 >
