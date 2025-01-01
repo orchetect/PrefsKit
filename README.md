@@ -10,7 +10,7 @@ A modern Swift library for reading & writing app preferences:
 - swappable/mockable storage backend (UserDefaults, Dictionary, PList file, and more)
 - keys are implicitly `@Observable` and `@Bindable` for effortless integration in modern SwiftUI apps
 - composable, chainable encoding strategies
-- built from the ground up for Swift 6
+- built from the ground up for Swift 6 and strict concurrency
 
 ## Table of Contents
 
@@ -170,7 +170,7 @@ enum Fruit: String {
    ```
 2. Using the `Pref(coding:)` macro, which also allows for chaining of coding strategies.
    
-   The initial coding strategy must be specified by using the synthesized extension property on its concrete type, as shown:
+   Due to Swift macro type system limitations, the base coding strategy must be specified by using a static constructor on its concrete type:
    
    ```swift
    @PrefsSchema final class Prefs {
@@ -201,7 +201,7 @@ struct Device: Codable {
    ```
 2. Using the `Pref(coding:)` macro, which also allows for chaining of coding strategies.
    
-   The initial coding strategy must be specified by using the synthesized extension property on its concrete type, as shown:
+   Due to Swift macro type system limitations, the base coding strategy must be specified by using a static constructor on its concrete type:
    
    ```swift
    @PrefsSchema final class Prefs {
