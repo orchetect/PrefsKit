@@ -6,7 +6,7 @@
 
 import Foundation
 
-/// A prefs value coding strategy which uses a `RawRepresentable`'s `RawValue` as its storage value.
+/// A prefs value coding strategy which uses a `RawRepresentable` type's `RawValue` as its storage value.
 public struct RawRepresentablePrefsCoding<Value>: RawRepresentablePrefsCodable
 where Value: Sendable, Value: RawRepresentable, Value.RawValue: PrefsStorageValue
 {
@@ -19,7 +19,7 @@ where Value: Sendable, Value: RawRepresentable, Value.RawValue: PrefsStorageValu
 // MARK: - Static Constructor
 
 extension RawRepresentable where Self: Sendable, Self.RawValue: PrefsStorageValue {
-    /// A prefs value coding strategy which uses a `RawRepresentable`'s `RawValue` as its storage value.
+    /// A prefs value coding strategy which uses a `RawRepresentable` type's `RawValue` as its storage value.
     public static var rawRepresentablePrefsCoding: RawRepresentablePrefsCoding<Self> {
         RawRepresentablePrefsCoding()
     }

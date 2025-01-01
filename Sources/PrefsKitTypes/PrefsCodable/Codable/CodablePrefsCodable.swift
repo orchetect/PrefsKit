@@ -10,8 +10,9 @@ import Foundation
 /// A prefs key that encodes and decodes a `Codable` type to/from raw storage.
 ///
 /// > Tip:
-/// > It is suggested that if all `Codable` types that are to be stored in prefs storage use
-/// > the same encoder/decoder, that you create a protocol that inherits from ``CodablePrefsCodable``
+/// >
+/// > It is suggested that if multiple `Codable` types that stored in prefs storage use the same
+/// > underlying encoder/decoder, that you create a protocol that inherits from ``CodablePrefsCodable``
 /// > for all non-defaulted `Codable` prefs and then implement `prefEncoder()` and `prefDecoder()` to return
 /// > the same instances. These types can then adopt this new protocol.
 public protocol CodablePrefsCodable<Encoder, Decoder>: PrefsCodable
