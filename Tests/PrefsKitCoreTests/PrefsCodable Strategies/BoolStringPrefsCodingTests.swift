@@ -51,7 +51,7 @@ struct BoolStringPrefsCodingTests {
             coding: MyType
                 .rawRepresentablePrefsCoding
                 .boolAsString() /* defaults to true/false (lowercase) */
-        ) var boolIntStrictChained: MyType?
+        ) var myTypeBoolStringChained: MyType?
     }
     
     // MARK: - Static Constructors
@@ -163,5 +163,20 @@ struct BoolStringPrefsCodingTests {
     
     // MARK: - Chaining Constructor
     
-    #warning("> TODO: add tests")
+    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
+    @Test
+    func myTypeBoolStringChained() {
+        let schema = TestSchema()
+        
+        schema.myTypeBoolStringChained = .yes
+        #expect(schema.storage.storageValue<String>(forKey: "myTypeBoolStringChained") == "true")
+        #expect(schema.myTypeBoolStringChained == .yes)
+        
+        schema.myTypeBoolStringChained = .no
+        #expect(schema.storage.storageValue<String>(forKey: "myTypeBoolStringChained") == "false")
+        #expect(schema.myTypeBoolStringChained == .no)
+        
+        schema.storage.setStorageValue(forKey: "myTypeBoolStringChained", to: "foobar")
+        #expect(schema.myTypeBoolStringChained == nil)
+    }
 }
