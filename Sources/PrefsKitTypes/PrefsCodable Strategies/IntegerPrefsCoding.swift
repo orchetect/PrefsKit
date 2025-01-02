@@ -77,3 +77,7 @@ extension PrefsCodable where Self == IntegerPrefsCoding<UInt64> {
     /// > Consider encoding as `String` or raw `Data` to ensure lossless storage of very large `UInt64` values.
     public static var uInt64AsInt: Self { .init() }
 }
+
+// MARK: - Chaining Constructor
+
+// note: non-Int integers do not conform to PrefsStorageValue so we can't offer coding strategy chaining methods.
