@@ -83,6 +83,8 @@ A modern Swift library for reading & writing app preferences:
 
 ### Storage Value Types
 
+#### Atomic Value Types
+
 These are the atomic value types supported:
 
 | Atomic Type        | Usage                                   | Description                                            |
@@ -103,6 +105,32 @@ These are the atomic value types supported:
 > Instead of `[Any]`, the custom `AnyPrefsArray` type ensures type safety for its elements.
 >
 > Likewise, instead of `[String: Any]`, the custom `AnyPrefsDictionary` type ensures type safety for its key values.
+
+#### Storage Type Coercion and Basic Atomic Value Conversion
+
+Non-atomic integer types (`UInt8`, `Int32`, etc.) may be used but the explicit coding strategy must be supplied. This is required (and not automatic) so that there is no ambiguity as to a value's underlying storage type.
+
+```swift
+@PrefsSchema final class Prefs {
+    @Pref(coding: .uInt8AsInt) var foo: UInt8?
+    @Pref(coding: .int32AsInt) var bar: Int32?
+}
+```
+
+Various simple type conversions are also provided as part of the library, such as storing an integer as a `String`.
+
+> [!NOTE]
+>
+> For compatibility with certain storage requirements, storing an integer as a string may be desirable.
+>
+> This can also be preferable for technical reasons, such as where `Int` as a storage type may overflow. For example, when using `UInt64` as nominal type (or Swift 6's new `Int128`/`UInt128`), when stored as a `String` it avoids otherwise potentially overflowing `Int` and failing to store the value.
+
+```swift
+@PrefsSchema final class Prefs {
+    @Pref(coding: .uInt8AsString) var foo: UInt8?
+    @Pref(coding: .uInt64AsString) var bar: UInt64?
+}
+```
 
 ### Storage Injection
 
