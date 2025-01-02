@@ -33,6 +33,7 @@ public struct BoolIntegerPrefsCoding: PrefsCodable {
 }
 
 extension BoolIntegerPrefsCoding {
+    /// Integer decoding strategy for ``BoolIntegerPrefsCoding``.
     public enum DecodingStrategy: Equatable, Hashable, Sendable {
         /// Strict decoding of a stored integer.
         /// Only `1` will be interpreted as `true` and `0` as `false`.
