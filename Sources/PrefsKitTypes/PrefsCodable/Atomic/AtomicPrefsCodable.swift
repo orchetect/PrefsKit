@@ -1,7 +1,7 @@
 //
 //  AtomicPrefsCodable.swift
 //  PrefsKit • https://github.com/orchetect/PrefsKit
-//  © 2024 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 /// A basic prefs value coding protocol for storing a standard atomic value type.

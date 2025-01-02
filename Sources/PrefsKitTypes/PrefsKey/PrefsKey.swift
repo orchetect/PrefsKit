@@ -1,7 +1,7 @@
 //
 //  PrefsKey.swift
 //  PrefsKit • https://github.com/orchetect/PrefsKit
-//  © 2024 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 public protocol PrefsKey where Self: Sendable, Coding.Value == Value, Coding.StorageValue == StorageValue {

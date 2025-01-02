@@ -1,7 +1,7 @@
 //
 //  PrefsStorageMode.swift
 //  PrefsKit • https://github.com/orchetect/PrefsKit
-//  © 2024 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 /// Pref schema property access storage mode for ``PrefsSchema`` implementations.
@@ -13,7 +13,7 @@ public enum PrefsStorageMode {
     case storageOnly
     
     /// Cache-backed read, storage-backed write.
-    /// 
+    ///
     /// Reads property values from storage on initialization, then utilizes an internal local cache for improved read
     /// performance thereafter. All writes are always written to storage immediately.
     ///

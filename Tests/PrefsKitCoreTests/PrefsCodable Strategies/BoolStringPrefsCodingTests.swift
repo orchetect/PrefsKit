@@ -1,7 +1,7 @@
 //
 //  BoolStringPrefsCodingTests.swift
 //  PrefsKit • https://github.com/orchetect/PrefsKit
-//  © 2024 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 import Foundation
@@ -47,9 +47,10 @@ struct BoolStringPrefsCodingTests {
         
         // MARK: - Chaining Constructor
         
-        @Pref(coding: MyType
-            .rawRepresentablePrefsCoding
-            .boolAsString() /* defaults to true/false (lowercase) */
+        @Pref(
+            coding: MyType
+                .rawRepresentablePrefsCoding
+                .boolAsString() /* defaults to true/false (lowercase) */
         ) var boolIntStrictChained: MyType?
     }
     

@@ -1,7 +1,7 @@
 //
 //  Macro Declarations.swift
 //  PrefsKit • https://github.com/orchetect/PrefsKit
-//  © 2024 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 import Foundation
@@ -54,4 +54,4 @@ public macro JSONDataCodablePref(key: String? = nil)
 @attached(accessor, names: named(get), named(set), named(_modify))
 @attached(peer, names: /* arbitrary */ prefixed(__PrefCoding_), prefixed(__PrefValue_))
 public macro JSONStringCodablePref(key: String? = nil)
-= #externalMacro(module: "PrefsKitMacrosImplementation", type: "JSONStringCodablePrefMacro")
+    = #externalMacro(module: "PrefsKitMacrosImplementation", type: "JSONStringCodablePrefMacro")

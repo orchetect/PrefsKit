@@ -1,7 +1,7 @@
 //
 //  AnyPrefsArray.swift
 //  PrefsKit • https://github.com/orchetect/PrefsKit
-//  © 2024 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 /// A type that wraps an array of type-erased values for use in prefs storage.

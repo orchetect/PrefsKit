@@ -1,7 +1,7 @@
 //
 //  PrefsKey Prototypes.swift
 //  PrefsKit • https://github.com/orchetect/PrefsKit
-//  © 2024 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 import Combine
@@ -252,7 +252,7 @@ public struct AnyDefaultedJSONDataCodablePrefsKey<Value>: DefaultedPrefsKey
 
 /// Generic concrete pref key with a `Codable` value type using JSON `String` (UTF-8) encoding.
 public struct AnyJSONStringCodablePrefsKey<Value>: PrefsKey
-where Value: Codable, Value: Sendable
+    where Value: Codable, Value: Sendable
 {
     public let key: String
     public let coding = JSONStringCodablePrefsCoding<Value>()
@@ -264,7 +264,7 @@ where Value: Codable, Value: Sendable
 
 /// Generic concrete pref key with a `Codable` value type using JSON `String` (UTF-8) encoding and a default value.
 public struct AnyDefaultedJSONStringCodablePrefsKey<Value>: DefaultedPrefsKey
-where Value: Codable, Value: Sendable
+    where Value: Codable, Value: Sendable
 {
     public let key: String
     public let defaultValue: Value

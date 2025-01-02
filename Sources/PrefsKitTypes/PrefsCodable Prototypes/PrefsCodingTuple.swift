@@ -1,12 +1,12 @@
 //
 //  PrefsCodingTuple.swift
 //  PrefsKit • https://github.com/orchetect/PrefsKit
-//  © 2024 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 /// A container for two ``PrefsCodable`` coding strategies in series.
 public struct PrefsCodingTuple<First, Second>: PrefsCodable
-where First: PrefsCodable, Second: PrefsCodable, First.StorageValue == Second.Value
+    where First: PrefsCodable, Second: PrefsCodable, First.StorageValue == Second.Value
 {
     public typealias Value = First.Value
     public typealias StorageValue = Second.StorageValue

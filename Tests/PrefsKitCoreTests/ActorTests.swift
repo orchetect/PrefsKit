@@ -1,7 +1,7 @@
 //
 //  ActorTests.swift
 //  PrefsKit • https://github.com/orchetect/PrefsKit
-//  © 2024 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 import Foundation
@@ -25,7 +25,8 @@ struct ActorTests {
     }
     
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
-    @Test func baseline() {
+    @Test
+    func baseline() {
         let prefs = TestSchema()
         
         Task { @MainActor in prefs.foo = 1 } // <-- needs MainActor context

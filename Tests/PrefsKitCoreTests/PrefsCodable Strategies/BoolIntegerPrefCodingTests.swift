@@ -1,7 +1,7 @@
 //
 //  BoolIntegerPrefCodingTests.swift
 //  PrefsKit • https://github.com/orchetect/PrefsKit
-//  © 2024 Steffan Andrews • Licensed under MIT License
+//  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 import Foundation
@@ -39,14 +39,16 @@ struct BoolIntegerPrefCodingTests {
         
         // MARK: - Chaining Constructor
         
-        @Pref(coding: MyType
-            .rawRepresentablePrefsCoding
-            .boolAsInteger(decodingStrategy: .strict)
+        @Pref(
+            coding: MyType
+                .rawRepresentablePrefsCoding
+                .boolAsInteger(decodingStrategy: .strict)
         ) var boolIntStrictChained: MyType?
         
-        @Pref(coding: MyType
-            .rawRepresentablePrefsCoding
-            .boolAsInteger(decodingStrategy: .nearest)
+        @Pref(
+            coding: MyType
+                .rawRepresentablePrefsCoding
+                .boolAsInteger(decodingStrategy: .nearest)
         ) var boolIntNearestChained: MyType?
     }
     
