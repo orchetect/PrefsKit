@@ -108,27 +108,96 @@ These are the atomic value types supported:
 
 #### Storage Type Coercion and Basic Atomic Value Conversion
 
-Non-atomic integer types (`UInt8`, `Int32`, etc.) may be used but the explicit coding strategy must be supplied. This is required (and not automatic) so that there is no ambiguity as to a value's underlying storage type.
-
-```swift
-@PrefsSchema final class Prefs {
-    @Pref(coding: .uInt8AsInt) var foo: UInt8?
-    @Pref(coding: .int32AsInt) var bar: Int32?
-}
-```
-
-Various simple type conversions are also provided as part of the library, such as storing an integer as a `String`.
+Various common type conversions are also provided as part of the library.
 
 > [!NOTE]
 >
-> For compatibility with certain storage requirements, storing an integer as a string may be desirable.
->
-> This can also be preferable for technical reasons, such as where `Int` as a storage type may overflow. For example, when using `UInt64` as nominal type (or Swift 6's new `Int128`/`UInt128`), when stored as a `String` it avoids otherwise potentially overflowing `Int` and failing to store the value.
+> Many non-atomic types, such as fixed-width integers (`UInt8`, `Int32`, etc.) may be used but the explicit coding strategy must be supplied. This is required (and not automatic) so that there is no ambiguity as to a value's underlying storage type.
+
+##### Storing binary integer types as an atomic `Int`
 
 ```swift
 @PrefsSchema final class Prefs {
+    @Pref(coding: .uIntAsInt) var foo: UInt?
+    
+    @Pref(coding: .int8AsInt) var foo: Int8?
+    @Pref(coding: .uInt8AsInt) var foo: UInt8?
+    
+    @Pref(coding: .int16AsInt) var foo: Int16?
+    @Pref(coding: .uInt16AsInt) var foo: UInt16?
+    
+    @Pref(coding: .int32AsInt) var foo: Int32?
+    @Pref(coding: .uInt32AsInt) var foo: UInt32?
+    
+    @Pref(coding: .int64AsInt) var foo: Int64?
+    @Pref(coding: .uInt64AsInt) var foo: UInt64?
+}
+```
+
+##### Storing fixed-width integer types as an atomic `String`
+
+```swift
+@PrefsSchema final class Prefs {
+    @Pref(coding: .intAsString) var foo: Int?
+    @Pref(coding: .uIntAsString) var foo: UInt?
+    
+    @Pref(coding: .int8AsString) var foo: Int8?
     @Pref(coding: .uInt8AsString) var foo: UInt8?
-    @Pref(coding: .uInt64AsString) var bar: UInt64?
+    
+    @Pref(coding: .int16AsString) var foo: Int16?
+    @Pref(coding: .uInt16AsString) var foo: UInt16?
+    
+    @Pref(coding: .int32AsString) var foo: Int32?
+    @Pref(coding: .uInt32AsString) var foo: UInt32?
+    
+    @Pref(coding: .int64AsString) var foo: Int64?
+    @Pref(coding: .uInt64AsString) var foo: UInt64?
+}
+```
+
+
+> [!TIP]
+>
+> Sometimes for compatibility with certain storage requirements, storing an integer as a string may be necessary.
+>
+> It can also be preferable for technical reasons, such as where `Int` as a storage type may overflow. For example, when using `UInt64` as nominal type (or Swift 6's new `Int128`/`UInt128`), when stored as a `String` it avoids otherwise potentially overflowing `Int` and failing to store the value.
+
+##### Storing `Bool` as `Int`
+
+Storing a boolean as an integer (`1` or `0`):
+
+```swift
+@PrefsSchema final class Prefs {
+    @Pref(coding: .boolAsInt()) var foo: Bool?
+}
+```
+
+##### Storing `Bool` as `String`
+
+Storing a boolean as a string gives granular control over storage semantics:
+
+- `true`/`false`, `yes`/`no`, or custom strings
+- capitalized (`TRUE`), lowercase (`true`), or uppercase (`True`)
+
+```swift
+@PrefsSchema final class Prefs {
+    @Pref(coding: .boolAsString(.trueFalse(.lowercase))) var foo: Bool?
+}
+```
+
+##### Storing `Date` as ISO-8601 `String`
+
+```swift
+@PrefsSchema final class Prefs {
+    @Pref(coding: .iso8601DateString) var date: Date?
+}
+```
+
+##### Storing `URL` as `String`
+
+```swift
+@PrefsSchema final class Prefs {
+    @Pref(coding: .urlString) var foo: URL?
 }
 ```
 
@@ -303,9 +372,11 @@ By way of example, a custom type that conforms to `Codable` could be first encod
 
 ```swift
 @PrefsSchema final class Prefs {
-    @Pref(coding: MyType.jsonDataPrefsCoding
-                        .compressedData(algorithm: .lzfse)
-                        .base64DataString()
+    @Pref(
+        coding: MyType
+            .jsonDataPrefsCoding
+            .compressedData(algorithm: .lzfse)
+            .base64DataString()
     ) var foo: MyType?
 }
 
