@@ -55,7 +55,8 @@ struct CompressedDataPrefsCodingTests {
         
         schema.myTypeChained = testType
         let getData: Data = try #require(schema.storage.storageValue<Data>(forKey: "myTypeChained"))
-        #expect(getData.count > 10) // just check for non-empty content, we won't check actual bytes
+        // just check for non-empty content, we won't check actual content since it's not fully deterministic
+        #expect(getData.count > 10)
         #expect(schema.myTypeChained == testType)
     }
 }
