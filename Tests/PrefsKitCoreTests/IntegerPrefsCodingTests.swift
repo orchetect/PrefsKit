@@ -36,7 +36,7 @@ struct IntegerPrefsCodingTests {
     
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
     @Test
-    func chainedEncoding_uInt_As_Int() async throws {
+    func uInt_As_Int() async throws {
         let schema = TestSchema()
         
         // can't use UInt.max, would overflow Int. so we'll use Int.max
@@ -47,7 +47,7 @@ struct IntegerPrefsCodingTests {
     
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
     @Test
-    func chainedEncoding_int8_As_Int() async throws {
+    func int8_As_Int() async throws {
         let schema = TestSchema()
         
         schema.int8_As_Int = 127 // Int8.max
@@ -61,7 +61,7 @@ struct IntegerPrefsCodingTests {
     
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
     @Test
-    func chainedEncoding_uInt8AsString() async throws {
+    func uInt8AsString() async throws {
         let schema = TestSchema()
         
         schema.uInt8_As_Int = 255 // UInt8.max
@@ -71,7 +71,7 @@ struct IntegerPrefsCodingTests {
     
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
     @Test
-    func chainedEncoding_int16_As_Int() async throws {
+    func int16_As_Int() async throws {
         let schema = TestSchema()
         
         schema.int16_As_Int = 32767 // Int16.max
@@ -85,7 +85,7 @@ struct IntegerPrefsCodingTests {
     
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
     @Test
-    func chainedEncoding_uInt16AsString() async throws {
+    func uInt16AsString() async throws {
         let schema = TestSchema()
         
         schema.uInt16_As_Int = 65535 // UInt16.max
@@ -95,7 +95,7 @@ struct IntegerPrefsCodingTests {
     
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
     @Test
-    func chainedEncoding_int32_As_Int() async throws {
+    func int32_As_Int() async throws {
         let schema = TestSchema()
         
         schema.int32_As_Int = 2147483647 // Int32.max
@@ -109,7 +109,7 @@ struct IntegerPrefsCodingTests {
     
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
     @Test
-    func chainedEncoding_uInt32AsString() async throws {
+    func uInt32AsString() async throws {
         let schema = TestSchema()
         
         schema.uInt32_As_Int = 23456
@@ -119,7 +119,7 @@ struct IntegerPrefsCodingTests {
     
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
     @Test
-    func chainedEncoding_int64_As_Int() async throws {
+    func int64_As_Int() async throws {
         let schema = TestSchema()
         
         schema.int64_As_Int = 9223372036854775807 // Int64.max
@@ -133,7 +133,7 @@ struct IntegerPrefsCodingTests {
     
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
     @Test
-    func chainedEncoding_uInt64AsString() async throws {
+    func uInt64AsString() async throws {
         let schema = TestSchema()
         
         // can't use UInt64.max, would overflow Int. so we'll use Int.max

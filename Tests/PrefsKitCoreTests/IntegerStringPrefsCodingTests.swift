@@ -47,7 +47,7 @@ struct IntegerStringPrefsCodingTests {
     
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
     @Test
-    func chainedEncoding_int_As_String() async throws {
+    func int_As_String() async throws {
         let schema = TestSchema()
         
         schema.int_As_String = 9223372036854775807 // Int.max (64-bit system)
@@ -61,7 +61,7 @@ struct IntegerStringPrefsCodingTests {
     
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
     @Test
-    func chainedEncoding_uInt_As_String() async throws {
+    func uInt_As_String() async throws {
         let schema = TestSchema()
         
         schema.uInt_As_String = 18446744073709551615 // UInt.max
@@ -71,7 +71,7 @@ struct IntegerStringPrefsCodingTests {
     
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
     @Test
-    func chainedEncoding_int8_As_String() async throws {
+    func int8_As_String() async throws {
         let schema = TestSchema()
         
         schema.int8_As_String = 127 // Int8.max
@@ -85,7 +85,7 @@ struct IntegerStringPrefsCodingTests {
     
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
     @Test
-    func chainedEncoding_uInt8AsString() async throws {
+    func uInt8AsString() async throws {
         let schema = TestSchema()
         
         schema.uInt8_As_String = 255 // UInt8.max
@@ -95,7 +95,7 @@ struct IntegerStringPrefsCodingTests {
     
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
     @Test
-    func chainedEncoding_int16_As_String() async throws {
+    func int16_As_String() async throws {
         let schema = TestSchema()
         
         schema.int16_As_String = 32767 // Int16.max
@@ -109,7 +109,7 @@ struct IntegerStringPrefsCodingTests {
     
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
     @Test
-    func chainedEncoding_uInt16AsString() async throws {
+    func uInt16AsString() async throws {
         let schema = TestSchema()
         
         schema.uInt16_As_String = 65535 // UInt16.max
@@ -119,7 +119,7 @@ struct IntegerStringPrefsCodingTests {
     
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
     @Test
-    func chainedEncoding_int32_As_String() async throws {
+    func int32_As_String() async throws {
         let schema = TestSchema()
         
         schema.int32_As_String = 2147483647 // Int32.max
@@ -133,7 +133,7 @@ struct IntegerStringPrefsCodingTests {
     
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
     @Test
-    func chainedEncoding_uInt32AsString() async throws {
+    func uInt32AsString() async throws {
         let schema = TestSchema()
         
         schema.uInt32_As_String = 23456
@@ -143,7 +143,7 @@ struct IntegerStringPrefsCodingTests {
     
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
     @Test
-    func chainedEncoding_int64_As_String() async throws {
+    func int64_As_String() async throws {
         let schema = TestSchema()
         
         schema.int64_As_String = 9223372036854775807 // Int64.max
@@ -157,7 +157,7 @@ struct IntegerStringPrefsCodingTests {
     
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
     @Test
-    func chainedEncoding_uInt64AsString() async throws {
+    func uInt64AsString() async throws {
         let schema = TestSchema()
         
         schema.uInt64_As_String = 18446744073709551615 // UInt64.max
@@ -167,7 +167,7 @@ struct IntegerStringPrefsCodingTests {
     
     @available(macOS 15.0, iOS 18.0, watchOS 11.0, tvOS 18.0, visionOS 2.0, *)
     @Test
-    func chainedEncoding_int128_As_String() async throws {
+    func int128_As_String() async throws {
         let schema = TestSchema()
         
         schema.int128_As_String = 170141183460469231731687303715884105727 // Int128.max
@@ -180,7 +180,7 @@ struct IntegerStringPrefsCodingTests {
     
     @available(macOS 15.0, iOS 18.0, watchOS 11.0, tvOS 18.0, visionOS 2.0, *)
     @Test
-    func chainedEncoding_uInt128AsString() async throws {
+    func uInt128AsString() async throws {
         let schema = TestSchema()
         
         schema.uInt128_As_String = 340282366920938463463374607431768211455 // UInt128.max
@@ -195,7 +195,7 @@ struct IntegerStringPrefsCodingTests {
     
     @available(macOS 15.0, iOS 18.0, watchOS 11.0, tvOS 18.0, visionOS 2.0, *)
     @Test
-    func chainedEncoding_fps_intAsString() async throws {
+    func fps_intAsString() async throws {
         let schema = TestSchema()
         
         schema.fpsInt_As_String = .plus
