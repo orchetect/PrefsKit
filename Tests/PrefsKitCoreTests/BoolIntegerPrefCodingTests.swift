@@ -28,8 +28,8 @@ struct BoolIntegerPrefCodingTests {
     
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
     @PrefsSchema final class TestSchema: @unchecked Sendable {
-        let storage = DictionaryPrefsStorage()
-        let storageMode: PrefsStorageMode = .storageOnly // important for unit tests in this file!
+        @Storage var storage = .dictionary
+        @StorageMode var storageMode = .storageOnly // important for unit tests in this file!
         
         // MARK: - Static Constructors
         

@@ -17,8 +17,8 @@ struct ChainingEncodingStrategiesTests {
     
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
     @PrefsSchema final class TestSchema: @unchecked Sendable {
-        let storage = DictionaryPrefsStorage()
-        let storageMode: PrefsStorageMode = .cachedReadStorageWrite
+        @Storage var storage = .dictionary
+        @StorageMode var storageMode = .cachedReadStorageWrite
         
         @Pref(coding: .compressedData(algorithm: .lzfse).base64DataString()) public var foo: Data?
         
