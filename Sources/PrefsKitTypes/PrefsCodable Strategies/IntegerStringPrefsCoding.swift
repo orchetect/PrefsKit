@@ -19,7 +19,7 @@ public struct IntegerStringPrefsCoding<Value>: PrefsCodable where Value: FixedWi
     }
 }
 
-// MARK: - Static Constructor
+// MARK: - Static Constructors
 
 extension PrefsCodable where Self == IntegerStringPrefsCoding<Int> {
     /// Coding strategy for `Int` using `String` as the encoded storage value.
@@ -81,4 +81,13 @@ extension PrefsCodable where Self == IntegerStringPrefsCoding<Int128> {
 extension PrefsCodable where Self == IntegerStringPrefsCoding<UInt128> {
     /// Coding strategy for `UInt128` using `String` as the encoded storage value.
     public static var uInt128AsString: Self { .init() }
+}
+
+// MARK: - Chaining Constructor
+
+extension PrefsCodable where StorageValue == Int {
+    /// Coding strategy for `Int` using `String` as the encoded storage value.
+    public var intAsString: PrefsCodingTuple<Self, IntegerStringPrefsCoding<Int>> {
+        PrefsCodingTuple(self, IntegerStringPrefsCoding<Int>())
+    }
 }
