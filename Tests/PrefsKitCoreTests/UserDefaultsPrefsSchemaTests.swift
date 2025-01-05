@@ -160,11 +160,9 @@ struct UserDefaultsPrefsSchemaTests {
         @Pref(key: Key.double) var double: Double?
         @Pref(key: Key.float) var float: Float?
         @Pref(key: Key.data) var data: Data?
-        // @Pref(key: Key.array) var array: [any PrefsStorageValue]? // can't work with 'any'
-        @Pref(key: Key.anyArray) var anyArray: AnyPrefsArray?
+        @Pref(key: Key.anyArray) var anyArray: [AnyPrefsStorageValue]?
         @Pref(key: Key.stringArray) var stringArray: [String]?
-        // @Pref(key: Key.dict) var dict: [String: any PrefsStorageValue]?? // can't work with 'any'
-        @Pref(key: Key.anyDict) var anyDict: AnyPrefsDictionary?
+        @Pref(key: Key.anyDict) var anyDict: [String: AnyPrefsStorageValue]?
         @Pref(key: Key.stringDict) var stringDict: [String: String]?
         
         // Atomic (Defaulted)
@@ -174,11 +172,9 @@ struct UserDefaultsPrefsSchemaTests {
         @Pref(key: Key.double) var doubleDefaulted: Double = 1.5
         @Pref(key: Key.float) var floatDefaulted: Float = 2.5
         @Pref(key: Key.data) var dataDefaulted: Data = Data([0x01, 0x02])
-        // @Pref(key: Key.array) var arrayDefaulted: [any PrefsStorageValue] = [123, "a string"] // can't work with 'any'
-        @Pref(key: Key.anyArray) var anyArrayDefaulted: AnyPrefsArray = [123, "a string"]
+        @Pref(key: Key.anyArray) var anyArrayDefaulted: [AnyPrefsStorageValue] = [123, "a string"].asAnyPrefsStorageValues
         @Pref(key: Key.stringArray) var stringArrayDefaulted: [String] = ["a", "b"]
-        // @Pref(key: Key.dict) var dictDefaulted: [String: any PrefsStorageValue] = ["foo": 123, "bar": "a string"] // can't work with 'any'
-        @Pref(key: Key.anyDict) var anyDictDefaulted: AnyPrefsDictionary = ["foo": 123, "bar": "a string"]
+        @Pref(key: Key.anyDict) var anyDictDefaulted: [String: AnyPrefsStorageValue] = ["foo": 123, "bar": "a string"].asAnyPrefsStorageValues
         @Pref(key: Key.stringDict) var stringDictDefaulted: [String: String] = ["a": "123", "b": "456"]
         
         // MARK: Key names derived from variable names
@@ -230,9 +226,9 @@ struct UserDefaultsPrefsSchemaTests {
         @Pref var x_double: Double?
         @Pref var x_float: Float?
         @Pref var x_data: Data?
-        @Pref var x_anyArray: AnyPrefsArray?
+        @Pref var x_anyArray: [AnyPrefsStorageValue]?
         @Pref var x_stringArray: [String]?
-        @Pref var x_anyDict: AnyPrefsDictionary?
+        @Pref var x_anyDict: [String: AnyPrefsStorageValue]?
         @Pref var x_stringDict: [String: String]?
         
         // Atomic (Defaulted)
@@ -242,9 +238,9 @@ struct UserDefaultsPrefsSchemaTests {
         @Pref var x_doubleDefaulted: Double = 1.5
         @Pref var x_floatDefaulted: Float = 2.5
         @Pref var x_dataDefaulted: Data = Data([0x01, 0x02])
-        @Pref var x_anyArrayDefaulted: AnyPrefsArray = [123, "a string"]
+        @Pref var x_anyArrayDefaulted: [AnyPrefsStorageValue] = [123, "a string"].asAnyPrefsStorageValues
         @Pref var x_stringArrayDefaulted: [String] = ["a", "b"]
-        @Pref var x_anyDictDefaulted: AnyPrefsDictionary = ["foo": 123, "bar": "a string"]
+        @Pref var x_anyDictDefaulted: [String: AnyPrefsStorageValue] = ["foo": 123, "bar": "a string"].asAnyPrefsStorageValues
         @Pref var x_stringDictDefaulted: [String: String] = ["a": "123", "b": "456"]
     }
     
@@ -610,14 +606,14 @@ struct UserDefaultsPrefsSchemaTests {
     func anyArrayPrefKey(schema: TestSchema) async throws {
         #expect(schema.anyArray == nil)
         
-        schema.anyArray = ["abc"]
+        schema.anyArray = ["abc"].asAnyPrefsStorageValues
         #expect(schema.anyArray?.count == 1)
-        #expect(schema.anyArray?[0] as? String == "abc")
+        #expect(schema.anyArray?[0].unwrapped as? String == "abc")
         
-        schema.anyArray?.append("xyz")
+        schema.anyArray?.append(AnyPrefsStorageValue("xyz")!)
         #expect(schema.anyArray?.count == 2)
-        #expect(schema.anyArray?[0] as? String == "abc")
-        #expect(schema.anyArray?[1] as? String == "xyz")
+        #expect(schema.anyArray?[0].unwrapped as? String == "abc")
+        #expect(schema.anyArray?[1].unwrapped as? String == "xyz")
         
         schema.anyArray = [
             1 as Int,
@@ -626,22 +622,24 @@ struct UserDefaultsPrefsSchemaTests {
             150.0 as Double,
             200.5 as Float,
             Data([0x03, 0x04]),
-            [456, "test"] as AnyPrefsArray,
-            ["def": 234, "ghi": "str"] as AnyPrefsDictionary
-        ]
+            [123],
+            [456, "test"].asAnyPrefsStorageValues,
+            ["def": 234, "ghi": "str"].asAnyPrefsStorageValues
+        ].asAnyPrefsStorageValues
         #expect(schema.anyArray?.count == 8)
-        #expect(schema.anyArray?[0] as? Int == 1)
-        #expect(schema.anyArray?[1] as? String == "xyz")
-        #expect(schema.anyArray?[2] as? Bool == true)
-        #expect(schema.anyArray?[3] as? Double == 150.0)
-        #expect(schema.anyArray?[4] as? Float == 200.5)
-        #expect(schema.anyArray?[5] as? Data == Data([0x03, 0x04]))
-        let arr = schema.anyArray?[6] as? AnyPrefsArray
-        #expect(arr?[0] as? Int == 456)
-        #expect(arr?[1] as? String == "test")
-        let dict = schema.anyArray?[7] as? AnyPrefsDictionary
-        #expect(dict?["def"] as? Int == 234)
-        #expect(dict?["ghi"] as? String == "str")
+        #expect(schema.anyArray?[0].unwrapped as? Int == 1)
+        #expect(schema.anyArray?[1].unwrapped as? String == "xyz")
+        #expect(schema.anyArray?[2].unwrapped as? Bool == true)
+        #expect(schema.anyArray?[3].unwrapped as? Double == 150.0)
+        #expect(schema.anyArray?[4].unwrapped as? Float == 200.5)
+        #expect(schema.anyArray?[5].unwrapped as? Data == Data([0x03, 0x04]))
+        #expect(schema.anyArray?[6].unwrapped as? [Int] == [123])
+        let arr = schema.anyArray?[7].unwrapped as? [AnyPrefsStorageValue]
+        #expect(arr?[0].unwrapped as? Int == 456)
+        #expect(arr?[1].unwrapped as? String == "test")
+        let dict = schema.anyArray?[8] as? [String: AnyPrefsStorageValue]
+        #expect(dict?["def"]?.unwrapped as? Int == 234)
+        #expect(dict?["ghi"]?.unwrapped as? String == "str")
         
         schema.anyArray = nil
         #expect(schema.anyArray == nil)
@@ -674,7 +672,7 @@ struct UserDefaultsPrefsSchemaTests {
     func anyDictionaryPrefKey(schema: TestSchema) async throws {
         #expect(schema.anyDict == nil)
         
-        schema.anyDict = ["abc": 123]
+        schema.anyDict = ["abc": 123].asAnyPrefsStorageValues
         #expect(schema.anyDict?.count == 1)
         #expect(schema.anyDict?["abc"] as? Int == 123)
         
@@ -685,9 +683,9 @@ struct UserDefaultsPrefsSchemaTests {
             "d": 150.0 as Double,
             "e": 200.5 as Float,
             "f": Data([0x03, 0x04]),
-            "g": [456, "test"] as AnyPrefsArray,
-            "h": ["def": 234, "ghi": 500.6] as AnyPrefsDictionary
-        ]
+            "g": [456, "test"].asAnyPrefsStorageValues,
+            "h": ["def": 234, "ghi": 500.6].asAnyPrefsStorageValues
+        ].asAnyPrefsStorageValues
         #expect(schema.anyDict?.count == 8)
         #expect(schema.anyDict?["a"] as? Int == 1)
         #expect(schema.anyDict?["b"] as? String == "xyz")
@@ -696,11 +694,11 @@ struct UserDefaultsPrefsSchemaTests {
         #expect(schema.anyDict?["e"] as? Float == 200.5)
         #expect(schema.anyDict?["f"] as? Data == Data([0x03, 0x04]))
         
-        let arr = schema.anyDict?["g"] as? AnyPrefsArray
+        let arr = schema.anyDict?["g"] as? [any PrefsStorageValue]
         #expect(arr?[0] as? Int == 456)
         #expect(arr?[1] as? String == "test")
         
-        let dict = schema.anyDict?["h"] as? AnyPrefsDictionary
+        let dict = schema.anyDict?["h"] as? [String: any PrefsStorageValue]
         #expect(dict?["def"] as? Int == 234)
         #expect(dict?["ghi"] as? Double == 500.6)
         
@@ -785,12 +783,12 @@ struct UserDefaultsPrefsSchemaTests {
     @Test(arguments: schemas)
     func anyArrayDefaultedPrefKey(schema: TestSchema) async throws {
         #expect(schema.anyArrayDefaulted.count == 2)
-        #expect(schema.anyArrayDefaulted[0] as? Int == 123)
-        #expect(schema.anyArrayDefaulted[1] as? String == "a string")
+        #expect(schema.anyArrayDefaulted[0].unwrapped as? Int == 123)
+        #expect(schema.anyArrayDefaulted[1].unwrapped as? String == "a string")
         
-        schema.anyArrayDefaulted = ["abc"]
+        schema.anyArrayDefaulted = ["abc"].asAnyPrefsStorageValues
         #expect(schema.anyArrayDefaulted.count == 1)
-        #expect(schema.anyArrayDefaulted[0] as? String == "abc")
+        #expect(schema.anyArrayDefaulted[0].unwrapped as? String == "abc")
     }
     
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
@@ -808,12 +806,12 @@ struct UserDefaultsPrefsSchemaTests {
     @Test(arguments: schemas)
     func anyDictionaryDefaultedPrefKey(schema: TestSchema) async throws {
         #expect(schema.anyDictDefaulted.count == 2)
-        #expect(schema.anyDictDefaulted["foo"] as? Int == 123)
-        #expect(schema.anyDictDefaulted["bar"] as? String == "a string")
+        #expect(schema.anyDictDefaulted["foo"]?.unwrapped as? Int == 123)
+        #expect(schema.anyDictDefaulted["bar"]?.unwrapped as? String == "a string")
         
-        schema.anyDictDefaulted = ["abc": 456]
+        schema.anyDictDefaulted = ["abc": 456].asAnyPrefsStorageValues
         #expect(schema.anyDictDefaulted.count == 1)
-        #expect(schema.anyDictDefaulted["abc"] as? Int == 456)
+        #expect(schema.anyDictDefaulted["abc"]?.unwrapped as? Int == 456)
     }
     
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)

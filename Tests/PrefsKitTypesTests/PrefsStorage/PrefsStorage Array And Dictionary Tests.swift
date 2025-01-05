@@ -8,7 +8,8 @@ import Foundation
 @testable import PrefsKitTypes
 import Testing
 
-@Suite struct PrefsStorageArrayTests {
+@Suite(.serialized)
+struct PrefsStorageArrayTests {
     static let domain = "com.orchetect.PrefsKit.\(type(of: Self.self))"
     
     static var storageBackends: [AnyPrefsStorage] {
@@ -88,13 +89,18 @@ import Testing
     
     @Test(arguments: Self.storageBackends)
     func anyPrefsArrayArray(storage: AnyPrefsStorage) throws {
-        storage.setStorageValue(forKey: "foo", to: AnyPrefsArray([1, 2, "string", true]))
+        let array = [1, 2, "string", true].asAnyPrefsStorageValues
+        storage.setStorageValue(forKey: "foo", to: array)
         
-        let key = AnyAtomicPrefsKey<AnyPrefsArray>(key: "foo")
+        let key = AnyAtomicPrefsKey<[AnyPrefsStorageValue]>(key: "foo")
         
         let value = try #require(storage.value(forKey: key))
+        try #require(value.count == 4)
         
-        #expect(value == [1, 2, "string", true])
+        #expect(value[0].unwrapped as? Int == 1)
+        #expect(value[1].unwrapped as? Int == 2)
+        #expect(value[2].unwrapped as? String == "string")
+        #expect(value[3].unwrapped as? Bool == true)
     }
     
     // MARK: - Nested
@@ -112,13 +118,22 @@ import Testing
     
     @Test(arguments: Self.storageBackends)
     func nestedAnyPrefsArrayArray(storage: AnyPrefsStorage) throws {
-        storage.setStorageValue(forKey: "foo", to: [["a", 2] as AnyPrefsArray, [true] as AnyPrefsArray])
+        let array = [["a", 2].asAnyPrefsStorageValues, [true].asAnyPrefsStorageValues].asAnyPrefsStorageValues
+        storage.setStorageValue(forKey: "foo", to: array)
         
-        let key = AnyAtomicPrefsKey<[AnyPrefsArray]>(key: "foo")
+        let key = AnyAtomicPrefsKey<[AnyPrefsStorageValue]>(key: "foo")
         
         let value = try #require(storage.value(forKey: key))
+        try #require(value.count == 2)
         
-        #expect(value == [["a", 2], [true]])
+        let subArray1 = try #require(value[0].unwrapped as? [AnyPrefsStorageValue])
+        try #require(subArray1.count == 2)
+        #expect(subArray1[0].unwrapped as? String == "a")
+        #expect(subArray1[1].unwrapped as? Int == 2)
+        
+        let subArray2 = try #require(value[1].unwrapped as? [AnyPrefsStorageValue])
+        try #require(subArray2.count == 1)
+        #expect(subArray2[0].unwrapped as? Bool == true)
     }
 }
  
@@ -208,10 +223,10 @@ import Testing
     
     @Test(arguments: Self.storageBackends)
     func anyPrefsDictionaryArray(storage: AnyPrefsStorage) throws {
-        let valueDict: AnyPrefsDictionary = ["one": 1, "two": 2, "string": "string", "bool": true]
+        let valueDict: [String: AnyPrefsStorageValue] = ["one": 1, "two": 2, "string": "string", "bool": true].asAnyPrefsStorageValues
         storage.setStorageValue(forKey: "foo", to: valueDict)
         
-        let key = AnyAtomicPrefsKey<AnyPrefsDictionary>(key: "foo")
+        let key = AnyAtomicPrefsKey<[String: AnyPrefsStorageValue]>(key: "foo")
         
         let value = try #require(storage.value(forKey: key))
         
@@ -222,11 +237,11 @@ import Testing
     
     @Test(arguments: Self.storageBackends)
     func nestedAnyPrefsDictionaryArray(storage: AnyPrefsStorage) throws {
-        let valueDictInner: AnyPrefsDictionary = ["one": 1, "two": 2, "string": "string", "bool": true]
+        let valueDictInner: [String: AnyPrefsStorageValue] = ["one": 1, "two": 2, "string": "string", "bool": true].asAnyPrefsStorageValues
         let valueDictOuter = ["bar": valueDictInner]
         storage.setStorageValue(forKey: "foo", to: valueDictOuter)
         
-        let key = AnyAtomicPrefsKey<[String: AnyPrefsDictionary]>(key: "foo")
+        let key = AnyAtomicPrefsKey<[String: [String: AnyPrefsStorageValue]]>(key: "foo")
         
         let value = try #require(storage.value(forKey: key))
         

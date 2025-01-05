@@ -14,14 +14,6 @@ extension PrefsStorage {
     public func setValue<Key: PrefsKey>(forKey key: Key, to value: Key.Value?) {
         setStorageValue(forKey: key.key, to: key.encode(value))
     }
-    
-    public func setValue<Key: PrefsKey>(forKey key: Key, to value: Key.Value?) where Key.Value == AnyPrefsArray {
-        setStorageValue(forKey: key.key, to: key.encode(value))
-    }
-    
-    public func setValue<Key: PrefsKey>(forKey key: Key, to value: Key.Value?) where Key.Value == AnyPrefsDictionary {
-        setStorageValue(forKey: key.key, to: key.encode(value))
-    }
 }
 
 // MARK: - Get Storage Value
@@ -51,37 +43,19 @@ extension PrefsStorage {
         storageValue(forKey: key.key)
     }
     
-    public func storageValue<Key: PrefsKey>(forKey key: Key) -> Key.StorageValue? where Key.StorageValue == [any PrefsStorageValue] {
+    public func storageValue<Key: PrefsKey, Element: PrefsStorageValue>(forKey key: Key) -> [Element]? where Key.StorageValue == [Element]  {
         storageValue(forKey: key.key)
     }
     
-    public func storageValue<Key: PrefsKey>(forKey key: Key) -> Key.StorageValue? where Key.StorageValue == [String: any PrefsStorageValue] {
+    public func storageValue<Key: PrefsKey, Element: PrefsStorageValue>(forKey key: Key) -> [String: Element]? where Key.StorageValue == [String: Element] {
         storageValue(forKey: key.key)
     }
     
-    // MARK: - Additional type conversions
-    
-    public func storageValue<Key: PrefsKey, Element: PrefsStorageValue>(
-        forKey key: Key
-    ) -> Key.StorageValue? where Key.Value == [Element], Key.StorageValue == Key.Value {
+    public func storageValue<Key: PrefsKey>(forKey key: Key) -> Key.StorageValue? where Key.StorageValue == [AnyPrefsStorageValue] {
         storageValue(forKey: key.key)
     }
     
-    public func storageValue<Key: PrefsKey, Element: PrefsStorageValue>(
-        forKey key: Key
-    ) -> Key.StorageValue? where Key.Value == [String: Element], Key.StorageValue == Key.Value {
-        storageValue(forKey: key.key)
-    }
-    
-    public func storageValue<Key: PrefsKey>(
-        forKey key: Key
-    ) -> Key.StorageValue? where Key.Value == AnyPrefsArray, Key.StorageValue == Key.Value {
-        storageValue(forKey: key.key)
-    }
-    
-    public func storageValue<Key: PrefsKey>(
-        forKey key: Key
-    ) -> Key.StorageValue? where Key.Value == AnyPrefsDictionary, Key.StorageValue == Key.Value {
+    public func storageValue<Key: PrefsKey>(forKey key: Key) -> Key.StorageValue? where Key.StorageValue == [String: AnyPrefsStorageValue] {
         storageValue(forKey: key.key)
     }
 }
@@ -119,42 +93,22 @@ extension PrefsStorage {
         return key.decode(storageValue)
     }
     
-    public func value<Key: PrefsKey>(forKey key: Key) -> Key.Value? where Key.StorageValue == [any PrefsStorageValue] {
+    public func value<Key: PrefsKey, Element: PrefsStorageValue>(forKey key: Key) -> Key.Value? where Key.StorageValue == [Element] {
         guard let storageValue = storageValue(forKey: key) else { return nil }
         return key.decode(storageValue)
     }
     
-    public func value<Key: PrefsKey>(forKey key: Key) -> Key.Value? where Key.StorageValue == [String: any PrefsStorageValue] {
+    public func value<Key: PrefsKey, Element: PrefsStorageValue>(forKey key: Key) -> Key.Value? where Key.StorageValue == [String: Element] {
         guard let storageValue = storageValue(forKey: key) else { return nil }
         return key.decode(storageValue)
     }
     
-    // MARK: - Additional type conversions
-    
-    public func value<Key: PrefsKey, Element: PrefsStorageValue>(
-        forKey key: Key
-    ) -> Key.Value? where Key.Value == [Element], Key.StorageValue == Key.Value {
+    public func value<Key: PrefsKey>(forKey key: Key) -> Key.Value? where Key.StorageValue == [AnyPrefsStorageValue] {
         guard let storageValue = storageValue(forKey: key) else { return nil }
         return key.decode(storageValue)
     }
     
-    public func value<Key: PrefsKey, Element: PrefsStorageValue>(
-        forKey key: Key
-    ) -> Key.Value? where Key.Value == [String: Element], Key.StorageValue == Key.Value {
-        guard let storageValue = storageValue(forKey: key) else { return nil }
-        return key.decode(storageValue)
-    }
-    
-    public func value<Key: PrefsKey>(
-        forKey key: Key
-    ) -> Key.Value? where Key.Value == AnyPrefsArray, Key.StorageValue == Key.Value {
-        guard let storageValue = storageValue(forKey: key) else { return nil }
-        return key.decode(storageValue)
-    }
-    
-    public func value<Key: PrefsKey>(
-        forKey key: Key
-    ) -> Key.Value? where Key.Value == AnyPrefsDictionary, Key.StorageValue == Key.Value {
+    public func value<Key: PrefsKey>(forKey key: Key) -> Key.Value? where Key.StorageValue == [String: AnyPrefsStorageValue] {
         guard let storageValue = storageValue(forKey: key) else { return nil }
         return key.decode(storageValue)
     }

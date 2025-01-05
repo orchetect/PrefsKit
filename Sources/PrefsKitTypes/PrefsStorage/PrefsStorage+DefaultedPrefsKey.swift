@@ -35,37 +35,19 @@ extension PrefsStorage {
         key.decodeDefaulted(storageValue(forKey: key))
     }
     
-    public func value<Key: DefaultedPrefsKey>(forKey key: Key) -> Key.Value where Key.StorageValue == [any PrefsStorageValue] {
+    public func value<Key: DefaultedPrefsKey, Element: PrefsStorageValue>(forKey key: Key) -> Key.Value where Key.StorageValue == [Element] {
         key.decodeDefaulted(storageValue(forKey: key))
     }
     
-    public func value<Key: DefaultedPrefsKey>(forKey key: Key) -> Key.Value where Key.StorageValue == [String: any PrefsStorageValue] {
+    public func value<Key: DefaultedPrefsKey, Element: PrefsStorageValue>(forKey key: Key) -> Key.Value where Key.StorageValue == [String: Element] {
         key.decodeDefaulted(storageValue(forKey: key))
     }
     
-    // MARK: - Additional type conversions
-    
-    public func value<Key: DefaultedPrefsKey, Element: PrefsStorageValue>(
-        forKey key: Key
-    ) -> Key.Value where Key.Value == [Element], Key.StorageValue == Key.Value {
+    public func value<Key: DefaultedPrefsKey>(forKey key: Key) -> Key.Value where Key.StorageValue == [AnyPrefsStorageValue] {
         key.decodeDefaulted(storageValue(forKey: key))
     }
     
-    public func value<Key: DefaultedPrefsKey, Element: PrefsStorageValue>(
-        forKey key: Key
-    ) -> Key.Value where Key.Value == [String: Element], Key.StorageValue == Key.Value {
-        key.decodeDefaulted(storageValue(forKey: key))
-    }
-    
-    public func value<Key: DefaultedPrefsKey>(
-        forKey key: Key
-    ) -> Key.Value where Key.Value == AnyPrefsArray, Key.StorageValue == Key.Value {
-        key.decodeDefaulted(storageValue(forKey: key))
-    }
-    
-    public func value<Key: DefaultedPrefsKey>(
-        forKey key: Key
-    ) -> Key.Value where Key.Value == AnyPrefsDictionary, Key.StorageValue == Key.Value {
+    public func value<Key: DefaultedPrefsKey>(forKey key: Key) -> Key.Value where Key.StorageValue == [String: AnyPrefsStorageValue] {
         key.decodeDefaulted(storageValue(forKey: key))
     }
 }

@@ -22,14 +22,6 @@ extension AnyPrefsStorage {
         wrapped.setStorageValue(forKey: key, to: value)
     }
     
-    public func setStorageValue(forKey key: String, to value: [any PrefsStorageValue]?) {
-        wrapped.setStorageValue(forKey: key, to: value)
-    }
-    
-    public func setStorageValue(forKey key: String, to value: [String: any PrefsStorageValue]?) {
-        wrapped.setStorageValue(forKey: key, to: value)
-    }
-    
     // MARK: - Get
     
     public func storageValue(forKey key: String) -> Int? {
@@ -56,16 +48,6 @@ extension AnyPrefsStorage {
         wrapped.storageValue(forKey: key)
     }
     
-    public func storageValue(forKey key: String) -> [any PrefsStorageValue]? {
-        wrapped.storageValue(forKey: key)
-    }
-    
-    public func storageValue(forKey key: String) -> [String: any PrefsStorageValue]? {
-        wrapped.storageValue(forKey: key)
-    }
-    
-    // MARK: - Additional type conversions
-    
     public func storageValue<Element: PrefsStorageValue>(forKey key: String) -> [Element]? {
         wrapped.storageValue(forKey: key)
     }
@@ -74,11 +56,11 @@ extension AnyPrefsStorage {
         wrapped.storageValue(forKey: key)
     }
     
-    public func storageValue(forKey key: String) -> AnyPrefsArray? {
+    public func storageValue(forKey key: String) -> [AnyPrefsStorageValue]? {
         wrapped.storageValue(forKey: key)
     }
     
-    public func storageValue(forKey key: String) -> AnyPrefsDictionary? {
+    public func storageValue(forKey key: String) -> [String: AnyPrefsStorageValue]? {
         wrapped.storageValue(forKey: key)
     }
 }

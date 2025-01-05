@@ -6,67 +6,26 @@
 
 import Foundation
 
-extension Int: PrefsStorageValue {
-    public var prefsStorageValue: Self { self }
-    public var userDefaultsStorageValue: Any { self }
-}
+// MARK: - Atomic Types
 
-extension String: PrefsStorageValue {
-    public var prefsStorageValue: Self { self }
-    public var userDefaultsStorageValue: Any { self }
-}
+extension AnyPrefsStorageValue: PrefsStorageValue { }
 
-extension Bool: PrefsStorageValue {
-    public var prefsStorageValue: Self { self }
-    public var userDefaultsStorageValue: Any { self }
-}
+extension Int: PrefsStorageValue { }
 
-extension Double: PrefsStorageValue {
-    public var prefsStorageValue: Self { self }
-    public var userDefaultsStorageValue: Any { self }
-}
+extension String: PrefsStorageValue { }
 
-extension Float: PrefsStorageValue {
-    public var prefsStorageValue: Self { self }
-    public var userDefaultsStorageValue: Any { self }
-}
+extension Bool: PrefsStorageValue { }
 
-extension Data: PrefsStorageValue {
-    public var prefsStorageValue: Self { self }
-    public var userDefaultsStorageValue: Any { self }
-}
+extension Double: PrefsStorageValue { }
 
-extension AnyPrefsArray: PrefsStorageValue {
-    public var prefsStorageValue: [any PrefsStorageValue] {
-        content.map { $0.value }
-    }
+extension Float: PrefsStorageValue { }
 
-    public var userDefaultsStorageValue: Any {
-        content.map { $0.userDefaultsValue }
-    }
-}
+extension Data: PrefsStorageValue { }
 
-extension AnyPrefsDictionary: PrefsStorageValue {
-    public var prefsStorageValue: [String: any PrefsStorageValue] {
-        content.mapValues { $0.value }
-    }
+extension Array: PrefsStorageValue where Element: PrefsStorageValue { }
 
-    public var userDefaultsStorageValue: Any {
-        content.mapValues { $0.userDefaultsValue }
-    }
-}
+extension Dictionary: PrefsStorageValue where Key == String, Value: PrefsStorageValue { }
 
-extension Array: PrefsStorageValue where Element: PrefsStorageValue {
-    public var prefsStorageValue: AnyPrefsArray { AnyPrefsArray(self) }
-    public var userDefaultsStorageValue: Any { self }
-}
+// MARK: - Additional Types
 
-extension Dictionary: PrefsStorageValue where Key == String, Value: PrefsStorageValue {
-    public var prefsStorageValue: AnyPrefsDictionary { AnyPrefsDictionary(self) }
-    public var userDefaultsStorageValue: Any { self }
-}
-
-extension NSNumber: PrefsStorageValue {
-    public var prefsStorageValue: NSNumber { self }
-    public var userDefaultsStorageValue: Any { self }
-}
+extension NSNumber: PrefsStorageValue { }

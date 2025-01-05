@@ -43,7 +43,7 @@ struct ISO8601StringDatePrefsCodingTests {
         
         #expect(schema.date == nil)
         
-        schema.storage.setStorageValue<String>(forKey: "date", to: "2025-01-02T06:51:16Z")
+        schema.storage.setStorageValue(forKey: "date", to: "2025-01-02T06:51:16Z")
         #expect(schema.date == testDate)
     }
 }

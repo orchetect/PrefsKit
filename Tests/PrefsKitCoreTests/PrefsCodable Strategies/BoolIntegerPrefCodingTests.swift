@@ -67,11 +67,11 @@ struct BoolIntegerPrefCodingTests {
         #expect(schema.storage.storageValue<Int>(forKey: "boolIntStrict") == 0)
         #expect(schema.boolIntStrict == false)
         
-        schema.storage.setStorageValue<Int>(forKey: "boolIntStrict", to: 2) // > 1
+        schema.storage.setStorageValue(forKey: "boolIntStrict", to: 2) // > 1
         #expect(schema.storage.storageValue<Int>(forKey: "boolIntStrict") == 2)
         #expect(schema.boolIntStrict == nil)
         
-        schema.storage.setStorageValue<Int>(forKey: "boolIntStrict", to: -1) // < 0
+        schema.storage.setStorageValue(forKey: "boolIntStrict", to: -1) // < 0
         #expect(schema.storage.storageValue<Int>(forKey: "boolIntStrict") == -1)
         #expect(schema.boolIntStrict == nil)
     }
@@ -89,11 +89,11 @@ struct BoolIntegerPrefCodingTests {
         #expect(schema.storage.storageValue<Int>(forKey: "boolIntNearest") == 0)
         #expect(schema.boolIntNearest == false)
         
-        schema.storage.setStorageValue<Int>(forKey: "boolIntNearest", to: 2) // > 1
+        schema.storage.setStorageValue(forKey: "boolIntNearest", to: 2) // > 1
         #expect(schema.storage.storageValue<Int>(forKey: "boolIntNearest") == 2)
         #expect(schema.boolIntNearest == true)
         
-        schema.storage.setStorageValue<Int>(forKey: "boolIntNearest", to: -1) // < 0
+        schema.storage.setStorageValue(forKey: "boolIntNearest", to: -1) // < 0
         #expect(schema.storage.storageValue<Int>(forKey: "boolIntNearest") == -1)
         #expect(schema.boolIntNearest == false)
     }
@@ -113,11 +113,11 @@ struct BoolIntegerPrefCodingTests {
         #expect(schema.storage.storageValue<Int>(forKey: "boolIntStrictChained") == 0)
         #expect(schema.boolIntStrictChained == .no)
         
-        schema.storage.setStorageValue<Int>(forKey: "boolIntStrictChained", to: 2) // > 1
+        schema.storage.setStorageValue(forKey: "boolIntStrictChained", to: 2) // > 1
         #expect(schema.storage.storageValue<Int>(forKey: "boolIntStrictChained") == 2)
         #expect(schema.boolIntStrict == nil)
         
-        schema.storage.setStorageValue<Int>(forKey: "boolIntStrictChained", to: -1) // < 0
+        schema.storage.setStorageValue(forKey: "boolIntStrictChained", to: -1) // < 0
         #expect(schema.storage.storageValue<Int>(forKey: "boolIntStrictChained") == -1)
         #expect(schema.boolIntStrict == nil)
     }
@@ -135,11 +135,11 @@ struct BoolIntegerPrefCodingTests {
         #expect(schema.storage.storageValue<Int>(forKey: "boolIntNearestChained") == 0)
         #expect(schema.boolIntNearestChained == .no)
         
-        schema.storage.setStorageValue<Int>(forKey: "boolIntNearestChained", to: 2) // > 1
+        schema.storage.setStorageValue(forKey: "boolIntNearestChained", to: 2) // > 1
         #expect(schema.storage.storageValue<Int>(forKey: "boolIntNearestChained") == 2)
         #expect(schema.boolIntNearestChained == .yes)
         
-        schema.storage.setStorageValue<Int>(forKey: "boolIntNearestChained", to: -1) // < 0
+        schema.storage.setStorageValue(forKey: "boolIntNearestChained", to: -1) // < 0
         #expect(schema.storage.storageValue<Int>(forKey: "boolIntNearestChained") == -1)
         #expect(schema.boolIntNearestChained == .no)
     }
