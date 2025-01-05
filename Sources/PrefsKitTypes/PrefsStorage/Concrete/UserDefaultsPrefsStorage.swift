@@ -114,8 +114,8 @@ extension UserDefaultsPrefsStorage: PrefsStorage {
 
 // MARK: - Utilities
 
-/// Convert a raw array from UserDefaults to a one that conforms to ``PrefsStorageValue``.
 extension [Any] {
+    /// Convert a raw array from UserDefaults to a one that conforms to ``PrefsStorageValue``.
     func convertUserDefaultsToAnyPrefsArray() -> AnyPrefsArray {
         let converted = compactMap(AnyPrefsStorageValue.init(userDefaultsValue:))
         assert(converted.count == count)
@@ -123,8 +123,8 @@ extension [Any] {
     }
 }
 
-/// Convert a raw dictionary from UserDefaults to a one that conforms to ``PrefsStorageValue``.
 extension [String: Any] {
+    /// Convert a raw dictionary from UserDefaults to a one that conforms to ``PrefsStorageValue``.
     func convertUserDefaultsToAnyPrefDict() -> AnyPrefsDictionary {
         let converted = compactMapValues(AnyPrefsStorageValue.init(userDefaultsValue:))
         assert(converted.count == count)
