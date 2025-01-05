@@ -34,11 +34,13 @@ extension UserDefaultsPrefsStorage: PrefsStorage {
     }
     
     public func setStorageValue(forKey key: String, to value: [any PrefsStorageValue]?) {
-        suite.set(value, forKey: key)
+        let converted = value?.convertToUserDefaultsArray()
+        suite.set(converted, forKey: key)
     }
     
     public func setStorageValue(forKey key: String, to value: [String: any PrefsStorageValue]?) {
-        suite.set(value, forKey: key)
+        let converted = value?.convertToUserDefaultsDictionary()
+        suite.set(converted, forKey: key)
     }
     
     // MARK: - Get
@@ -82,19 +84,73 @@ extension UserDefaultsPrefsStorage: PrefsStorage {
     // MARK: - Additional type conversions
     
     public func storageValue<Element: PrefsStorageValue>(forKey key: String) -> [Element]? {
+        switch Element.self {
+        case is AnyPrefsArray.Type: // TODO: only accounts for [AnyPrefsArray] but not [[AnyPrefsArray]] etc.
+            let value: [AnyPrefsArray]? = storageValue(forKey: key)
+            return value as! [Element]?
+        case is AnyPrefsDictionary.Type: // TODO: only accounts for [AnyPrefsDictionary] but not [[AnyPrefsDictionary]] etc.
+            let value: [AnyPrefsDictionary]? = storageValue(forKey: key)
+            return value as! [Element]?
+        default:
+            guard let rawArray = suite.array(forKey: key) else { return nil }
+            let typedArray = rawArray
+                .compactMap { $0 as? Element }
+            assert(typedArray.count == rawArray.count)
+            return typedArray
+        }
+    }
+    
+    public func storageValue(forKey key: String) -> [AnyPrefsArray]? {
         guard let rawArray = suite.array(forKey: key) else { return nil }
         let typedArray = rawArray
-            .compactMap { $0 as? Element }
-        assert(typedArray.count == rawArray.count)
-        return typedArray
+            .compactMap { $0 as? [any PrefsStorageValue] }
+        let mappedArray = typedArray.map { AnyPrefsArray($0) }
+        assert(mappedArray.count == rawArray.count)
+        return mappedArray
+    }
+    
+    public func storageValue(forKey key: String) -> [AnyPrefsDictionary]? {
+        guard let rawArray = suite.array(forKey: key) else { return nil }
+        let typedArray = rawArray
+            .compactMap { $0 as? [String: any PrefsStorageValue] }
+        let mappedArray = typedArray.map { AnyPrefsDictionary($0) }
+        assert(mappedArray.count == rawArray.count)
+        return mappedArray
     }
     
     public func storageValue<Element: PrefsStorageValue>(forKey key: String) -> [String: Element]? {
+        switch Element.self {
+        case is AnyPrefsArray.Type: // TODO: only accounts for [String: AnyPrefsArray] but not [String: [AnyPrefsArray]] etc.
+            let value: [String: AnyPrefsArray]? = storageValue(forKey: key)
+            return value as! [String: Element]?
+        case is AnyPrefsDictionary.Type: // TODO: only accounts for [AnyPrefsDictionary] but not [[AnyPrefsDictionary]] etc.
+            let value: [String: AnyPrefsDictionary]? = storageValue(forKey: key)
+            return value as! [String: Element]?
+        default:
+            guard let rawDict = suite.dictionary(forKey: key) else { return nil }
+            let typedDict = rawDict
+                .compactMapValues { $0 as? Element }
+            assert(typedDict.count == rawDict.count)
+            return typedDict
+        }
+    }
+    
+    public func storageValue(forKey key: String) -> [String: AnyPrefsArray]? {
         guard let rawDict = suite.dictionary(forKey: key) else { return nil }
         let typedDict = rawDict
-            .compactMapValues { $0 as? Element }
-        assert(typedDict.count == rawDict.count)
-        return typedDict
+            .compactMapValues { $0 as? [any PrefsStorageValue] }
+        let mappedDict = typedDict.mapValues { AnyPrefsArray($0) }
+        assert(mappedDict.count == rawDict.count)
+        return mappedDict
+    }
+    
+    public func storageValue(forKey key: String) -> [String: AnyPrefsDictionary]? {
+        guard let rawDict = suite.dictionary(forKey: key) else { return nil }
+        let typedDict = rawDict
+            .compactMapValues { $0 as? [String: any PrefsStorageValue] }
+        let mappedDict = typedDict.mapValues { AnyPrefsDictionary($0) }
+        assert(mappedDict.count == rawDict.count)
+        return mappedDict
     }
     
     public func storageValue(forKey key: String) -> AnyPrefsArray? {
@@ -129,5 +185,27 @@ extension [String: Any] {
         let converted = compactMapValues(AnyPrefsStorageValue.init(userDefaultsValue:))
         assert(converted.count == count)
         return AnyPrefsDictionary(converted)
+    }
+}
+
+extension [any PrefsStorageValue] {
+    /// Convert an array that potentially has a mix of atomic prefs values (including ``AnyPrefsArray`` or
+    /// ``AnyPrefsDictionary``) to one compatible with storage in UserDefaults.
+    func convertToUserDefaultsArray() -> [Any] {
+        let converted = compactMap(AnyPrefsStorageValue.init(_:))
+            .map(\.userDefaultsValue)
+        assert(converted.count == count)
+        return converted
+    }
+}
+
+extension [String: any PrefsStorageValue] {
+    /// Convert a dictionary that potentially has a mix of atomic prefs values (including ``AnyPrefsArray`` or
+    /// ``AnyPrefsDictionary``) to one compatible with storage in UserDefaults.
+    func convertToUserDefaultsDictionary() -> [String: Any] {
+        let converted = compactMapValues(AnyPrefsStorageValue.init(_:))
+            .mapValues(\.userDefaultsValue)
+        assert(converted.count == count)
+        return converted
     }
 }

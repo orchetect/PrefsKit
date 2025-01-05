@@ -107,9 +107,9 @@ public enum AnyPrefsStorageValue {
         case let .data(data):
             data
         case let .array(anyPrefsArray):
-            anyPrefsArray.prefsStorageValue
+            anyPrefsArray.userDefaultsStorageValue
         case let .dictionary(anyPrefsDictionary):
-            anyPrefsDictionary.prefsStorageValue
+            anyPrefsDictionary.userDefaultsStorageValue
         }
     }
 }

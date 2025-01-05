@@ -37,17 +37,67 @@ public protocol PrefsStorage: AnyObject where Self: Sendable {
 
 extension PrefsStorage {
     public func storageValue<Element: PrefsStorageValue>(forKey key: String) -> [Element]? {
+        switch Element.self {
+        case is AnyPrefsArray.Type: // TODO: only accounts for [AnyPrefsArray] but not [[AnyPrefsArray]] etc.
+            let value: [AnyPrefsArray]? = storageValue(forKey: key)
+            return value as! [Element]?
+        case is AnyPrefsDictionary.Type: // TODO: only accounts for [AnyPrefsDictionary] but not [[AnyPrefsDictionary]] etc.
+            let value: [AnyPrefsDictionary]? = storageValue(forKey: key)
+            return value as! [Element]?
+        default:
+            guard let storageValue: [any PrefsStorageValue] = storageValue(forKey: key) else { return nil }
+            let cast = storageValue.compactMap { $0 as? Element }
+            assert(storageValue.count == cast.count)
+            return cast
+        }
+    }
+    
+    public func storageValue(forKey key: String) -> [AnyPrefsArray]? {
         guard let storageValue: [any PrefsStorageValue] = storageValue(forKey: key) else { return nil }
-        let cast = storageValue.compactMap { $0 as? Element }
-        assert(storageValue.count == cast.count)
-        return cast
+        let cast = storageValue.compactMap { $0 as? [any PrefsStorageValue] }
+        let mapped = cast.map { AnyPrefsArray($0) }
+        assert(storageValue.count == mapped.count)
+        return mapped
+    }
+    
+    public func storageValue(forKey key: String) -> [AnyPrefsDictionary]? {
+        guard let storageValue: [any PrefsStorageValue] = storageValue(forKey: key) else { return nil }
+        let cast = storageValue.compactMap { $0 as? [String: any PrefsStorageValue] }
+        let mapped = cast.map { AnyPrefsDictionary($0) }
+        assert(storageValue.count == mapped.count)
+        return mapped
     }
     
     public func storageValue<Element: PrefsStorageValue>(forKey key: String) -> [String: Element]? {
+        switch Element.self {
+        case is AnyPrefsArray.Type: // TODO: only accounts for [String: AnyPrefsArray] but not [String: [AnyPrefsArray]] etc.
+            let value: [String: AnyPrefsArray]? = storageValue(forKey: key)
+            return value as! [String: Element]?
+        case is AnyPrefsDictionary.Type: // TODO: only accounts for [AnyPrefsDictionary] but not [[AnyPrefsDictionary]] etc.
+            let value: [String: AnyPrefsDictionary]? = storageValue(forKey: key)
+            return value as! [String: Element]?
+        default:
+            guard let storageValue: [String: any PrefsStorageValue] = storageValue(forKey: key) else { return nil }
+            let cast = storageValue.compactMapValues { $0 as? Element }
+            assert(storageValue.count == cast.count)
+            return cast
+        }
+    }
+    
+    public func storageValue(forKey key: String) -> [String: AnyPrefsArray]? {
         guard let storageValue: [String: any PrefsStorageValue] = storageValue(forKey: key) else { return nil }
-        let cast = storageValue.compactMapValues { $0 as? Element }
-        assert(storageValue.count == cast.count)
-        return cast
+        let cast = storageValue.compactMapValues { $0 as? [any PrefsStorageValue] }
+        let mapped = cast.compactMapValues { AnyPrefsArray($0) }
+        assert(storageValue.count == mapped.count)
+        return mapped
+    }
+    
+    public func storageValue(forKey key: String) -> [String: AnyPrefsDictionary]? {
+        guard let storageValue: [String: any PrefsStorageValue] = storageValue(forKey: key) else { return nil }
+        let cast = storageValue.compactMapValues { $0 as? [String: any PrefsStorageValue] }
+        let mapped = cast.compactMapValues { AnyPrefsDictionary($0) }
+        assert(storageValue.count == mapped.count)
+        return mapped
     }
     
     public func storageValue(forKey key: String) -> AnyPrefsArray? {

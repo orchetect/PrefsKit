@@ -57,12 +57,12 @@ extension AnyPrefsDictionary: PrefsStorageValue {
 }
 
 extension Array: PrefsStorageValue where Element: PrefsStorageValue {
-    public var prefsStorageValue: Self { self }
+    public var prefsStorageValue: AnyPrefsArray { AnyPrefsArray(self) }
     public var userDefaultsStorageValue: Any { self }
 }
 
 extension Dictionary: PrefsStorageValue where Key == String, Value: PrefsStorageValue {
-    public var prefsStorageValue: Self { self }
+    public var prefsStorageValue: AnyPrefsDictionary { AnyPrefsDictionary(self) }
     public var userDefaultsStorageValue: Any { self }
 }
 
