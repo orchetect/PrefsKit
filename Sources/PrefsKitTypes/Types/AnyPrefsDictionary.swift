@@ -8,7 +8,7 @@
 public struct AnyPrefsDictionary {
     public var content: [String: AnyPrefsStorageValue]
     
-    @inlinable
+    @inlinable @_disfavoredOverload
     public init(_ content: [String: AnyPrefsStorageValue]) {
         self.content = content
     }

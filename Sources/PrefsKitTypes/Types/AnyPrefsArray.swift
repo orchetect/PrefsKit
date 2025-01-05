@@ -8,7 +8,7 @@
 public struct AnyPrefsArray {
     public var content: [AnyPrefsStorageValue]
     
-    @inlinable
+    @inlinable @_disfavoredOverload
     public init(_ content: [AnyPrefsStorageValue]) {
         self.content = content
     }
