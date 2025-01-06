@@ -20,18 +20,7 @@ extension UserDefaultsPrefsStorage: PrefsStorage {
     // MARK: - Set
     
     public func setStorageValue<StorageValue: PrefsStorageValue>(forKey key: String, to value: StorageValue?) {
-        switch value {
-        case let v as AnyPrefsStorageValue?:
-            suite.set(v?.unwrappedForUserDefaults, forKey: key)
-        case let v as [AnyPrefsStorageValue]?:
-            suite.set(v?.unwrappedForUserDefaults, forKey: key)
-        case let v as [String: AnyPrefsStorageValue]?:
-            suite.set(v?.unwrappedForUserDefaults, forKey: key)
-        case let v as [String: [String: AnyPrefsStorageValue]]?:
-            suite.set(v?.mapValues(\.unwrappedForUserDefaults), forKey: key)
-        default:
-            suite.set(value, forKey: key)
-        }
+        suite.set(value, forKey: key)
     }
     
     // MARK: - Get
@@ -62,25 +51,42 @@ extension UserDefaultsPrefsStorage: PrefsStorage {
     
     public func storageValue<Element: PrefsStorageValue>(forKey key: String) -> [Element]? {
         guard let rawArray = suite.array(forKey: key) else { return nil }
-        let typedArray = rawArray as? [Element]
-        return typedArray
+        if let typedArray = rawArray as? [Element] {
+            return typedArray
+        } else if let typedArray = rawArray.map(convert(userDefaultsValue:)) as? [Element] {
+            return typedArray
+        } else {
+            return nil
+        }
     }
     
     public func storageValue<Element: PrefsStorageValue>(forKey key: String) -> [String: Element]? {
         guard let rawDict = suite.dictionary(forKey: key) else { return nil }
-        let typedDict = rawDict as? [String: Element]
-        return typedDict
+        if let typedDict = rawDict as? [String: Element] {
+            return typedDict
+        } else if let typedDict = rawDict.mapValues(convert(userDefaultsValue:)) as? [String: Element] {
+            return typedDict
+        } else {
+            return nil
+        }
     }
     
-    public func storageValue(forKey key: String) -> [AnyPrefsStorageValue]? {
+    public func storageValue(forKey key: String) -> [Any]? {
         guard let rawArray = suite.array(forKey: key) else { return nil }
-        let typedArray = rawArray.convertUserDefaultsToAnyPrefsArray(allowHomogenousCasting: false)
+        let typedArray = rawArray.map(convert(userDefaultsValue:))
         return typedArray
     }
     
-    public func storageValue(forKey key: String) -> [String: AnyPrefsStorageValue]? {
+    public func storageValue(forKey key: String) -> [String : Any]? {
         guard let rawDict = suite.dictionary(forKey: key) else { return nil }
-        let typedDict = rawDict.convertUserDefaultsToAnyPrefDict(allowHomogenousCasting: false)
+        let typedDict = rawDict.mapValues(convert(userDefaultsValue:))
         return typedDict
+    }
+}
+
+extension UserDefaultsPrefsStorage: _PrefsStorage {
+    @_disfavoredOverload
+    package func setStorageValue(forKey key: String, to value: Any) {
+        suite.set(value, forKey: key)
     }
 }

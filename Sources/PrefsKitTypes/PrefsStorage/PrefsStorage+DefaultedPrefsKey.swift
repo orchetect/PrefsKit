@@ -42,12 +42,4 @@ extension PrefsStorage {
     public func value<Key: DefaultedPrefsKey, Element: PrefsStorageValue>(forKey key: Key) -> Key.Value where Key.StorageValue == [String: Element] {
         key.decodeDefaulted(storageValue(forKey: key))
     }
-    
-    public func value<Key: DefaultedPrefsKey>(forKey key: Key) -> Key.Value where Key.StorageValue == [AnyPrefsStorageValue] {
-        key.decodeDefaulted(storageValue(forKey: key))
-    }
-    
-    public func value<Key: DefaultedPrefsKey>(forKey key: Key) -> Key.Value where Key.StorageValue == [String: AnyPrefsStorageValue] {
-        key.decodeDefaulted(storageValue(forKey: key))
-    }
 }

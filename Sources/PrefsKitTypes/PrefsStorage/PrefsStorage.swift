@@ -23,6 +23,11 @@ public protocol PrefsStorage: AnyObject where Self: Sendable {
     func storageValue(forKey key: String) -> Data?
     func storageValue<Element: PrefsStorageValue>(forKey key: String) -> [Element]?
     func storageValue<Element: PrefsStorageValue>(forKey key: String) -> [String: Element]?
-    func storageValue(forKey key: String) -> [AnyPrefsStorageValue]?
-    func storageValue(forKey key: String) -> [String: AnyPrefsStorageValue]?
+    func storageValue(forKey key: String) -> [Any]?
+    func storageValue(forKey key: String) -> [String: Any]?
+}
+
+package protocol _PrefsStorage: PrefsStorage {
+    @_disfavoredOverload
+    func setStorageValue(forKey key: String, to value: Any)
 }

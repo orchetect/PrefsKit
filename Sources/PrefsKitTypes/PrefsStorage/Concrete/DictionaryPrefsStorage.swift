@@ -9,13 +9,11 @@ import Foundation
 /// Dictionary-backed ``PrefsStorage`` with internally-synchronized dictionary access.
 open class DictionaryPrefsStorage {
     @SynchronizedLock
-    var storage: [String: any PrefsStorageValue]
+    var storage: [String: Any]
     
-    /// Local dictionary storage in memory.
-    public var root: [String: any PrefsStorageValue] {
-        get { storage }
-        _modify { yield &storage }
-        set { storage = newValue }
+    /// Read-only access to local dictionary storage in memory.
+    public var root: [String: Any] {
+        storage
     }
     
     public init(root: [String: any PrefsStorageValue] = [:]) {
@@ -29,55 +27,55 @@ extension DictionaryPrefsStorage: PrefsStorage {
     // MARK: - Set
     
     public func setStorageValue<StorageValue: PrefsStorageValue>(forKey key: String, to value: StorageValue?) {
-        switch value {
-        case let v as AnyPrefsStorageValue?:
-            root[key] = v?.unwrapped
-        default:
-            root[key] = value
-        }
+        storage[key] = value
     }
     
     // MARK: - Get
     
     public func storageValue(forKey key: String) -> Int? {
-        root[key] as? Int
+        storage[key] as? Int
     }
     
     public func storageValue(forKey key: String) -> String? {
-        root[key] as? String
+        storage[key] as? String
     }
     
     public func storageValue(forKey key: String) -> Bool? {
-        root[key] as? Bool
+        storage[key] as? Bool
     }
     
     public func storageValue(forKey key: String) -> Double? {
-        root[key] as? Double
+        storage[key] as? Double
     }
     
     public func storageValue(forKey key: String) -> Float? {
-        root[key] as? Float
+        storage[key] as? Float
     }
     
     public func storageValue(forKey key: String) -> Data? {
-        root[key] as? Data
+        storage[key] as? Data
     }
     
     public func storageValue<Element: PrefsStorageValue>(forKey key: String) -> [Element]? {
-        root[key] as? [Element]
+        storage[key] as? [Element]
     }
     
     public func storageValue<Element: PrefsStorageValue>(forKey key: String) -> [String: Element]? {
-        root[key] as? [String: Element]
+        storage[key] as? [String: Element]
     }
     
-    public func storageValue(forKey key: String) -> [AnyPrefsStorageValue]? {
-        (root[key] as? [Any])?
-            .convertUserDefaultsToAnyPrefsArray(allowHomogenousCasting: false)
+    public func storageValue(forKey key: String) -> [Any]? {
+        storage[key] as? [Any]
     }
     
-    public func storageValue(forKey key: String) -> [String: AnyPrefsStorageValue]? {
-        (root[key] as? [String: Any])?
-            .convertUserDefaultsToAnyPrefDict(allowHomogenousCasting: false)
+    public func storageValue(forKey key: String) -> [String: Any]? {
+        storage[key] as? [String: Any]
+    }
+}
+
+extension DictionaryPrefsStorage: _PrefsStorage {
+    @_disfavoredOverload
+    package func setStorageValue(forKey key: String, to value: Any) {
+        storage[key] = value
     }
 }

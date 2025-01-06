@@ -11,12 +11,12 @@ import Foundation
 extension DictionaryPrefsStorage {
     /// Replaces the local ``root`` dictionary with the contents of a plist file.
     public func load(plist url: URL) throws {
-        root = try .init(plist: url)
+        storage = try .init(plist: url)
     }
     
     /// Replaces the local ``root`` dictionary with the raw contents of a plist file.
     public func load(plist data: Data) throws {
-        root = try .init(plist: data)
+        storage = try .init(plist: data)
     }
     
     /// Saves the local ``root`` dictionary to a plist file.
@@ -32,7 +32,7 @@ extension DictionaryPrefsStorage {
 
 // MARK: - Utilities
 
-extension [String: any PrefsStorageValue] {
+extension [String: Any] {
     public init(plist url: URL) throws {
         let fileData = try Data(contentsOf: url)
         try self.init(plist: fileData)
@@ -53,7 +53,7 @@ extension [String: any PrefsStorageValue] {
     }
 }
 
-func convertToPrefDict(plist nsDict: NSDictionary) throws -> [String: any PrefsStorageValue] {
+func convertToPrefDict(plist nsDict: NSDictionary) throws -> [String: Any] {
     let dict: [String: Any] = try nsDict.reduce(into: [:]) { base, pair in
         guard let key = pair.key as? String
         else { throw CocoaError(.coderReadCorrupt) }
@@ -79,11 +79,11 @@ func convertToPrefDict(plist nsDict: NSDictionary) throws -> [String: any PrefsS
     case let v as [String: Double]: return v
     case let v as [String: Float]: return v
     case let v as [String: Data]: return v
-    default: return dict.convertUserDefaultsToAnyPrefDict()
+    default: return dict
     }
 }
 
-func convertToPrefArray(plist nsArray: NSArray) throws -> [any PrefsStorageValue] {
+func convertToPrefArray(plist nsArray: NSArray) throws -> [Any] {
     let array: [Any] = try nsArray.reduce(into: []) { base, element in
         switch element {
         case let v as String: base.append(v)
@@ -106,6 +106,6 @@ func convertToPrefArray(plist nsArray: NSArray) throws -> [any PrefsStorageValue
     case let v as [Double]: return v
     case let v as [Float]: return v
     case let v as [Data]: return v
-    default: return array.convertUserDefaultsToAnyPrefsArray()
+    default: return array
     }
 }

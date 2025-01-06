@@ -8,8 +8,6 @@ import Foundation
 
 // MARK: - Atomic Types
 
-extension AnyPrefsStorageValue: PrefsStorageValue { }
-
 extension Int: PrefsStorageValue { }
 
 extension String: PrefsStorageValue { }

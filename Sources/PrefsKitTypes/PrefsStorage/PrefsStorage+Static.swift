@@ -6,16 +6,6 @@
 
 import Foundation
 
-// We could offer `.any()` but it's a little confusing.
-// Just let users construct an instance of `AnyPrefsStorage` when they want to.
-//
-// extension PrefsStorage where Self == AnyPrefsStorage {
-//     /// Type-erased box containing an instance of a concrete class conforming to ``PrefsStorage``.
-//     public static func any(_ storage: any PrefsStorage) -> AnyPrefsStorage {
-//         AnyPrefsStorage(storage)
-//     }
-// }
-
 extension PrefsStorage where Self == DictionaryPrefsStorage {
     /// Dictionary prefs storage.
     public static var dictionary: DictionaryPrefsStorage {

@@ -50,14 +50,6 @@ extension PrefsStorage {
     public func storageValue<Key: PrefsKey, Element: PrefsStorageValue>(forKey key: Key) -> [String: Element]? where Key.StorageValue == [String: Element] {
         storageValue(forKey: key.key)
     }
-    
-    public func storageValue<Key: PrefsKey>(forKey key: Key) -> Key.StorageValue? where Key.StorageValue == [AnyPrefsStorageValue] {
-        storageValue(forKey: key.key)
-    }
-    
-    public func storageValue<Key: PrefsKey>(forKey key: Key) -> Key.StorageValue? where Key.StorageValue == [String: AnyPrefsStorageValue] {
-        storageValue(forKey: key.key)
-    }
 }
 
 // MARK: - Get Value
@@ -99,16 +91,6 @@ extension PrefsStorage {
     }
     
     public func value<Key: PrefsKey, Element: PrefsStorageValue>(forKey key: Key) -> Key.Value? where Key.StorageValue == [String: Element] {
-        guard let storageValue = storageValue(forKey: key) else { return nil }
-        return key.decode(storageValue)
-    }
-    
-    public func value<Key: PrefsKey>(forKey key: Key) -> Key.Value? where Key.StorageValue == [AnyPrefsStorageValue] {
-        guard let storageValue = storageValue(forKey: key) else { return nil }
-        return key.decode(storageValue)
-    }
-    
-    public func value<Key: PrefsKey>(forKey key: Key) -> Key.Value? where Key.StorageValue == [String: AnyPrefsStorageValue] {
         guard let storageValue = storageValue(forKey: key) else { return nil }
         return key.decode(storageValue)
     }
