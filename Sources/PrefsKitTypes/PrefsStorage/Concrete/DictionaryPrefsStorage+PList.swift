@@ -20,8 +20,8 @@ extension DictionaryPrefsStorage {
     }
     
     /// Saves the local ``root`` dictionary to a plist file.
-    public func save(plist url: URL) throws {
-        try root.plistData().write(to: url)
+    public func save(plist url: URL, format: PropertyListSerialization.PropertyListFormat = .xml) throws {
+        try plistData(format: format).write(to: url)
     }
     
     /// Returns the local ``root`` dictionary as raw plist file data.
