@@ -100,7 +100,7 @@ struct PrefsStorageDictionaryTests {
     }
     
     @Test(arguments: Self.storageBackends)
-    func anyPrefsDictionaryArray(storage: AnyPrefsStorage) async throws {
+    func anyDictionaryArray(storage: AnyPrefsStorage) async throws {
         let valueDict: [String: Any] = ["one": 1, "two": 2, "string": "string", "bool": true]
         storage.setStorageValue(forKey: "foo", to: valueDict)
         
@@ -118,7 +118,7 @@ struct PrefsStorageDictionaryTests {
     // MARK: - Nested
     
     @Test(arguments: Self.storageBackends)
-    func nestedAnyPrefsDictionaryArray(storage: AnyPrefsStorage) async throws {
+    func nestedAnyDictionaryArray(storage: AnyPrefsStorage) async throws {
         let valueDictInner: [String: Any] = ["one": 1, "two": 2, "string": "string", "bool": true]
         let valueDictOuter = ["bar": valueDictInner]
         storage.setStorageValue(forKey: "foo", to: valueDictOuter)

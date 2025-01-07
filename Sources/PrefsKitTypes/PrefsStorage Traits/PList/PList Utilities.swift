@@ -1,59 +1,37 @@
 //
-//  DictionaryPrefsStorage+PList.swift
+//  PList Utilities.swift
 //  PrefsKit • https://github.com/orchetect/PrefsKit
 //  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 import Foundation
 
-// MARK: - PList Interchange
-
-extension DictionaryPrefsStorage {
-    /// Replaces the local ``root`` dictionary with the contents of a plist file.
-    public func load(plist url: URL) throws {
-        storage = try .init(plist: url)
-    }
-    
-    /// Replaces the local ``root`` dictionary with the raw contents of a plist file.
-    public func load(plist data: Data) throws {
-        storage = try .init(plist: data)
-    }
-    
-    /// Saves the local ``root`` dictionary to a plist file.
-    public func save(plist url: URL, format: PropertyListSerialization.PropertyListFormat = .xml) throws {
-        try plistData(format: format).write(to: url)
-    }
-    
-    /// Returns the local ``root`` dictionary as raw plist file data.
-    public func plistData(format: PropertyListSerialization.PropertyListFormat = .xml) throws -> Data {
-        try root.plistData(format: format)
-    }
-}
-
-// MARK: - Utilities
-
 extension [String: Any] {
-    public init(plist url: URL) throws {
+    package init(plist url: URL) throws {
         let fileData = try Data(contentsOf: url)
         try self.init(plist: fileData)
     }
     
-    public init(plist data: Data) throws {
+    package init(plist data: Data) throws {
         var fmt: PropertyListSerialization.PropertyListFormat = .xml // will be overwritten
         let dict = try PropertyListSerialization.propertyList(from: data, format: &fmt)
         guard let nsDict = dict as? NSDictionary else {
             throw CocoaError(.coderReadCorrupt)
         }
-        let mappedDict = try convertToPrefDict(plist: nsDict)
+        try self.init(plist: nsDict)
+    }
+    
+    package init(plist dictionary: NSDictionary) throws {
+        let mappedDict = try convertToPrefDict(plist: dictionary)
         self = mappedDict
     }
     
-    public func plistData(format: PropertyListSerialization.PropertyListFormat = .xml) throws -> Data {
+    package func plistData(format: PropertyListSerialization.PropertyListFormat = .xml) throws -> Data {
         try PropertyListSerialization.data(fromPropertyList: self, format: format, options: .init())
     }
 }
 
-func convertToPrefDict(plist nsDict: NSDictionary) throws -> [String: Any] {
+package func convertToPrefDict(plist nsDict: NSDictionary) throws -> [String: Any] {
     let dict: [String: Any] = try nsDict.reduce(into: [:]) { base, pair in
         guard let key = pair.key as? String
         else { throw CocoaError(.coderReadCorrupt) }
@@ -83,7 +61,7 @@ func convertToPrefDict(plist nsDict: NSDictionary) throws -> [String: Any] {
     }
 }
 
-func convertToPrefArray(plist nsArray: NSArray) throws -> [Any] {
+package func convertToPrefArray(plist nsArray: NSArray) throws -> [Any] {
     let array: [Any] = try nsArray.reduce(into: []) { base, element in
         switch element {
         case let v as String: base.append(v)

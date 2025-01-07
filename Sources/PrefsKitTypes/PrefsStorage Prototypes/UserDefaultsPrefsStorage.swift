@@ -6,7 +6,7 @@
 
 import Foundation
 
-open class UserDefaultsPrefsStorage {
+public final class UserDefaultsPrefsStorage {
     public let suite: UserDefaults
     
     public init(suite: UserDefaults = .standard) {
@@ -53,7 +53,7 @@ extension UserDefaultsPrefsStorage: PrefsStorage {
         guard let rawArray = suite.array(forKey: key) else { return nil }
         if let typedArray = rawArray as? [Element] {
             return typedArray
-        } else if let typedArray = rawArray.map(convert(userDefaultsValue:)) as? [Element] {
+        } else if let typedArray = rawArray.map(UserDefaults.convertToPrefsStorageCompatible(value:)) as? [Element] {
             return typedArray
         } else {
             return nil
@@ -64,7 +64,7 @@ extension UserDefaultsPrefsStorage: PrefsStorage {
         guard let rawDict = suite.dictionary(forKey: key) else { return nil }
         if let typedDict = rawDict as? [String: Element] {
             return typedDict
-        } else if let typedDict = rawDict.mapValues(convert(userDefaultsValue:)) as? [String: Element] {
+        } else if let typedDict = rawDict.mapValues(UserDefaults.convertToPrefsStorageCompatible(value:)) as? [String: Element] {
             return typedDict
         } else {
             return nil
@@ -73,13 +73,13 @@ extension UserDefaultsPrefsStorage: PrefsStorage {
     
     public func storageValue(forKey key: String) -> [Any]? {
         guard let rawArray = suite.array(forKey: key) else { return nil }
-        let typedArray = rawArray.map(convert(userDefaultsValue:))
+        let typedArray = rawArray.map(UserDefaults.convertToPrefsStorageCompatible(value:))
         return typedArray
     }
     
     public func storageValue(forKey key: String) -> [String : Any]? {
         guard let rawDict = suite.dictionary(forKey: key) else { return nil }
-        let typedDict = rawDict.mapValues(convert(userDefaultsValue:))
+        let typedDict = rawDict.mapValues(UserDefaults.convertToPrefsStorageCompatible(value:))
         return typedDict
     }
 }

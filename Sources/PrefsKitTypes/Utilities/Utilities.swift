@@ -58,3 +58,20 @@ extension UserDefaults {
         object(forKey: key) != nil
     }
 }
+
+// MARK: - Package Utilities
+
+extension UserDefaults {
+    func removeAllKeys() {
+        let keys = UserDefaults.standard.dictionaryRepresentation().keys
+        for key in keys {
+            removeObject(forKey: key)
+        }
+    }
+    
+    func merge(_ contents: [String: Any]) {
+        for element in contents {
+            set(element.value, forKey: element.key)
+        }
+    }
+}

@@ -123,7 +123,7 @@ struct PrefsStorageArrayTests {
     }
     
     @Test(arguments: Self.storageBackends)
-    func nestedAnyPrefsArrayArray(storage: AnyPrefsStorage) async throws {
+    func nestedAnyArray(storage: AnyPrefsStorage) async throws {
         let array: [Any] = [["a", 2], [true]]
         storage.setStorageValue(forKey: "foo", to: array)
         
