@@ -81,6 +81,10 @@ extension DictionaryPrefsStorage: PrefsStorage {
         storage[key] as? Data
     }
     
+    public func storageValue(forKey key: String) -> Date? {
+        storage[key] as? Date
+    }
+    
     public func storageValue<Element: PrefsStorageValue>(forKey key: String) -> [Element]? {
         storage[key] as? [Element]
     }

@@ -48,6 +48,10 @@ extension AnyPrefsStorage {
         wrapped.storageValue(forKey: key)
     }
     
+    public func storageValue(forKey key: String) -> Date? {
+        wrapped.storageValue(forKey: key)
+    }
+    
     public func storageValue<Element: PrefsStorageValue>(forKey key: String) -> [Element]? {
         wrapped.storageValue(forKey: key)
     }

@@ -20,6 +20,8 @@ extension Float: PrefsStorageValue { }
 
 extension Data: PrefsStorageValue { }
 
+extension Date: PrefsStorageValue { }
+
 extension Array: PrefsStorageValue where Element: PrefsStorageValue { }
 
 extension Dictionary: PrefsStorageValue where Key == String, Value: PrefsStorageValue { }

@@ -44,6 +44,10 @@ extension PrefsStorage {
         storageValue(forKey: key)
     }
     
+    public func storageValue<Coding: PrefsCodable>(forKey key: String, using coding: Coding) -> Coding.StorageValue? where Coding.StorageValue == Date {
+        storageValue(forKey: key)
+    }
+    
     public func storageValue<Coding: PrefsCodable, Element: PrefsStorageValue>(forKey key: String, using coding: Coding) -> Coding.StorageValue? where Coding.StorageValue == [Element] {
         storageValue(forKey: key)
     }
@@ -82,6 +86,11 @@ extension PrefsStorage {
     }
     
     public func value<Coding: PrefsCodable>(forKey key: String, using coding: Coding) -> Coding.Value? where Coding.StorageValue == Data {
+        guard let storageValue = storageValue(forKey: key, using: coding) else { return nil }
+        return coding.decode(prefsValue: storageValue)
+    }
+    
+    public func value<Coding: PrefsCodable>(forKey key: String, using coding: Coding) -> Coding.Value? where Coding.StorageValue == Date {
         guard let storageValue = storageValue(forKey: key, using: coding) else { return nil }
         return coding.decode(prefsValue: storageValue)
     }

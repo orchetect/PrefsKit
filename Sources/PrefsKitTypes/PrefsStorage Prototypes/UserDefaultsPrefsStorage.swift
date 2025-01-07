@@ -49,6 +49,11 @@ extension UserDefaultsPrefsStorage: PrefsStorage {
         suite.data(forKey: key)
     }
     
+    public func storageValue(forKey key: String) -> Date? {
+        guard let rawString = suite.string(forKey: key) else { return nil }
+        return ISO8601DateFormatter().date(from: rawString)
+    }
+    
     public func storageValue<Element: PrefsStorageValue>(forKey key: String) -> [Element]? {
         guard let rawArray = suite.array(forKey: key) else { return nil }
         if let typedArray = rawArray as? [Element] {

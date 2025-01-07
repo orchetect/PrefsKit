@@ -23,6 +23,8 @@ extension UserDefaults {
             return value
         case let value as NSData:
             return value as Data
+        case let value as NSDate:
+            return value as Date
             
             // MARK: Arrays
         case let value as [NSString]:
@@ -33,6 +35,8 @@ extension UserDefaults {
             return value
         case let value as [NSData]:
             return value as [Data]
+        case let value as [NSDate]:
+            return value as [Date]
         case let value as [Any]:
             return value.map(convertToPrefsStorageCompatible(value:))
             
@@ -45,6 +49,8 @@ extension UserDefaults {
             return value as [String: NSNumber]
         case let value as [NSString: NSData]:
             return value as [String: Data]
+        case let value as [NSString: NSDate]:
+            return value as [String: Date]
         case let value as [String: Any]:
             return value.mapValues(convertToPrefsStorageCompatible(value:))
             

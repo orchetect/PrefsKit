@@ -43,6 +43,10 @@ extension PrefsStorage {
         storageValue(forKey: key.key)
     }
     
+    public func storageValue<Key: PrefsKey>(forKey key: Key) -> Key.StorageValue? where Key.StorageValue == Date {
+        storageValue(forKey: key.key)
+    }
+    
     public func storageValue<Key: PrefsKey, Element: PrefsStorageValue>(forKey key: Key) -> [Element]? where Key.StorageValue == [Element]  {
         storageValue(forKey: key.key)
     }
@@ -81,6 +85,11 @@ extension PrefsStorage {
     }
     
     public func value<Key: PrefsKey>(forKey key: Key) -> Key.Value? where Key.StorageValue == Data {
+        guard let storageValue = storageValue(forKey: key) else { return nil }
+        return key.decode(storageValue)
+    }
+    
+    public func value<Key: PrefsKey>(forKey key: Key) -> Key.Value? where Key.StorageValue == Date {
         guard let storageValue = storageValue(forKey: key) else { return nil }
         return key.decode(storageValue)
     }
