@@ -7,14 +7,14 @@
 import Foundation
 
 extension UserDefaultsPrefsStorage: PrefsStoragePListExportable {
-    public func plistData(format: PropertyListSerialization.PropertyListFormat = .xml) throws -> Data {
+    public func exportPListData(format: PropertyListSerialization.PropertyListFormat = .xml) throws -> Data {
         try suite
             .dictionaryRepresentation()
             .plistData(format: format)
     }
     
-    public func save(plist url: URL, format: PropertyListSerialization.PropertyListFormat = .xml) throws {
-        try plistData(format: format)
+    public func exportPList(to url: URL, format: PropertyListSerialization.PropertyListFormat = .xml) throws {
+        try exportPListData(format: format)
             .write(to: url)
     }
 }

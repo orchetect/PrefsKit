@@ -7,18 +7,18 @@
 import Foundation
 
 extension AnyPrefsStorage: PrefsStoragePListExportable {
-    public func plistData(format: PropertyListSerialization.PropertyListFormat) throws -> Data {
+    public func exportPListData(format: PropertyListSerialization.PropertyListFormat) throws -> Data {
         guard let wrapped = wrapped as? PrefsStoragePListExportable else {
             throw PrefsStorageError.plistWritingNotSupported
         }
-        return try wrapped.plistData(format: format)
+        return try wrapped.exportPListData(format: format)
     }
     
-    public func save(plist url: URL, format: PropertyListSerialization.PropertyListFormat) throws {
+    public func exportPList(to url: URL, format: PropertyListSerialization.PropertyListFormat) throws {
         guard let wrapped = wrapped as? PrefsStoragePListExportable else {
             throw PrefsStorageError.plistWritingNotSupported
         }
-        try wrapped.save(plist: url, format: format)
+        try wrapped.exportPList(to: url, format: format)
     }
 }
 
