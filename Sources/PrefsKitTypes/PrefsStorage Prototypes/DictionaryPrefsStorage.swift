@@ -7,7 +7,7 @@
 import Foundation
 
 /// Dictionary-backed ``PrefsStorage`` with internally-synchronized dictionary access.
-open class DictionaryPrefsStorage: PrefsStoragePListInitializable {
+open class DictionaryPrefsStorage: PrefsStoragePListInitializable, PrefsStorageJSONInitializable {
     @SynchronizedLock
     var storage: [String: Any]
     
@@ -22,7 +22,7 @@ open class DictionaryPrefsStorage: PrefsStoragePListInitializable {
         self.storage = storage
     }
     
-    // MARK: DictionaryPrefsStorage inits
+    // MARK: PrefsStoragePListInitializable inits
     
     // Note:
     //
@@ -42,6 +42,29 @@ open class DictionaryPrefsStorage: PrefsStoragePListInitializable {
     
     required public convenience init(plist dictionary: NSDictionary) throws {
         let plistContent: [String: Any] = try .init(plist: dictionary)
+        self.init(unsafe: plistContent)
+    }
+    
+    // MARK: PrefsStorageJSONInitializable inits
+    
+    // Note:
+    //
+    // `PrefsStorageJSONInitializable` conformance is in class definition, as
+    // `open class` requires protocol-required inits to be defined there and not in an extension.
+    //
+    
+    required public convenience init(json url: URL) throws {
+        let plistContent: [String: Any] = try .init(json: url)
+        self.init(unsafe: plistContent)
+    }
+    
+    required public convenience init(json data: Data) throws {
+        let plistContent: [String: Any] = try .init(json: data)
+        self.init(unsafe: plistContent)
+    }
+    
+    required public convenience init(json string: String) throws {
+        let plistContent: [String: Any] = try .init(json: string)
         self.init(unsafe: plistContent)
     }
 }
