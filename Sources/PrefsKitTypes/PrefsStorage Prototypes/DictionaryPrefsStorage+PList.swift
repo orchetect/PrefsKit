@@ -18,22 +18,11 @@ extension DictionaryPrefsStorage: PrefsStoragePListExportable {
     }
 }
 
-extension DictionaryPrefsStorage: PrefsStoragePListInitializable {
-    public convenience init(plist url: URL) throws {
-        let plistContent: [String: Any] = try .init(plist: url)
-        self.init(unsafe: plistContent)
-    }
-    
-    public convenience init(plist data: Data) throws {
-        let plistContent: [String: Any] = try .init(plist: data)
-        self.init(unsafe: plistContent)
-    }
-    
-    public convenience init(plist dictionary: NSDictionary) throws {
-        let plistContent: [String: Any] = try .init(plist: dictionary)
-        self.init(unsafe: plistContent)
-    }
-}
+// Note:
+//
+// `PrefsStoragePListInitializable` conformance is in class definition, as
+// `open class` requires protocol-required inits to be defined there and not in an extension.
+//
 
 extension DictionaryPrefsStorage: PrefsStoragePListImportable {
     public func load(plist url: URL, by behavior: PrefsStorageImportBehavior) throws {

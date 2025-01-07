@@ -6,7 +6,7 @@
 
 import Foundation
 
-public final class UserDefaultsPrefsStorage {
+open class UserDefaultsPrefsStorage {
     public let suite: UserDefaults
     
     public init(suite: UserDefaults = .standard) {

@@ -7,7 +7,7 @@
 import Foundation
 
 /// Dictionary-backed ``PrefsStorage`` with internally-synchronized dictionary access.
-public final class DictionaryPrefsStorage {
+open class DictionaryPrefsStorage: PrefsStoragePListInitializable {
     @SynchronizedLock
     var storage: [String: Any]
     
@@ -18,8 +18,31 @@ public final class DictionaryPrefsStorage {
     
     /// Initialize from raw untyped dictionary content.
     /// You are responsible for ensuring value types are compatible with related methods such as plist conversion.
-    public init(unsafe storage: [String: Any]) {
+    public required init(unsafe storage: [String: Any]) {
         self.storage = storage
+    }
+    
+    // MARK: DictionaryPrefsStorage inits
+    
+    // Note:
+    //
+    // `PrefsStoragePListInitializable` conformance is in class definition, as
+    // `open class` requires protocol-required inits to be defined there and not in an extension.
+    //
+    
+    required public convenience init(plist url: URL) throws {
+        let plistContent: [String: Any] = try .init(plist: url)
+        self.init(unsafe: plistContent)
+    }
+    
+    required public convenience init(plist data: Data) throws {
+        let plistContent: [String: Any] = try .init(plist: data)
+        self.init(unsafe: plistContent)
+    }
+    
+    required public convenience init(plist dictionary: NSDictionary) throws {
+        let plistContent: [String: Any] = try .init(plist: dictionary)
+        self.init(unsafe: plistContent)
     }
 }
 
