@@ -88,18 +88,19 @@ A modern Swift library for reading & writing app preferences:
 
 These are the atomic value types supported:
 
-| Atomic Type | Usage                                 | Description                                       |
-| ----------- | ------------------------------------- | ------------------------------------------------- |
-| `String`    | `@Pref var x: String = ""`            | An atomic `String` value                          |
-| `Bool`      | `@Pref var x: Bool = true`            | An atomic `Bool` value                            |
-| `Int`       | `@Pref var x: Int = 1`                | An atomic `Int` value                             |
-| `Double`    | `@Pref var x: Double = 1.0`           | An atomic `Double` value                          |
-| `Float`     | `@Pref var x: Float = 1.0`            | An atomic `Float` value                           |
-| `Data`      | `@Pref var x: Data = Data()`          | An atomic `Data` value                            |
-| Array       | `@Pref var x: [Int] = []`             | Array of a single atomic value type               |
-|             | `@Pref var x: [String] = []`          | etc ...                                           |
-| Dictionary  | `@Pref var x: [String: Int] = [:]`    | Keyed by `String` with a single atomic value type |
-|             | `@Pref var x: [String: String] = [:]` | etc ...                                           |
+| Atomic Type | Usage                                 | Description                                             |
+| ----------- | ------------------------------------- | ------------------------------------------------------- |
+| `String`    | `@Pref var x: String = ""`            | An atomic `String` value                                |
+| `Bool`      | `@Pref var x: Bool = true`            | An atomic `Bool` value                                  |
+| `Int`       | `@Pref var x: Int = 1`                | An atomic `Int` value                                   |
+| `Double`    | `@Pref var x: Double = 1.0`           | An atomic `Double` value                                |
+| `Float`     | `@Pref var x: Float = 1.0`            | An atomic `Float` value                                 |
+| `Data`      | `@Pref var x: Data = Data()`          | An atomic `Data` value                                  |
+| `Date`      | `@Pref var x: Date = Date()`          | An atomic `Date` value using NSDate encoding by default |
+| Array       | `@Pref var x: [Int] = []`             | Array of a single atomic value type                     |
+|             | `@Pref var x: [String] = []`          | etc ...                                                 |
+| Dictionary  | `@Pref var x: [String: Int] = [:]`    | Keyed by `String` with a single atomic value type       |
+|             | `@Pref var x: [String: String] = [:]` | etc ...                                                 |
 
 > [!NOTE]
 >
