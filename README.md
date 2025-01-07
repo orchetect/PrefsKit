@@ -20,9 +20,9 @@ A modern Swift library for reading & writing app preferences:
   - [Storage Injection](#Storage-Injection)
   - [Key Naming](#Key-Naming)
   - [Custom Value Coding](#Custom-Value-Coding)
+  - [Composing Value Coding Strategies](#Composing-Value-Coding-Strategies)
   - [Dynamic Key Access](#Dynamic-Key-Access)
   - [Mixed Value Type Collections](#Mixed-Value-Type-Collections)
-  - [Composing Value Coding Strategies](#Composing-Value-Coding-Strategies)
   - [Using Actors](#Using-Actors)
 - [FAQ](#FAQ)
 
