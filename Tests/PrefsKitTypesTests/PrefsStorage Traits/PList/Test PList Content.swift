@@ -87,6 +87,22 @@ enum TestPList {
             """
         
         enum Root {
+            static var dictionary: [String: Any] {
+                [
+                    Key1.key: Key1.value,
+                    Key2.key: Key2.value,
+                    Key3.key: Key3.value,
+                    Key4.key: Key4.value,
+                    Key5.key: Key5.value,
+                    Key6.key: Key6.value,
+                    Key7.key: Key7.value,
+                    Key8.key: Key8.value,
+                    Key9.key: Key9.value,
+                    Key10.key: Key10.value,
+                    Key11.key: Key11.value
+                ]
+            }
+            
             enum Key1 {
                 static let key: String = "key1"
                 static let value: String = "string"
