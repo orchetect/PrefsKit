@@ -1,12 +1,12 @@
 //
-//  UserDefaultsPrefsStorage+PrefsStorageLoadable.swift
+//  UserDefaultsPrefsStorage+PrefsStorageImportable.swift
 //  PrefsKit • https://github.com/orchetect/PrefsKit
 //  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 import Foundation
 
-extension UserDefaultsPrefsStorage: _PrefsStorageLoadable {
+extension UserDefaultsPrefsStorage: _PrefsStorageImportable {
     package func load(raw contents: [String: any PrefsStorageValue], by behavior: PrefsStorageLoadBehavior) throws {
         switch behavior {
         case .replacingStorage:

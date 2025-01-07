@@ -1,12 +1,12 @@
 //
-//  DictionaryPrefsStorage+PrefsStorageLoadable.swift
+//  DictionaryPrefsStorage+PrefsStorageImportable.swift
 //  PrefsKit • https://github.com/orchetect/PrefsKit
 //  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 import Foundation
 
-extension DictionaryPrefsStorage: _PrefsStorageLoadable {
+extension DictionaryPrefsStorage: _PrefsStorageImportable {
     package func load(raw contents: [String: any PrefsStorageValue], by behavior: PrefsStorageLoadBehavior) throws {
         switch behavior {
         case .replacingStorage:

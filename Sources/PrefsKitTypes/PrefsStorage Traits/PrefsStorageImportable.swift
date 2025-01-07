@@ -1,5 +1,5 @@
 //
-//  PrefsStorageLoadable.swift
+//  PrefsStorageImportable.swift
 //  PrefsKit • https://github.com/orchetect/PrefsKit
 //  © 2025 Steffan Andrews • Licensed under MIT License
 //
@@ -11,7 +11,7 @@
 /// 2. Loading storage contents will not update local cache properties for any `@Pref` keys defined in a `@PrefsSchema`
 ///    whose `storageMode` is set to `cachedReadStorageWrite`. The storage mode must be set to `storageOnly` to ensure
 ///    data loads correctly.
-package protocol _PrefsStorageLoadable where Self: PrefsStorage {
+package protocol _PrefsStorageImportable where Self: PrefsStorage {
     /// Load key/values into storage.
     func load(raw contents: [String: any PrefsStorageValue], by behavior: PrefsStorageLoadBehavior) throws
     
