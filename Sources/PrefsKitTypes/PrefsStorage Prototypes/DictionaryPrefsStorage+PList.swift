@@ -6,7 +6,7 @@
 
 import Foundation
 
-extension DictionaryPrefsStorage: PrefsStoragePListWritable {
+extension DictionaryPrefsStorage: PrefsStoragePListExportable {
     public func plistData(format: PropertyListSerialization.PropertyListFormat = .xml) throws -> Data {
         try storage
             .plistData(format: format)
