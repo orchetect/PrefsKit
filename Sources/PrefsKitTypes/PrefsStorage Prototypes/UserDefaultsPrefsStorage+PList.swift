@@ -19,7 +19,7 @@ extension UserDefaultsPrefsStorage: PrefsStoragePListExportable {
     }
 }
 
-extension UserDefaultsPrefsStorage: PrefsStoragePListLoadable {
+extension UserDefaultsPrefsStorage: PrefsStoragePListImportable {
     public func load(plist url: URL, by behavior: PrefsStorageLoadBehavior) throws {
         let plistContent: [String: Any] = try .init(plist: url)
         try load(unsafe: plistContent, by: behavior)

@@ -35,7 +35,7 @@ extension DictionaryPrefsStorage: PrefsStoragePListInitializable {
     }
 }
 
-extension DictionaryPrefsStorage: PrefsStoragePListLoadable {
+extension DictionaryPrefsStorage: PrefsStoragePListImportable {
     public func load(plist url: URL, by behavior: PrefsStorageLoadBehavior) throws {
         let plistContent: [String: Any] = try .init(plist: url)
         try load(unsafe: plistContent, by: behavior)
