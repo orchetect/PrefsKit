@@ -43,6 +43,7 @@ package func convertToPrefDict(plist nsDict: NSDictionary) throws -> [String: An
         case let v as Double: base[key] = v
         case let v as Float: base[key] = v
         case let v as Data: base[key] = v
+        case let v as Date: base[key] = v
         case let v as NSArray: base[key] = try convertToPrefArray(plist: v)
         case let v as NSDictionary: base[key] = try convertToPrefDict(plist: v)
         default: throw CocoaError(.coderReadCorrupt)
@@ -57,6 +58,7 @@ package func convertToPrefDict(plist nsDict: NSDictionary) throws -> [String: An
     case let v as [String: Double]: return v
     case let v as [String: Float]: return v
     case let v as [String: Data]: return v
+    case let v as [String: Date]: return v
     default: return dict
     }
 }
@@ -70,6 +72,7 @@ package func convertToPrefArray(plist nsArray: NSArray) throws -> [Any] {
         case let v as Double: base.append(v)
         case let v as Float: base.append(v)
         case let v as Data: base.append(v)
+        case let v as Date: base.append(v)
         case let v as NSArray: try base.append(convertToPrefArray(plist: v))
         case let v as NSDictionary: try base.append(convertToPrefDict(plist: v))
         default: throw CocoaError(.coderReadCorrupt)
@@ -84,6 +87,7 @@ package func convertToPrefArray(plist nsArray: NSArray) throws -> [Any] {
     case let v as [Double]: return v
     case let v as [Float]: return v
     case let v as [Data]: return v
+    case let v as [Date]: return v
     default: return array
     }
 }
