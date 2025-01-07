@@ -21,6 +21,7 @@ A modern Swift library for reading & writing app preferences:
   - [Key Naming](#Key-Naming)
   - [Custom Value Coding](#Custom-Value-Coding)
   - [Dynamic Key Access](#Dynamic-Key-Access)
+  - [Mixed Value Type Collections](#Mixed-Value-Type-Collections)
   - [Composing Value Coding Strategies](#Composing-Value-Coding-Strategies)
   - [Using Actors](#Using-Actors)
 - [FAQ](#FAQ)
@@ -87,24 +88,22 @@ A modern Swift library for reading & writing app preferences:
 
 These are the atomic value types supported:
 
-| Atomic Type        | Usage                                   | Description                                            |
-| ------------------ | --------------------------------------- | ------------------------------------------------------ |
-| `String`           | `@Pref var x: String = ""`              | An atomic `String` value                               |
-| `Bool`             | `@Pref var x: Bool = true`              | An atomic `Bool` value                                 |
-| `Int`              | `@Pref var x: Int = 1`                  | An atomic `Int` value                                  |
-| `Double`           | `@Pref var x: Double = 1.0`             | An atomic `Double` value                               |
-| `Float`            | `@Pref var x: Float = 1.0`              | An atomic `Float` value                                |
-| `Data`             | `@Pref var x: Data = Data()`            | An atomic `Data` value                                 |
-| Array              | `@Pref var x: [Int] = []`               | Array of a single atomic value type                    |
-| Array (Mixed)      | `@Pref var x: AnyPrefsArray = []`       | Array of a mixture of atomic value types               |
-| Dictionary         | `@Pref var x: [String: Int] = [:]`      | Keyed by `String` with a single atomic value type      |
-| Dictionary (Mixed) | `@Pref var x: AnyPrefsDictionary = [:]` | Keyed by `String` with a mixture of atomic value types |
+| Atomic Type | Usage                                 | Description                                       |
+| ----------- | ------------------------------------- | ------------------------------------------------- |
+| `String`    | `@Pref var x: String = ""`            | An atomic `String` value                          |
+| `Bool`      | `@Pref var x: Bool = true`            | An atomic `Bool` value                            |
+| `Int`       | `@Pref var x: Int = 1`                | An atomic `Int` value                             |
+| `Double`    | `@Pref var x: Double = 1.0`           | An atomic `Double` value                          |
+| `Float`     | `@Pref var x: Float = 1.0`            | An atomic `Float` value                           |
+| `Data`      | `@Pref var x: Data = Data()`          | An atomic `Data` value                            |
+| Array       | `@Pref var x: [Int] = []`             | Array of a single atomic value type               |
+|             | `@Pref var x: [String] = []`          | etc ...                                           |
+| Dictionary  | `@Pref var x: [String: Int] = [:]`    | Keyed by `String` with a single atomic value type |
+|             | `@Pref var x: [String: String] = [:]` | etc ...                                           |
 
 > [!NOTE]
 >
-> Instead of `[Any]`, the custom `AnyPrefsArray` type ensures type safety for its elements.
->
-> Likewise, instead of `[String: Any]`, the custom `AnyPrefsDictionary` type ensures type safety for its key values.
+> Access to mixed value types in an array (`[Any]`) or dictionary (`[String: Any]`) requires manual interaction with storage. See [Mixed Value Type Collections](#Mixed-Value-Type-Collections) for more details.
 
 #### Storage Type Coercion and Basic Atomic Value Conversion
 
@@ -154,7 +153,6 @@ Various common type conversions are also provided as part of the library.
     @Pref(coding: .uInt64AsString) var foo: UInt64?
 }
 ```
-
 
 > [!TIP]
 >
@@ -221,7 +219,7 @@ One method is by way of type-erasure using the concrete type `AnyPrefsStorage` a
 
 Another method is by way of generics if, for example, you know the storage backend will always be a dictionary.
 
-The benefit of this approach is that it gives access to type-specific members of the concrete storage type instead of only protocolized `PrefsStorage` members.
+The benefit of this approach is that it gives access to type-specific members of the concrete storage type instead of only protocolized `PrefsStorage` members. For example, typing as `DictionaryPrefsStorage` adds methods to load and save storage contents to/from a plist file.
 
 ```swift
 @PrefsSchema final class Prefs {
@@ -399,15 +397,50 @@ The storage property may be accessed directly using `value(forKey:)` and `setVal
     
     // `storage` access is NOT Observable or Bindable in SwiftUI views
     func fruit(name: String) -> String? {
-        storage.value(forKey: "fruit-\(name)")
+        storage.storageValue(forKey: "fruit-\(name)")
     }
     func setFruit(name: String, to newValue: String?) {
-        storage.setValue(forKey: "fruit-\(name)", to: newValue)
+        storage.setStorageValue(forKey: "fruit-\(name)", to: newValue)
     }
 }
 ```
 
 > [!NOTE]
+> 
+> Mutating storage directly does not inherit the `@Observable` behavior of `@Pref`-defined keys, which inherently means this type of access cannot be used in a SwiftUI Binding. For these reasons it is ideal that the prefs schema contain root-level preference keys that are known at compile time where possible.
+
+### Mixed Value Type Collections
+
+To ensure type safety, mixed value types in arrays (aka `[Any]`) or dictionaries (aka `[String: Any]`) are not possible to be used for a `@Pref` type declaration. Only collections with homogenous types (aka `[Int]`, `[String]`, etc.) are allowed. This is also partly due to a technical reason, since `Any` cannot conform to a protocol. PrefsKit restricts types using a protocol to ensure compatibility between different storage backends (UserDefaults, plist, etc.).
+
+Access to mixed value types in an array or dictionary requires manual interaction with storage. These collections can only be read back from storage, not written to storage. This is an accommodation for migrating from an old prefs storage format to one that is compatible with PrefsKit's `@PrefsSchema`.
+
+```swift
+@PrefsSchema final class Prefs {
+    // mixed-type arrays may be read as `[Any]`
+    func someArray() -> [Any]? {
+        storage.storageValue(forKey: "someArray")
+    }
+    // mixed-type arrays may stored, but must contain only valid value types
+    func setSomeArray(to newValue: [any PrefsStorageValue]?) {
+        storage.setStorageValue(forKey: "someArray", to: newValue)
+    }
+    
+    // mixed-type dictionaries may be read as `[String: Any]`
+    func someDict() -> [String: Any]? {
+        storage.storageValue(forKey: "someDict")
+    }
+    // mixed-type dictionaries may stored, but must contain only valid value types
+    func setSomeDict(to newValue: [String: any PrefsStorageValue]?) {
+        storage.setStorageValue(forKey: "someDict", to: newValue)
+    }
+}
+```
+
+As an alternative to directly accessing mixed type collections, consider creating a `Codable` type that can serialize them through [`@Pref`'s support for `Codable` types](#Codable-Types). This also allows it to gain the `@Observable` features like other pref declarations.
+
+> [!NOTE]
+> 
 > Mutating storage directly does not inherit the `@Observable` behavior of `@Pref`-defined keys, which inherently means this type of access cannot be used in a SwiftUI Binding. For these reasons it is ideal that the prefs schema contain root-level preference keys that are known at compile time where possible.
 
 ### Using Actors
@@ -434,6 +467,7 @@ Actors may, however, be attached to individual `@Pref` preference declarations.
 ```
 
 > [!NOTE]
+> 
 > This may be subject to change in future versions of PrefsKit.
 
 ## FAQ
