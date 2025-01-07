@@ -125,7 +125,7 @@ enum TestPList {
             
             enum Key5 {
                 static let key: String = "key5"
-                static let value: Date = try! Date("2025-01-07T05:32:03Z", strategy: .iso8601)
+                static let value: Date = ISO8601DateFormatter().date(from: "2025-01-07T05:32:03Z")!
             }
             
             enum Key6 {
