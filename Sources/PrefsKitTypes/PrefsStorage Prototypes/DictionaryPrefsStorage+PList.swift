@@ -36,18 +36,18 @@ extension DictionaryPrefsStorage: PrefsStoragePListInitializable {
 }
 
 extension DictionaryPrefsStorage: PrefsStoragePListImportable {
-    public func `import`(plist url: URL, by behavior: PrefsStorageLoadBehavior) throws {
+    public func load(plist url: URL, by behavior: PrefsStorageLoadBehavior) throws {
         let plistContent: [String: Any] = try .init(plist: url)
-        try load(unsafe: plistContent, by: behavior)
+        try self.load(unsafe: plistContent, by: behavior)
     }
     
-    public func `import`(plist data: Data, by behavior: PrefsStorageLoadBehavior) throws {
+    public func load(plist data: Data, by behavior: PrefsStorageLoadBehavior) throws {
         let plistContent: [String: Any] = try .init(plist: data)
-        try load(unsafe: plistContent, by: behavior)
+        try self.load(unsafe: plistContent, by: behavior)
     }
     
-    public func `import`(plist dictionary: NSDictionary, by behavior: PrefsStorageLoadBehavior) throws {
+    public func load(plist dictionary: NSDictionary, by behavior: PrefsStorageLoadBehavior) throws {
         let plistContent: [String: Any] = try .init(plist: dictionary)
-        try load(unsafe: plistContent, by: behavior)
+        try self.load(unsafe: plistContent, by: behavior)
     }
 }
