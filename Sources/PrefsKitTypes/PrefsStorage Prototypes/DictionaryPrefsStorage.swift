@@ -11,11 +11,7 @@ public final class DictionaryPrefsStorage {
     @SynchronizedLock
     var storage: [String: Any]
     
-    /// Read-only access to local dictionary storage in memory.
-    public var root: [String: Any] {
-        storage
-    }
-    
+    /// Initialize from type-safe dictionary content.
     public init(root: [String: any PrefsStorageValue] = [:]) {
         storage = root
     }
