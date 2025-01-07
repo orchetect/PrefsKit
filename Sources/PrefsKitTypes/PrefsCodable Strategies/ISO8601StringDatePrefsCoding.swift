@@ -23,22 +23,20 @@ import Foundation
 /// >
 /// > `Date` has native `Codable` conformance, which means it may also be used directly with
 /// > `@JSONDataCodablePref` or `@JSONStringCodablePref`.
-@available(macOS 12.0, iOS 15.0, tvOS 15.0, watchOS 8.0, *)
 public struct ISO8601DateStringPrefsCoding: PrefsCodable {
     public init() { }
     
     public func encode(prefsValue: Date) -> String? {
-        prefsValue.ISO8601Format()
+        ISO8601DateFormatter().string(from: prefsValue)
     }
     
     public func decode(prefsValue: String) -> Date? {
-        try? Date(prefsValue, strategy: .iso8601)
+        ISO8601DateFormatter().date(from: prefsValue)
     }
 }
 
 // MARK: - Static Constructor
 
-@available(macOS 12.0, iOS 15.0, tvOS 15.0, watchOS 8.0, *)
 extension PrefsCodable where Self == ISO8601DateStringPrefsCoding {
     /// Coding strategy for `Date` using standard ISO-8601 format `String` as the encoded storage value.
     ///
