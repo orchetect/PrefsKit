@@ -34,7 +34,7 @@ struct PrefsStoragePListInitializableTests {
     // MARK: - Tests
     
     @Test(arguments: Self.storageBackends)
-    func foo(storageType: any PrefsStoragePListInitializable.Type) async throws {
+    func initPListData(storageType: any PrefsStoragePListInitializable.Type) async throws {
         let data = try #require(TestPList.Basic.xmlString.data(using: .utf8))
         let storage = try storageType.init(plist: data)
         

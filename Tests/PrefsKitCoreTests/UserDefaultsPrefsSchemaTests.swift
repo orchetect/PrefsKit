@@ -81,6 +81,7 @@ struct UserDefaultsPrefsSchemaTests {
         static let double = "double"
         static let float = "float"
         static let data = "data"
+        static let date = "date"
         static let array = "array"
         static let anyArray = "anyArray"
         static let stringArray = "stringArray"
@@ -160,6 +161,7 @@ struct UserDefaultsPrefsSchemaTests {
         @Pref(key: Key.double) var double: Double?
         @Pref(key: Key.float) var float: Float?
         @Pref(key: Key.data) var data: Data?
+        @Pref(key: Key.date) var date: Date?
         // @Pref(key: Key.anyArray) var anyArray: [Any]? // doesn't conform to `PrefsStorageValue`
         @Pref(key: Key.stringArray) var stringArray: [String]?
         // @Pref(key: Key.anyDict) var anyDict: [String: Any]? // doesn't conform to `PrefsStorageValue`
@@ -172,6 +174,7 @@ struct UserDefaultsPrefsSchemaTests {
         @Pref(key: Key.double) var doubleDefaulted: Double = 1.5
         @Pref(key: Key.float) var floatDefaulted: Float = 2.5
         @Pref(key: Key.data) var dataDefaulted: Data = Data([0x01, 0x02])
+        @Pref(key: Key.date) var dateDefaulted: Date = ISO8601DateFormatter().date(from: "2025-01-07T05:32:03Z")!
         // @Pref(key: Key.anyArray) var anyArrayDefaulted: [Any] = [123, "a string"] // doesn't conform to `PrefsStorageValue`
         @Pref(key: Key.stringArray) var stringArrayDefaulted: [String] = ["a", "b"]
         // @Pref(key: Key.anyDict) var anyDictDefaulted: [String: Any] = ["foo": 123, "bar": "a string"] // doesn't conform to `PrefsStorageValue`
@@ -601,6 +604,24 @@ struct UserDefaultsPrefsSchemaTests {
         #expect(schema.data == nil)
     }
     
+    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
+    @Test(arguments: schemas)
+    func datePrefKey(schema: TestSchema) async throws {
+        #expect(schema.date == nil)
+        
+        schema.date = ISO8601DateFormatter().date(from: "2025-01-07T05:32:03Z")!
+        #expect(schema.date == ISO8601DateFormatter().date(from: "2025-01-07T05:32:03Z")!)
+        
+        schema.date = ISO8601DateFormatter().date(from: "2025-01-07T05:32:04Z")!
+        #expect(schema.date == ISO8601DateFormatter().date(from: "2025-01-07T05:32:04Z")!)
+        
+        schema.date?.addTimeInterval(1.0)
+        #expect(schema.date == ISO8601DateFormatter().date(from: "2025-01-07T05:32:05Z")!)
+        
+        schema.date = nil
+        #expect(schema.date == nil)
+    }
+    
     // @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
     // @Test(arguments: schemas)
     // func anyArrayPrefKey(schema: TestSchema) async throws {
@@ -777,6 +798,18 @@ struct UserDefaultsPrefsSchemaTests {
         
         schema.dataDefaulted = Data([0x03, 0x04])
         #expect(schema.dataDefaulted == Data([0x03, 0x04]))
+    }
+    
+    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
+    @Test(arguments: schemas)
+    func dateDefaultedPrefKey(schema: TestSchema) async throws {
+        #expect(schema.dateDefaulted == ISO8601DateFormatter().date(from: "2025-01-07T05:32:03Z")!)
+        
+        schema.dateDefaulted = ISO8601DateFormatter().date(from: "2025-01-07T05:32:04Z")!
+        #expect(schema.dateDefaulted == ISO8601DateFormatter().date(from: "2025-01-07T05:32:04Z")!)
+        
+        schema.dateDefaulted.addTimeInterval(1.0)
+        #expect(schema.dateDefaulted == ISO8601DateFormatter().date(from: "2025-01-07T05:32:05Z")!)
     }
     
     // @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
