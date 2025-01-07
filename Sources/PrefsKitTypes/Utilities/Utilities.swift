@@ -63,7 +63,7 @@ extension UserDefaults {
 
 extension UserDefaults {
     func removeAllKeys() {
-        let keys = UserDefaults.standard.dictionaryRepresentation().keys
+        let keys = dictionaryRepresentation().keys
         for key in keys {
             removeObject(forKey: key)
         }
