@@ -70,6 +70,7 @@ struct PrefsStoragePListExportableTests {
         try await TestPList.Basic.checkContent(in: newStorage)
     }
     
+    @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
     @Test(arguments: Self.storageBackends)
     func exportPList(storage: any PrefsStoragePListExportable) async throws {
         try await TestPList.Basic.checkContent(in: storage)
