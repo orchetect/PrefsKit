@@ -15,10 +15,10 @@ extension AnyPrefsStorage: _PrefsStorageLoadable {
     }
     
     @_disfavoredOverload
-    package func load(raw contents: [String: Any], by behavior: PrefsStorageLoadBehavior) throws {
+    package func load(unsafe contents: [String: Any], by behavior: PrefsStorageLoadBehavior) throws {
         guard let wrapped = wrapped as? _PrefsStorageLoadable else {
             throw PrefsStorageError.contentLoadingNotSupported
         }
-        try wrapped.load(raw: contents, by: behavior)
+        try wrapped.load(unsafe: contents, by: behavior)
     }
 }

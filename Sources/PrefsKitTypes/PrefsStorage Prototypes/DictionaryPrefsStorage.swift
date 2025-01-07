@@ -20,7 +20,9 @@ public final class DictionaryPrefsStorage {
         storage = root
     }
     
-    public init(raw storage: [String: Any]) {
+    /// Initialize from raw untyped dictionary content.
+    /// You are responsible for ensuring value types are compatible with related methods such as plist conversion.
+    public init(unsafe storage: [String: Any]) {
         self.storage = storage
     }
 }

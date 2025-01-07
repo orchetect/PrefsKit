@@ -22,16 +22,16 @@ extension UserDefaultsPrefsStorage: PrefsStoragePListWritable {
 extension UserDefaultsPrefsStorage: PrefsStoragePListLoadable {
     public func load(plist url: URL, by behavior: PrefsStorageLoadBehavior) throws {
         let plistContent: [String: Any] = try .init(plist: url)
-        try load(raw: plistContent, by: behavior)
+        try load(unsafe: plistContent, by: behavior)
     }
     
     public func load(plist data: Data, by behavior: PrefsStorageLoadBehavior) throws {
         let plistContent: [String: Any] = try .init(plist: data)
-        try load(raw: plistContent, by: behavior)
+        try load(unsafe: plistContent, by: behavior)
     }
     
     public func load(plist dictionary: NSDictionary, by behavior: PrefsStorageLoadBehavior) throws {
         let plistContent: [String: Any] = try .init(plist: dictionary)
-        try load(raw: plistContent, by: behavior)
+        try load(unsafe: plistContent, by: behavior)
     }
 }

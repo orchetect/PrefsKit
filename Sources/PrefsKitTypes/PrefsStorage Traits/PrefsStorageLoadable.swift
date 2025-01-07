@@ -17,5 +17,5 @@ package protocol _PrefsStorageLoadable where Self: PrefsStorage {
     
     /// Load key/values into storage.
     @_disfavoredOverload
-    func load(raw contents: [String: Any], by behavior: PrefsStorageLoadBehavior) throws
+    func load(unsafe contents: [String: Any], by behavior: PrefsStorageLoadBehavior) throws
 }

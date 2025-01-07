@@ -18,7 +18,7 @@ extension UserDefaultsPrefsStorage: _PrefsStorageLoadable {
     }
     
     @_disfavoredOverload
-    package func load(raw contents: [String: Any], by behavior: PrefsStorageLoadBehavior) throws {
+    package func load(unsafe contents: [String: Any], by behavior: PrefsStorageLoadBehavior) throws {
         switch behavior {
         case .replacingStorage:
             suite.removeAllKeys()
