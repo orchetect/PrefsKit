@@ -7,7 +7,7 @@
 import Foundation
 
 extension AnyPrefsStorage: _PrefsStorageImportable {
-    package func load(raw contents: [String: any PrefsStorageValue], by behavior: PrefsStorageLoadBehavior) throws {
+    package func load(raw contents: [String: any PrefsStorageValue], by behavior: PrefsStorageImportBehavior) throws {
         guard let wrapped = wrapped as? _PrefsStorageImportable else {
             throw PrefsStorageError.contentLoadingNotSupported
         }
@@ -15,7 +15,7 @@ extension AnyPrefsStorage: _PrefsStorageImportable {
     }
     
     @_disfavoredOverload
-    package func load(unsafe contents: [String: Any], by behavior: PrefsStorageLoadBehavior) throws {
+    package func load(unsafe contents: [String: Any], by behavior: PrefsStorageImportBehavior) throws {
         guard let wrapped = wrapped as? _PrefsStorageImportable else {
             throw PrefsStorageError.contentLoadingNotSupported
         }

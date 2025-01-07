@@ -7,7 +7,7 @@
 import Foundation
 
 extension UserDefaultsPrefsStorage: _PrefsStorageImportable {
-    package func load(raw contents: [String: any PrefsStorageValue], by behavior: PrefsStorageLoadBehavior) throws {
+    package func load(raw contents: [String: any PrefsStorageValue], by behavior: PrefsStorageImportBehavior) throws {
         switch behavior {
         case .replacingStorage:
             suite.removeAllKeys()
@@ -18,7 +18,7 @@ extension UserDefaultsPrefsStorage: _PrefsStorageImportable {
     }
     
     @_disfavoredOverload
-    package func load(unsafe contents: [String: Any], by behavior: PrefsStorageLoadBehavior) throws {
+    package func load(unsafe contents: [String: Any], by behavior: PrefsStorageImportBehavior) throws {
         switch behavior {
         case .replacingStorage:
             suite.removeAllKeys()

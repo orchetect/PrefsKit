@@ -13,9 +13,9 @@
 ///    data loads correctly.
 package protocol _PrefsStorageImportable where Self: PrefsStorage {
     /// Load key/values into storage.
-    func load(raw contents: [String: any PrefsStorageValue], by behavior: PrefsStorageLoadBehavior) throws
+    func load(raw contents: [String: any PrefsStorageValue], by behavior: PrefsStorageImportBehavior) throws
     
     /// Load key/values into storage.
     @_disfavoredOverload
-    func load(unsafe contents: [String: Any], by behavior: PrefsStorageLoadBehavior) throws
+    func load(unsafe contents: [String: Any], by behavior: PrefsStorageImportBehavior) throws
 }

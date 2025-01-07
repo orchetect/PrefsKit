@@ -23,21 +23,21 @@ extension AnyPrefsStorage: PrefsStoragePListExportable {
 }
 
 extension AnyPrefsStorage: PrefsStoragePListImportable {
-    public func load(plist url: URL, by behavior: PrefsStorageLoadBehavior) throws {
+    public func load(plist url: URL, by behavior: PrefsStorageImportBehavior) throws {
         guard let wrapped = wrapped as? PrefsStoragePListImportable else {
             throw PrefsStorageError.plistLoadingNotSupported
         }
         try wrapped.load(plist: url, by: behavior)
     }
     
-    public func load(plist data: Data, by behavior: PrefsStorageLoadBehavior) throws {
+    public func load(plist data: Data, by behavior: PrefsStorageImportBehavior) throws {
         guard let wrapped = wrapped as? PrefsStoragePListImportable else {
             throw PrefsStorageError.plistLoadingNotSupported
         }
         try wrapped.load(plist: data, by: behavior)
     }
     
-    public func load(plist dictionary: NSDictionary, by behavior: PrefsStorageLoadBehavior) throws {
+    public func load(plist dictionary: NSDictionary, by behavior: PrefsStorageImportBehavior) throws {
         guard let wrapped = wrapped as? PrefsStoragePListImportable else {
             throw PrefsStorageError.plistLoadingNotSupported
         }

@@ -1,11 +1,11 @@
 //
-//  PrefsStorageLoadBehavior.swift
+//  PrefsStorageImportBehavior.swift
 //  PrefsKit • https://github.com/orchetect/PrefsKit
 //  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
 /// Contents loading behavior for ``PrefsStorage`` load methods.
-public enum PrefsStorageLoadBehavior {
+public enum PrefsStorageImportBehavior {
     /// Replaces existing storage contents with new contents, removing all existing keys first.
     case replacingStorage
     
