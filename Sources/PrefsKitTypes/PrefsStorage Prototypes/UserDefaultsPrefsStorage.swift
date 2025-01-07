@@ -50,8 +50,7 @@ extension UserDefaultsPrefsStorage: PrefsStorage {
     }
     
     public func storageValue(forKey key: String) -> Date? {
-        guard let rawString = suite.string(forKey: key) else { return nil }
-        return ISO8601DateFormatter().date(from: rawString)
+        (suite.object(forKey: key) as? NSDate) as Date?
     }
     
     public func storageValue<Element: PrefsStorageValue>(forKey key: String) -> [Element]? {
