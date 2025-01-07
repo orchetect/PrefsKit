@@ -1,5 +1,5 @@
 //
-//  PrefsStoragePListImportableTests.swift
+//  PrefsStorageJSONPListImportableTests.swift
 //  PrefsKit • https://github.com/orchetect/PrefsKit
 //  © 2025 Steffan Andrews • Licensed under MIT License
 //
@@ -9,7 +9,7 @@ import Foundation
 import Testing
 
 @Suite(.serialized)
-struct PrefsStoragePListImportableTests {
+struct PrefsStorageJSONPListImportableTests {
     static let domain = "com.orchetect.PrefsKit.\(type(of: Self.self))"
     
     static let base: [String: any PrefsStorageValue] = [
@@ -18,24 +18,23 @@ struct PrefsStoragePListImportableTests {
         "baseExclusive": 3.14 as Double
     ]
     
-    static var storageBackends: [any PrefsStorage & PrefsStoragePListImportable] {
-        [
-            .dictionary(root: base),
-            .userDefaults(suite: UserDefaults(suiteName: domain)!) // content added in init()
-        ]
-    }
+    typealias StorageBackend = PrefsStorage & PrefsStoragePListImportable & PrefsStorageJSONImportable
+    static let storageBackends: [any StorageBackend] = [
+        .dictionary(root: base),
+        .userDefaults(suite: UserDefaults(suiteName: domain)!) // content added in init()
+    ]
     
-    typealias Key1 = TestPList.Basic.Root.Key1
-    typealias Key2 = TestPList.Basic.Root.Key2
-    typealias Key3 = TestPList.Basic.Root.Key3
-    typealias Key4 = TestPList.Basic.Root.Key4
-    typealias Key5 = TestPList.Basic.Root.Key5
-    typealias Key6 = TestPList.Basic.Root.Key6
-    typealias Key7 = TestPList.Basic.Root.Key7
-    typealias Key8 = TestPList.Basic.Root.Key8
-    typealias Key9 = TestPList.Basic.Root.Key9
-    typealias Key10 = TestPList.Basic.Root.Key10
-    typealias Key11 = TestPList.Basic.Root.Key11
+    typealias Key1 = TestContent.Basic.Root.Key1
+    typealias Key2 = TestContent.Basic.Root.Key2
+    typealias Key3 = TestContent.Basic.Root.Key3
+    typealias Key4 = TestContent.Basic.Root.Key4
+    typealias Key5 = TestContent.Basic.Root.Key5
+    typealias Key6 = TestContent.Basic.Root.Key6
+    typealias Key7 = TestContent.Basic.Root.Key7
+    typealias Key8 = TestContent.Basic.Root.Key8
+    typealias Key9 = TestContent.Basic.Root.Key9
+    typealias Key10 = TestContent.Basic.Root.Key10
+    typealias Key11 = TestContent.Basic.Root.Key11
     
     // MARK: - Init
     
@@ -61,15 +60,41 @@ struct PrefsStoragePListImportableTests {
         try #require(defaults.object(forKey: Key11.key) == nil)
     }
     
-    // MARK: - Tests
+    // MARK: - JSON Tests
+    
+    @Test(arguments: Self.storageBackends)
+    func loadJSONDataReplacing(storage: any PrefsStorage & PrefsStorageJSONImportable) async throws {
+        let data = try #require(TestContent.Basic.jsonString.data(using: .utf8))
+        try storage.load(json: data, by: .replacingStorage)
+        
+        // check new content
+        try await TestContent.Basic.checkContent(in: storage)
+        
+        // check old content was removed
+        try #require(storage.storageValue(forKey: "baseExclusive") == Double?.none)
+    }
+    
+    @Test(arguments: Self.storageBackends)
+    func loadJSONDataMerging(storage: any PrefsStorage & PrefsStorageJSONImportable) async throws {
+        let data = try #require(TestContent.Basic.jsonString.data(using: .utf8))
+        try storage.load(json: data, by: .mergingWithStorage)
+        
+        // check new content
+        try await TestContent.Basic.checkContent(in: storage)
+        
+        // check old content was removed
+        try #require(storage.storageValue(forKey: "baseExclusive") == 3.14 as Double)
+    }
+    
+    // MARK: - PList Tests
     
     @Test(arguments: Self.storageBackends)
     func loadPListDataReplacing(storage: any PrefsStorage & PrefsStoragePListImportable) async throws {
-        let data = try #require(TestPList.Basic.xmlString.data(using: .utf8))
+        let data = try #require(TestContent.Basic.plistString.data(using: .utf8))
         try storage.load(plist: data, by: .replacingStorage)
         
         // check new content
-        try await TestPList.Basic.checkContent(in: storage)
+        try await TestContent.Basic.checkContent(in: storage)
         
         // check old content was removed
         try #require(storage.storageValue(forKey: "baseExclusive") == Double?.none)
@@ -77,11 +102,11 @@ struct PrefsStoragePListImportableTests {
     
     @Test(arguments: Self.storageBackends)
     func loadPListDataMerging(storage: any PrefsStorage & PrefsStoragePListImportable) async throws {
-        let data = try #require(TestPList.Basic.xmlString.data(using: .utf8))
+        let data = try #require(TestContent.Basic.plistString.data(using: .utf8))
         try storage.load(plist: data, by: .mergingWithStorage)
         
         // check new content
-        try await TestPList.Basic.checkContent(in: storage)
+        try await TestContent.Basic.checkContent(in: storage)
         
         // check old content was removed
         try #require(storage.storageValue(forKey: "baseExclusive") == 3.14 as Double)
