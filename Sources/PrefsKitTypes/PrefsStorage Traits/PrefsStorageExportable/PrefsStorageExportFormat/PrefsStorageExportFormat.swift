@@ -15,7 +15,7 @@ public protocol PrefsStorageExportFormatDataExportable where Self: PrefsStorageE
 }
 
 public protocol PrefsStorageExportFormatFileExportable where Self: PrefsStorageExportFormat {
-    func export(storage: [String: Any], to fileURL: URL) throws
+    func export(storage: [String: Any], to file: URL) throws
 }
 
 public protocol PrefsStorageExportFormatStringExportable where Self: PrefsStorageExportFormat {
@@ -25,8 +25,8 @@ public protocol PrefsStorageExportFormatStringExportable where Self: PrefsStorag
 // MARK: - Default Implementation
 
 extension PrefsStorageExportFormat where Self: PrefsStorageExportFormatDataExportable, Self: PrefsStorageExportFormatFileExportable {
-    public func export(storage: [String: Any], to fileURL: URL) throws {
+    public func export(storage: [String: Any], to file: URL) throws {
         let data = try exportData(storage: storage)
-        try data.write(to: fileURL)
+        try data.write(to: file)
     }
 }
