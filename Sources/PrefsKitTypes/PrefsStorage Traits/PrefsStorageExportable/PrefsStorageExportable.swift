@@ -12,7 +12,7 @@ public protocol PrefsStorageExportable where Self: PrefsStorage {
     
     func export<Format: PrefsStorageExportFormat>(
         format: Format,
-        to fileURL: URL
+        to file: URL
     ) throws where Format: PrefsStorageExportFormatFileExportable
     
     func exportData<Format: PrefsStorageExportFormat>(
@@ -24,12 +24,14 @@ public protocol PrefsStorageExportable where Self: PrefsStorage {
     ) throws -> String where Format: PrefsStorageExportFormatStringExportable
 }
 
+// MARK: - Default Implementation
+
 extension PrefsStorage where Self: PrefsStorageExportable {
     public func export<Format: PrefsStorageExportFormat>(
         format: Format,
-        to fileURL: URL
+        to file: URL
     ) throws where Format: PrefsStorageExportFormatFileExportable {
-        try format.export(storage: dictionaryRepresentation(), to: fileURL)
+        try format.export(storage: dictionaryRepresentation(), to: file)
     }
     
     public func exportData<Format: PrefsStorageExportFormat>(
