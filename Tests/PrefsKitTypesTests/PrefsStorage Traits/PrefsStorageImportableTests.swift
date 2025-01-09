@@ -8,24 +8,37 @@ import Foundation
 @testable import PrefsKitTypes
 import Testing
 
+/// Test PList and JSON import into prefs storage.
 @Suite(.serialized)
 struct PrefsStorageImportableTests {
     static let domain = "com.orchetect.PrefsKit.\(type(of: Self.self))"
     
     static var base: [String: any PrefsStorageValue] {
         [
-            "foo": "string",
-            "bar": 123,
-            "baz": 3.14 as Double
+            Key1.key: "old string",
+            Key2.key: Data([0x08, 0x09]),
+            "baseExclusive": 3.14 as Double
         ]
     }
     
-    static var storageBackends: [AnyPrefsStorage] {
+    static var storageBackends: [any PrefsStorage & PrefsStorageImportable] {
         [
-            AnyPrefsStorage(.dictionary(root: base)),
-            AnyPrefsStorage(.userDefaults(suite: UserDefaults(suiteName: domain)!)) // content added in init()
+            .dictionary(root: base),
+            .userDefaults(suite: UserDefaults(suiteName: domain)!) // content added in init()
         ]
     }
+    
+    typealias Key1 = TestContent.Basic.Root.Key1
+    typealias Key2 = TestContent.Basic.Root.Key2
+    typealias Key3 = TestContent.Basic.Root.Key3
+    typealias Key4 = TestContent.Basic.Root.Key4
+    typealias Key5 = TestContent.Basic.Root.Key5
+    typealias Key6 = TestContent.Basic.Root.Key6
+    typealias Key7 = TestContent.Basic.Root.Key7
+    typealias Key8 = TestContent.Basic.Root.Key8
+    typealias Key9 = TestContent.Basic.Root.Key9
+    typealias Key10 = TestContent.Basic.Root.Key10
+    typealias Key11 = TestContent.Basic.Root.Key11
     
     // MARK: - Init
     
@@ -37,75 +50,77 @@ struct PrefsStorageImportableTests {
         defaults.merge(Self.base)
         
         // verify loaded default contents
-        try #require(defaults.string(forKey: "foo") == "string")
-        try #require(defaults.integer(forKey: "bar") == 123)
-        try #require(defaults.double(forKey: "baz") == 3.14)
-        try #require(defaults.object(forKey: "boo") == nil)
+        try #require(defaults.string(forKey: Key1.key) == "old string")
+        try #require(defaults.data(forKey: Key2.key) == Data([0x08, 0x09]))
+        try #require(defaults.double(forKey: "baseExclusive") == 3.14)
+        try #require(defaults.object(forKey: Key3.key) == nil)
+        try #require(defaults.object(forKey: Key4.key) == nil)
+        try #require(defaults.object(forKey: Key5.key) == nil)
+        try #require(defaults.object(forKey: Key6.key) == nil)
+        try #require(defaults.object(forKey: Key7.key) == nil)
+        try #require(defaults.object(forKey: Key8.key) == nil)
+        try #require(defaults.object(forKey: Key9.key) == nil)
+        try #require(defaults.object(forKey: Key10.key) == nil)
+        try #require(defaults.object(forKey: Key11.key) == nil)
     }
     
-    // MARK: - Tests
+    // MARK: - JSON Tests
     
     @Test(arguments: Self.storageBackends)
-    func loadRawReplacing(storage: AnyPrefsStorage) async throws {
-        let newContent: [String: any PrefsStorageValue] = [
-            "foo": "new string", // key exists, new value of same type
-            "bar": Data([0x01, 0x02]), // key exists, new value of different type incompatible with old type
-            "boo": true // new key that doesn't exist
-        ]
+    func loadJSONDataReplacing(storage: any PrefsStorage & PrefsStorageImportable) async throws {
+        let data = try #require(TestContent.Basic.jsonString.data(using: .utf8))
+        try storage.load(
+            from: data,
+            format: .json(strategy: TestContent.Basic.JSONPrefsStorageImportStrategy()),
+            by: .replacingStorage
+        )
         
-        try storage.load(raw: newContent, by: .replacingStorage)
+        // check new content
+        try await TestContent.Basic.checkContent(in: storage)
         
-        #expect(storage.storageValue(forKey: "foo") == "new string")
-        #expect(storage.storageValue(forKey: "bar") == Data([0x01, 0x02]))
-        #expect(storage.storageValue(forKey: "baz") == Double?.none) // old key removed
-        #expect(storage.storageValue(forKey: "boo") == true)
-    }
-    
-    @Test(arguments: Self.storageBackends)
-    func loadRawMerging(storage: AnyPrefsStorage) async throws {
-        let newContent: [String: any PrefsStorageValue] = [
-            "foo": "new string", // key exists, new value of same type
-            "bar": Data([0x01, 0x02]), // key exists, new value of different type incompatible with old type
-            "boo": true // new key that doesn't exist
-        ]
-        
-        try storage.load(raw: newContent, by: .mergingWithStorage)
-        
-        #expect(storage.storageValue(forKey: "foo") == "new string")
-        #expect(storage.storageValue(forKey: "bar") == Data([0x01, 0x02]))
-        #expect(storage.storageValue(forKey: "baz") == 3.14 as Double) // key not contained in new content; old value
-        #expect(storage.storageValue(forKey: "boo") == true)
+        // check old content was removed
+        try #require(storage.storageValue(forKey: "baseExclusive") == Double?.none)
     }
     
     @Test(arguments: Self.storageBackends)
-    func loadUnsafeReplacing(storage: AnyPrefsStorage) async throws {
-        let newContent: [String: any PrefsStorageValue] = [
-            "foo": "new string", // key exists, new value of same type
-            "bar": Data([0x01, 0x02]), // key exists, new value of different type incompatible with old type
-            "boo": true // new key that doesn't exist
-        ]
+    func loadJSONDataMerging(storage: any PrefsStorage & PrefsStorageImportable) async throws {
+        let data = try #require(TestContent.Basic.jsonString.data(using: .utf8))
+        try storage.load(
+            from: data,
+            format: .json(strategy: TestContent.Basic.JSONPrefsStorageImportStrategy()),
+            by: .mergingWithStorage
+        )
         
-        try storage.load(unsafe: newContent, by: .replacingStorage)
+        // check new content
+        try await TestContent.Basic.checkContent(in: storage)
         
-        #expect(storage.storageValue(forKey: "foo") == "new string")
-        #expect(storage.storageValue(forKey: "bar") == Data([0x01, 0x02]))
-        #expect(storage.storageValue(forKey: "baz") == Double?.none) // old key removed
-        #expect(storage.storageValue(forKey: "boo") == true)
+        // check old content was removed
+        try #require(storage.storageValue(forKey: "baseExclusive") == 3.14 as Double)
+    }
+    
+    // MARK: - PList Tests
+    
+    @Test(arguments: Self.storageBackends)
+    func loadPListDataReplacing(storage: any PrefsStorage & PrefsStorageImportable) async throws {
+        let data = try #require(TestContent.Basic.plistString.data(using: .utf8))
+        try storage.load(from: data, format: .plist(), by: .replacingStorage)
+        
+        // check new content
+        try await TestContent.Basic.checkContent(in: storage)
+        
+        // check old content was removed
+        try #require(storage.storageValue(forKey: "baseExclusive") == Double?.none)
     }
     
     @Test(arguments: Self.storageBackends)
-    func loadUnsafeMerging(storage: AnyPrefsStorage) async throws {
-        let newContent: [String: any PrefsStorageValue] = [
-            "foo": "new string", // key exists, new value of same type
-            "bar": Data([0x01, 0x02]), // key exists, new value of different type incompatible with old type
-            "boo": true // new key that doesn't exist
-        ]
+    func loadPListDataMerging(storage: any PrefsStorage & PrefsStorageImportable) async throws {
+        let data = try #require(TestContent.Basic.plistString.data(using: .utf8))
+        try storage.load(from: data, format: .plist(), by: .mergingWithStorage)
         
-        try storage.load(unsafe: newContent, by: .mergingWithStorage)
+        // check new content
+        try await TestContent.Basic.checkContent(in: storage)
         
-        #expect(storage.storageValue(forKey: "foo") == "new string")
-        #expect(storage.storageValue(forKey: "bar") == Data([0x01, 0x02]))
-        #expect(storage.storageValue(forKey: "baz") == 3.14 as Double) // key not contained in new content; old value
-        #expect(storage.storageValue(forKey: "boo") == true)
+        // check old content was removed
+        try #require(storage.storageValue(forKey: "baseExclusive") == 3.14 as Double)
     }
 }

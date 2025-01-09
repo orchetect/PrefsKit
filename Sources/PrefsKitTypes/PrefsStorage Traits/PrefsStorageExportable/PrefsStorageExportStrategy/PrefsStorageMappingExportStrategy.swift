@@ -47,17 +47,30 @@ extension PrefsStorageExportStrategy where Self: PrefsStorageMappingExportStrate
     
     func prepareForExport(keyPath: [String], element: Any) throws -> Any {
         switch element {
-        case let v as Int: try exportValue(forKeyPath: keyPath, value: v)
-        case let v as String: try exportValue(forKeyPath: keyPath, value: v)
-        case let v as Bool: try exportValue(forKeyPath: keyPath, value: v)
-        case let v as Double: try exportValue(forKeyPath: keyPath, value: v)
-        case let v as Float: try exportValue(forKeyPath: keyPath, value: v)
-        case let v as Data: try exportValue(forKeyPath: keyPath, value: v)
-        case let v as Date: try exportValue(forKeyPath: keyPath, value: v)
-        case let v as [Any]: try prepareForExport(keyPath: keyPath, array: v)
-        case let v as [String: Any]: try prepareForExport(keyPath: keyPath, dict: v)
-        case let v as NSNumber: try exportValue(forKeyPath: keyPath, value: v)
-        default: element
+        case let v as String:
+            try exportValue(forKeyPath: keyPath, value: v)
+        case let v as Bool where "\(type(of: element))" == "__NSCFBoolean":
+            try exportValue(forKeyPath: keyPath, value: v)
+        case let v as Int:
+            try exportValue(forKeyPath: keyPath, value: v)
+        case let v as Bool:
+            try exportValue(forKeyPath: keyPath, value: v)
+        case let v as Double:
+            try exportValue(forKeyPath: keyPath, value: v)
+        case let v as Float:
+            try exportValue(forKeyPath: keyPath, value: v)
+        case let v as Data:
+            try exportValue(forKeyPath: keyPath, value: v)
+        case let v as Date:
+            try exportValue(forKeyPath: keyPath, value: v)
+        case let v as [Any]:
+            try prepareForExport(keyPath: keyPath, array: v)
+        case let v as [String: Any]:
+            try prepareForExport(keyPath: keyPath, dict: v)
+        case let v as NSNumber:
+            try exportValue(forKeyPath: keyPath, value: v)
+        default:
+            element
         }
     }
 }

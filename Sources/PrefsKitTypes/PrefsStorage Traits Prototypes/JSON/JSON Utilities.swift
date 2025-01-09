@@ -9,9 +9,9 @@ import Foundation
 // MARK: - Import
 
 extension [String: Any] {
-    package init(json url: URL) throws {
+    package init(json url: URL, options: JSONSerialization.ReadingOptions = []) throws {
         let fileData = try Data(contentsOf: url)
-        try self.init(json: fileData)
+        try self.init(json: fileData, options: options)
     }
     
     package init(json data: Data, options: JSONSerialization.ReadingOptions = []) throws {
@@ -22,9 +22,11 @@ extension [String: Any] {
         self = dictionary
     }
     
-    package init(json string: String) throws {
-        let data = try JSONSerialization.data(withJSONObject: string)
-        try self.init(json: data)
+    package init(json string: String, options: JSONSerialization.ReadingOptions = []) throws {
+        guard let data = string.data(using: .utf8) else {
+            throw PrefsStorageError.jsonFormatNotSupported
+        }
+        try self.init(json: data, options: options)
     }
 }
 

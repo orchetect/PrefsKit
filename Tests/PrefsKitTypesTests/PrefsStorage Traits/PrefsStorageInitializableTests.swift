@@ -1,5 +1,5 @@
 //
-//  PrefsStorageJSONPListInitializableTests.swift
+//  PrefsStorageInitializableTests.swift
 //  PrefsKit • https://github.com/orchetect/PrefsKit
 //  © 2025 Steffan Andrews • Licensed under MIT License
 //
@@ -10,10 +10,10 @@ import Testing
 
 /// Test prefs storage inits for PList and JSON.
 @Suite(.serialized)
-struct PrefsStorageJSONPListInitializableTests {
+struct PrefsStorageInitializableTests {
     static let domain = "com.orchetect.PrefsKit.\(type(of: Self.self))"
     
-    typealias StorageBackend = PrefsStorage & PrefsStoragePListInitializable & PrefsStorageJSONInitializable
+    typealias StorageBackend = PrefsStorage & PrefsStorageInitializable
     static var storageBackends: [any StorageBackend.Type] {
         [
             DictionaryPrefsStorage.self
@@ -36,9 +36,22 @@ struct PrefsStorageJSONPListInitializableTests {
     // MARK: - JSON Tests
     
     @Test(arguments: Self.storageBackends)
-    func initJSONData(storageType: any PrefsStorageJSONInitializable.Type) async throws {
+    func initJSONData(storageType: any PrefsStorageInitializable.Type) async throws {
         let data = try #require(TestContent.Basic.jsonString.data(using: .utf8))
-        let storage = try storageType.init(json: data)
+        let storage = try storageType.init(
+            from: data,
+            format: .json(strategy: TestContent.Basic.JSONPrefsStorageImportStrategy())
+        )
+        
+        try await TestContent.Basic.checkContent(in: storage)
+    }
+    
+    @Test(arguments: Self.storageBackends)
+    func initJSONString(storageType: any PrefsStorageInitializable.Type) async throws {
+        let storage = try storageType.init(
+            from: TestContent.Basic.jsonString,
+            format: .json(strategy: TestContent.Basic.JSONPrefsStorageImportStrategy())
+        )
         
         try await TestContent.Basic.checkContent(in: storage)
     }
@@ -46,9 +59,16 @@ struct PrefsStorageJSONPListInitializableTests {
     // MARK: - PList Tests
     
     @Test(arguments: Self.storageBackends)
-    func initPListData(storageType: any PrefsStoragePListInitializable.Type) async throws {
+    func initPListData(storageType: any PrefsStorageInitializable.Type) async throws {
         let data = try #require(TestContent.Basic.plistString.data(using: .utf8))
-        let storage = try storageType.init(plist: data)
+        let storage = try storageType.init(from: data, format: .plist())
+        
+        try await TestContent.Basic.checkContent(in: storage)
+    }
+    
+    @Test(arguments: Self.storageBackends)
+    func initPListString(storageType: any PrefsStorageInitializable.Type) async throws {
+        let storage = try storageType.init(from: TestContent.Basic.plistString, format: .plist())
         
         try await TestContent.Basic.checkContent(in: storage)
     }

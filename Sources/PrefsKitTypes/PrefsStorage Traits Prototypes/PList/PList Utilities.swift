@@ -23,6 +23,13 @@ extension [String: Any] {
         try self.init(plist: nsDict)
     }
     
+    package init(plist string: String) throws {
+        guard let data = string.data(using: .utf8) else {
+            throw CocoaError(.coderReadCorrupt)
+        }
+        try self.init(plist: data)
+    }
+    
     package init(plist dictionary: NSDictionary) throws {
         let mappedDict = try convertToPrefDict(plist: dictionary)
         self = mappedDict

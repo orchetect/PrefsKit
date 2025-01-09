@@ -94,8 +94,8 @@ extension TestContent.Basic {
           "key1": "string",
           "key2": 123,
           "key3": true,
-          "key4": "0102",
-          "key5": "Jan 6, 2025 at 9:32:03 PM",
+          "key4": "AQI=",
+          "key5": "2025-01-07T05:32:03Z",
           "key6": [
             "string1",
             "string2"
@@ -121,7 +121,7 @@ extension TestContent.Basic {
           "key10": {
             "keyA": "string",
             "keyB": 789,
-            "keyC": "0304"
+            "keyC": "AwQ="
           },
           "key11": {
             "keyB": {
@@ -266,6 +266,70 @@ extension TestContent.Basic {
                     static let value: Int = 567
                 }
             }
+        }
+    }
+}
+
+extension TestContent.Basic {
+    struct JSONPrefsStorageImportStrategy: PrefsStorageImportStrategy {
+        public func importValue(forKeyPath keyPath: [String], value: String) throws -> any PrefsStorageValue {
+            // `String`, `Data`, and `Date` are all encoded as `String` in `JSONPrefsStorageImportStrategy`.
+            // we can convert types at this stage if we know the structure of the file.
+            
+            typealias Key4 = TestContent.Basic.Root.Key4
+            typealias Key5 = TestContent.Basic.Root.Key5
+            typealias Key10 = TestContent.Basic.Root.Key10
+            
+            switch keyPath {
+            case [Key4.key], [Key10.key, Key10.KeyC.key]:
+                // base64 string encoded
+                guard let data = Data(base64Encoded: value) else {
+                    throw PrefsStorageError.jsonExportError
+                }
+                return data
+            case [Key5.key]:
+                // ISO-8601 string encoded
+                guard let date = ISO8601DateFormatter().date(from: value) else {
+                    throw PrefsStorageError.jsonExportError
+                }
+                return date
+            default:
+                return value
+            }
+        }
+    }
+    
+    struct JSONPrefsStorageExportStrategy: PrefsStorageMappingExportStrategy {
+        func exportValue(forKeyPath keyPath: [String], value: Int) throws -> Any {
+            value
+        }
+        
+        func exportValue(forKeyPath keyPath: [String], value: String) throws -> Any {
+            value
+        }
+        
+        func exportValue(forKeyPath keyPath: [String], value: Bool) throws -> Any {
+            value
+        }
+        
+        func exportValue(forKeyPath keyPath: [String], value: Double) throws -> Any {
+            value
+        }
+        
+        func exportValue(forKeyPath keyPath: [String], value: Float) throws -> Any {
+            value
+        }
+        
+        func exportValue(forKeyPath keyPath: [String], value: Data) throws -> Any {
+            value.base64EncodedString()
+        }
+        
+        func exportValue(forKeyPath keyPath: [String], value: Date) throws -> Any {
+            value.ISO8601Format()
+        }
+        
+        func exportValue(forKeyPath keyPath: [String], value: NSNumber) throws -> Any {
+            value
         }
     }
 }

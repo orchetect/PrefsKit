@@ -7,7 +7,7 @@
 import Foundation
 
 /// Dictionary-backed ``PrefsStorage`` with internally-synchronized dictionary access.
-open class DictionaryPrefsStorage: PrefsStoragePListInitializable, PrefsStorageJSONInitializable {
+open class DictionaryPrefsStorage: PrefsStorageInitializable {
     @SynchronizedLock
     var storage: [String: Any]
     
@@ -22,50 +22,36 @@ open class DictionaryPrefsStorage: PrefsStoragePListInitializable, PrefsStorageJ
         self.storage = storage
     }
     
-    // MARK: PrefsStoragePListInitializable inits
+    // MARK: PrefsStorageInitializable inits
     
     // Note:
     //
-    // `PrefsStoragePListInitializable` conformance is in class definition, as
+    // `PrefsStorageInitializable` conformance is in class definition, as
     // `open class` requires protocol-required inits to be defined there and not in an extension.
     //
     
-    required public convenience init(plist url: URL) throws {
-        let plistContent: [String: Any] = try .init(plist: url)
-        self.init(unsafe: plistContent)
+    required public convenience init<Format: PrefsStorageImportFormat>(
+        from url: URL,
+        format: Format
+    ) throws where Format: PrefsStorageImportFormatFileImportable {
+        self.init()
+        try load(from: url, format: format, by: .replacingStorage)
     }
     
-    required public convenience init(plist data: Data) throws {
-        let plistContent: [String: Any] = try .init(plist: data)
-        self.init(unsafe: plistContent)
+    required public convenience init<Format: PrefsStorageImportFormat>(
+        from data: Data,
+        format: Format
+    ) throws where Format: PrefsStorageImportFormatDataImportable {
+        self.init()
+        try load(from: data, format: format, by: .replacingStorage)
     }
     
-    required public convenience init(plist dictionary: NSDictionary) throws {
-        let plistContent: [String: Any] = try .init(plist: dictionary)
-        self.init(unsafe: plistContent)
-    }
-    
-    // MARK: PrefsStorageJSONInitializable inits
-    
-    // Note:
-    //
-    // `PrefsStorageJSONInitializable` conformance is in class definition, as
-    // `open class` requires protocol-required inits to be defined there and not in an extension.
-    //
-    
-    required public convenience init(json url: URL) throws {
-        let plistContent: [String: Any] = try .init(json: url)
-        self.init(unsafe: plistContent)
-    }
-    
-    required public convenience init(json data: Data) throws {
-        let plistContent: [String: Any] = try .init(json: data)
-        self.init(unsafe: plistContent)
-    }
-    
-    required public convenience init(json string: String) throws {
-        let plistContent: [String: Any] = try .init(json: string)
-        self.init(unsafe: plistContent)
+    required public convenience init<Format: PrefsStorageImportFormat>(
+        from string: String,
+        format: Format
+    ) throws where Format: PrefsStorageImportFormatStringImportable {
+        self.init()
+        try load(from: string, format: format, by: .replacingStorage)
     }
 }
 

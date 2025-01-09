@@ -1,5 +1,5 @@
 //
-//  PrefsStorageJSONPListExportableTests.swift
+//  PrefsStorageExportableTests.swift
 //  PrefsKit • https://github.com/orchetect/PrefsKit
 //  © 2025 Steffan Andrews • Licensed under MIT License
 //
@@ -10,7 +10,7 @@ import Testing
 
 /// Test PList and JSON export from prefs storage.
 @Suite(.serialized)
-struct PrefsStorageJSONPListExportableTests {
+struct PrefsStorageExportableTests {
     static let domain = "com.orchetect.PrefsKit.\(type(of: Self.self))"
     
     static var storageBackends: [any PrefsStorage & PrefsStorageExportable] {
@@ -54,27 +54,25 @@ struct PrefsStorageJSONPListExportableTests {
     func exportJSONData(storage: any PrefsStorageExportable) async throws {
         try await TestContent.Basic.checkContent(in: storage)
         let data = try storage.exportData(
-            format: .json(
-                strategy: .json(
-                    data: { keyPath, data in data.base64EncodedString() },
-                    date: { keyPath, date in date.ISO8601Format() }
-                )
-            )
+            format: .json(strategy: TestContent.Basic.JSONPrefsStorageExportStrategy())
         )
         
         let json = try JSONSerialization.jsonObject(with: data)
-        var dict = try #require(json as? [String: Any])
+        let dict = try #require(json as? [String: Any])
         
         if dict.count > 11 {
             withKnownIssue("UserDefaults suite includes all search lists when requesting its `dictionaryRepresentation()`, which means a lot more keys than expected may be included.") {
                 #expect(dict.count == 11)
-                dict = dict.filter { keys.contains($0.key) }
+                // dict = dict.filter { keys.contains($0.key) }
             }
         }
         
-        #expect(dict.count == 11)
+        #expect(keys.allSatisfy(dict.keys.contains(_:)))
         
-        let newStorage = DictionaryPrefsStorage(unsafe: dict)
+        let newStorage = try DictionaryPrefsStorage(
+            from: data,
+            format: .json(strategy: TestContent.Basic.JSONPrefsStorageImportStrategy())
+        )
         try await TestContent.Basic.checkContent(in: newStorage)
     }
     
@@ -84,29 +82,27 @@ struct PrefsStorageJSONPListExportableTests {
         try await TestContent.Basic.checkContent(in: storage)
         let url = URL.temporaryDirectory.appendingPathComponent("\(UUID().uuidString).plist")
         try storage.export(
-            format: .json(
-                strategy: .json(
-                    data: { keyPath, data in data.base64EncodedString() },
-                    date: { keyPath, date in date.ISO8601Format() }
-                )
-            ),
+            format: .json(strategy: TestContent.Basic.JSONPrefsStorageExportStrategy()),
             to: url
         )
         let data = try Data(contentsOf: url)
         
         let json = try JSONSerialization.jsonObject(with: data)
-        var dict = try #require(json as? [String: Any])
+        let dict = try #require(json as? [String: Any])
         
         if dict.count > 11 {
             withKnownIssue("UserDefaults suite includes all search lists when requesting its `dictionaryRepresentation()`, which means a lot more keys than expected may be included.") {
                 #expect(dict.count == 11)
-                dict = dict.filter { keys.contains($0.key) }
+                // dict = dict.filter { keys.contains($0.key) }
             }
         }
         
-        #expect(dict.count == 11)
+        #expect(keys.allSatisfy(dict.keys.contains(_:)))
         
-        let newStorage = DictionaryPrefsStorage(unsafe: dict)
+        let newStorage = try DictionaryPrefsStorage(
+            from: data,
+            format: .json(strategy: TestContent.Basic.JSONPrefsStorageImportStrategy())
+        )
         try await TestContent.Basic.checkContent(in: newStorage)
     }
     
@@ -128,6 +124,7 @@ struct PrefsStorageJSONPListExportableTests {
         }
         
         #expect(dict.count == 11)
+        #expect(keys.allSatisfy(dict.keys.contains(_:)))
         
         let newStorage = DictionaryPrefsStorage(unsafe: dict)
         try await TestContent.Basic.checkContent(in: newStorage)
