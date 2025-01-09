@@ -8,7 +8,7 @@ import Foundation
 
 extension UserDefaults {
     @inlinable
-    package static func convertToPrefsStorageCompatible(value: Any) -> Any {
+    package static func castAsPrefsStorageCompatible(value: Any) -> Any {
         // Note that underlying number format of NSNumber can't easily be determined
         // so the cleanest solution is to make NSNumber `PrefsStorageValue` and allow
         // the user to conditionally cast it as the number type they desire.
@@ -38,7 +38,7 @@ extension UserDefaults {
         case let value as [NSDate]:
             return value as [Date]
         case let value as [Any]:
-            return value.map(convertToPrefsStorageCompatible(value:))
+            return value.map(castAsPrefsStorageCompatible(value:))
             
             // MARK: Dictionaries
         case let value as [NSString: NSString]:
@@ -52,7 +52,7 @@ extension UserDefaults {
         case let value as [NSString: NSDate]:
             return value as [String: Date]
         case let value as [String: Any]:
-            return value.mapValues(convertToPrefsStorageCompatible(value:))
+            return value.mapValues(castAsPrefsStorageCompatible(value:))
             
             // MARK: Default
         default:

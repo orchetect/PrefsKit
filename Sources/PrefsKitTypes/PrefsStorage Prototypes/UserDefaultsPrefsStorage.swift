@@ -57,7 +57,7 @@ extension UserDefaultsPrefsStorage: PrefsStorage {
         guard let rawArray = suite.array(forKey: key) else { return nil }
         if let typedArray = rawArray as? [Element] {
             return typedArray
-        } else if let typedArray = rawArray.map(UserDefaults.convertToPrefsStorageCompatible(value:)) as? [Element] {
+        } else if let typedArray = rawArray.map(UserDefaults.castAsPrefsStorageCompatible(value:)) as? [Element] {
             return typedArray
         } else {
             return nil
@@ -68,7 +68,7 @@ extension UserDefaultsPrefsStorage: PrefsStorage {
         guard let rawDict = suite.dictionary(forKey: key) else { return nil }
         if let typedDict = rawDict as? [String: Element] {
             return typedDict
-        } else if let typedDict = rawDict.mapValues(UserDefaults.convertToPrefsStorageCompatible(value:)) as? [String: Element] {
+        } else if let typedDict = rawDict.mapValues(UserDefaults.castAsPrefsStorageCompatible(value:)) as? [String: Element] {
             return typedDict
         } else {
             return nil
@@ -77,13 +77,13 @@ extension UserDefaultsPrefsStorage: PrefsStorage {
     
     public func storageValue(forKey key: String) -> [Any]? {
         guard let rawArray = suite.array(forKey: key) else { return nil }
-        let typedArray = rawArray.map(UserDefaults.convertToPrefsStorageCompatible(value:))
+        let typedArray = rawArray.map(UserDefaults.castAsPrefsStorageCompatible(value:))
         return typedArray
     }
     
     public func storageValue(forKey key: String) -> [String : Any]? {
         guard let rawDict = suite.dictionary(forKey: key) else { return nil }
-        let typedDict = rawDict.mapValues(UserDefaults.convertToPrefsStorageCompatible(value:))
+        let typedDict = rawDict.mapValues(UserDefaults.castAsPrefsStorageCompatible(value:))
         return typedDict
     }
 }
