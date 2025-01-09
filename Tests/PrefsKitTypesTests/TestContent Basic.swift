@@ -325,7 +325,7 @@ extension TestContent.Basic {
         }
         
         func exportValue(forKeyPath keyPath: [String], value: Date) throws -> Any {
-            value.ISO8601Format()
+            ISO8601DateFormatter().string(from: value)
         }
         
         func exportValue(forKeyPath keyPath: [String], value: NSNumber) throws -> Any {
