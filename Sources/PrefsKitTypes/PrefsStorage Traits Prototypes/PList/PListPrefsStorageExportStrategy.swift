@@ -10,7 +10,7 @@ public struct PListPrefsStorageExportStrategy {
     public init() { }
 }
 
-extension PListPrefsStorageExportStrategy: PrefsStorageDictionaryExportStrategy {
+extension PListPrefsStorageExportStrategy: PrefsStorageExportStrategy {
     public func prepareForExport(storage: [String: Any]) throws -> [String: Any] {
         // pass storage through as-is, no casting or conversions necessary
         storage

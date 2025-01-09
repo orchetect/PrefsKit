@@ -6,13 +6,7 @@
 
 import Foundation
 
-public struct PListPrefsStorageImportStrategy {
-    public init() { }
-}
-
-extension PListPrefsStorageImportStrategy: PrefsStorageImportStrategy {
-    
-}
+public typealias PListPrefsStorageImportStrategy = PrefsStoragePassthroughImportStrategy
 
 // MARK: - Static Constructor
 
