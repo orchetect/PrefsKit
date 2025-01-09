@@ -6,6 +6,8 @@
 
 import Foundation
 
+// MARK: - Import
+
 extension [String: Any] {
     package init(json url: URL) throws {
         let fileData = try Data(contentsOf: url)
@@ -24,9 +26,14 @@ extension [String: Any] {
         let data = try JSONSerialization.data(withJSONObject: string)
         try self.init(json: data)
     }
-    
+}
+
+// MARK: - Export
+
+extension [String: Any] {
     package func jsonData(options: JSONSerialization.WritingOptions = []) throws -> Data {
-        try JSONSerialization.data(withJSONObject: self, options: options)
+        try JSONSerialization
+            .data(withJSONObject: self, options: options)
     }
     
     package func jsonString(

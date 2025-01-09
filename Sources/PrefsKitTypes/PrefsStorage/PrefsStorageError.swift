@@ -7,16 +7,20 @@
 import Foundation
 
 public enum PrefsStorageError: LocalizedError {
+    case contentExportingNotSupported
     case contentLoadingNotSupported
     case jsonExportError
     case jsonFormatNotSupported
     case jsonLoadingNotSupported
     case jsonWritingNotSupported
+    case plistExportError
     case plistLoadingNotSupported
     case plistWritingNotSupported
     
     public var errorDescription: String? {
         switch self {
+        case .contentExportingNotSupported:
+            "Exporting content is not supported for this prefs storage implementation."
         case .contentLoadingNotSupported:
             "Loading content is not supported for this prefs storage implementation."
         case .jsonExportError:
@@ -27,6 +31,8 @@ public enum PrefsStorageError: LocalizedError {
             "Conversion from JSON is not supported for this prefs storage implementation."
         case .jsonWritingNotSupported:
             "Conversion to JSON format is not supported for this prefs storage implementation."
+        case .plistExportError:
+            "PList export failed."
         case .plistLoadingNotSupported:
             "Conversion from plist format is not supported for this prefs storage implementation."
         case .plistWritingNotSupported:

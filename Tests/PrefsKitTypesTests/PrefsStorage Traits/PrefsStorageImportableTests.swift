@@ -12,11 +12,13 @@ import Testing
 struct PrefsStorageImportableTests {
     static let domain = "com.orchetect.PrefsKit.\(type(of: Self.self))"
     
-    static let base: [String: any PrefsStorageValue] = [
-        "foo": "string",
-        "bar": 123,
-        "baz": 3.14 as Double
-    ]
+    static var base: [String: any PrefsStorageValue] {
+        [
+            "foo": "string",
+            "bar": 123,
+            "baz": 3.14 as Double
+        ]
+    }
     
     static var storageBackends: [AnyPrefsStorage] {
         [

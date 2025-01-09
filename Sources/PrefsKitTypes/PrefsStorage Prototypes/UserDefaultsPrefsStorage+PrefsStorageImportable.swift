@@ -28,3 +28,37 @@ extension UserDefaultsPrefsStorage: _PrefsStorageImportable {
         }
     }
 }
+
+extension UserDefaultsPrefsStorage: PrefsStorageJSONImportable {
+    public func load(json url: URL, by behavior: PrefsStorageImportBehavior) throws {
+        let plistContent: [String: Any] = try .init(json: url)
+        try load(unsafe: plistContent, by: behavior)
+    }
+    
+    public func load(json data: Data, by behavior: PrefsStorageImportBehavior) throws {
+        let plistContent: [String: Any] = try .init(json: data)
+        try load(unsafe: plistContent, by: behavior)
+    }
+    
+    public func load(json string: String, by behavior: PrefsStorageImportBehavior) throws {
+        let plistContent: [String: Any] = try .init(json: string)
+        try load(unsafe: plistContent, by: behavior)
+    }
+}
+
+extension UserDefaultsPrefsStorage: PrefsStoragePListImportable {
+    public func load(plist url: URL, by behavior: PrefsStorageImportBehavior) throws {
+        let plistContent: [String: Any] = try .init(plist: url)
+        try load(unsafe: plistContent, by: behavior)
+    }
+    
+    public func load(plist data: Data, by behavior: PrefsStorageImportBehavior) throws {
+        let plistContent: [String: Any] = try .init(plist: data)
+        try load(unsafe: plistContent, by: behavior)
+    }
+    
+    public func load(plist dictionary: NSDictionary, by behavior: PrefsStorageImportBehavior) throws {
+        let plistContent: [String: Any] = try .init(plist: dictionary)
+        try load(unsafe: plistContent, by: behavior)
+    }
+}

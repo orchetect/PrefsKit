@@ -8,15 +8,18 @@ import Foundation
 @testable import PrefsKitTypes
 import Testing
 
+/// Test prefs storage inits for PList and JSON.
 @Suite(.serialized)
 struct PrefsStorageJSONPListInitializableTests {
     static let domain = "com.orchetect.PrefsKit.\(type(of: Self.self))"
     
     typealias StorageBackend = PrefsStorage & PrefsStoragePListInitializable & PrefsStorageJSONInitializable
-    static let storageBackends: [any StorageBackend.Type] = [
-        DictionaryPrefsStorage.self
-        // (`UserDefaultsPrefsStorage` does not conform to the protocol)
-    ]
+    static var storageBackends: [any StorageBackend.Type] {
+        [
+            DictionaryPrefsStorage.self
+            // (`UserDefaultsPrefsStorage` does not conform to the protocol)
+        ]
+    }
     
     typealias Key1 = TestContent.Basic.Root.Key1
     typealias Key2 = TestContent.Basic.Root.Key2

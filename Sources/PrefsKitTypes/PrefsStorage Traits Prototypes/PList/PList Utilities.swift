@@ -6,6 +6,8 @@
 
 import Foundation
 
+// MARK: - Import
+
 extension [String: Any] {
     package init(plist url: URL) throws {
         let fileData = try Data(contentsOf: url)
@@ -24,10 +26,6 @@ extension [String: Any] {
     package init(plist dictionary: NSDictionary) throws {
         let mappedDict = try convertToPrefDict(plist: dictionary)
         self = mappedDict
-    }
-    
-    package func plistData(format: PropertyListSerialization.PropertyListFormat = .xml) throws -> Data {
-        try PropertyListSerialization.data(fromPropertyList: self, format: format, options: .init())
     }
 }
 
@@ -89,5 +87,22 @@ package func convertToPrefArray(plist nsArray: NSArray) throws -> [Any] {
     case let v as [Data]: return v
     case let v as [Date]: return v
     default: return array
+    }
+}
+
+// MARK: - Export
+
+extension [String: Any] {
+    package func plistData(format: PropertyListSerialization.PropertyListFormat = .xml) throws -> Data {
+        try PropertyListSerialization
+            .data(fromPropertyList: self, format: format, options: .init())
+    }
+    
+    package func plistString(encoding: String.Encoding = .utf8) throws -> String {
+        let data = try plistData(format: .xml)
+        guard let string = String(data: data, encoding: encoding) else {
+            throw PrefsStorageError.plistExportError
+        }
+        return string
     }
 }

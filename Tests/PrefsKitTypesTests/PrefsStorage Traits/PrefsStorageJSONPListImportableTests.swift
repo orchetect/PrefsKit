@@ -8,21 +8,31 @@ import Foundation
 @testable import PrefsKitTypes
 import Testing
 
+/// Test PList and JSON import into prefs storage.
 @Suite(.serialized)
 struct PrefsStorageJSONPListImportableTests {
     static let domain = "com.orchetect.PrefsKit.\(type(of: Self.self))"
     
-    static let base: [String: any PrefsStorageValue] = [
-        Key1.key: "old string",
-        Key2.key: Data([0x08, 0x09]),
-        "baseExclusive": 3.14 as Double
-    ]
+    static var base: [String: any PrefsStorageValue] {
+        [
+            Key1.key: "old string",
+            Key2.key: Data([0x08, 0x09]),
+            "baseExclusive": 3.14 as Double
+        ]
+    }
     
-    typealias StorageBackend = PrefsStorage & PrefsStoragePListImportable & PrefsStorageJSONImportable
-    static let storageBackends: [any StorageBackend] = [
-        .dictionary(root: base),
-        .userDefaults(suite: UserDefaults(suiteName: domain)!) // content added in init()
-    ]
+    static var jsonStorageBackends: [any PrefsStorage & PrefsStorageJSONImportable] {
+        [
+            .dictionary(root: base),
+            .userDefaults(suite: UserDefaults(suiteName: domain)!) // content added in init()
+        ]
+    }
+    static var plistStorageBackends: [any PrefsStorage & PrefsStoragePListImportable] {
+        [
+            .dictionary(root: base),
+            .userDefaults(suite: UserDefaults(suiteName: domain)!) // content added in init()
+        ]
+    }
     
     typealias Key1 = TestContent.Basic.Root.Key1
     typealias Key2 = TestContent.Basic.Root.Key2
@@ -62,7 +72,7 @@ struct PrefsStorageJSONPListImportableTests {
     
     // MARK: - JSON Tests
     
-    @Test(arguments: Self.storageBackends)
+    @Test(arguments: Self.jsonStorageBackends)
     func loadJSONDataReplacing(storage: any PrefsStorage & PrefsStorageJSONImportable) async throws {
         let data = try #require(TestContent.Basic.jsonString.data(using: .utf8))
         try storage.load(json: data, by: .replacingStorage)
@@ -74,7 +84,7 @@ struct PrefsStorageJSONPListImportableTests {
         try #require(storage.storageValue(forKey: "baseExclusive") == Double?.none)
     }
     
-    @Test(arguments: Self.storageBackends)
+    @Test(arguments: Self.jsonStorageBackends)
     func loadJSONDataMerging(storage: any PrefsStorage & PrefsStorageJSONImportable) async throws {
         let data = try #require(TestContent.Basic.jsonString.data(using: .utf8))
         try storage.load(json: data, by: .mergingWithStorage)
@@ -88,7 +98,7 @@ struct PrefsStorageJSONPListImportableTests {
     
     // MARK: - PList Tests
     
-    @Test(arguments: Self.storageBackends)
+    @Test(arguments: Self.plistStorageBackends)
     func loadPListDataReplacing(storage: any PrefsStorage & PrefsStoragePListImportable) async throws {
         let data = try #require(TestContent.Basic.plistString.data(using: .utf8))
         try storage.load(plist: data, by: .replacingStorage)
@@ -100,7 +110,7 @@ struct PrefsStorageJSONPListImportableTests {
         try #require(storage.storageValue(forKey: "baseExclusive") == Double?.none)
     }
     
-    @Test(arguments: Self.storageBackends)
+    @Test(arguments: Self.plistStorageBackends)
     func loadPListDataMerging(storage: any PrefsStorage & PrefsStoragePListImportable) async throws {
         let data = try #require(TestContent.Basic.plistString.data(using: .utf8))
         try storage.load(plist: data, by: .mergingWithStorage)

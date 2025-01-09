@@ -6,5 +6,5 @@
 
 import Foundation
 
-/// Protocol adopted by atomic value types that are valid for storage in prefs storage.
+/// Protocol adopted by format-agnostic atomic value types that are valid for storage in prefs storage.
 public protocol PrefsStorageValue where Self: Equatable, Self: Sendable { }

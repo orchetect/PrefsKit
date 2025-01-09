@@ -8,15 +8,17 @@ import Foundation
 @testable import PrefsKitTypes
 import Testing
 
+/// Test PList and JSON export from prefs storage.
 @Suite(.serialized)
 struct PrefsStorageJSONPListExportableTests {
     static let domain = "com.orchetect.PrefsKit.\(type(of: Self.self))"
     
-    typealias StorageBackend = PrefsStorage & PrefsStoragePListExportable & PrefsStorageJSONExportable
-    static let storageBackends: [any StorageBackend] = [
-        .dictionary(unsafe: TestContent.Basic.Root.dictionary),
-        .userDefaults(suite: UserDefaults(suiteName: domain)!) // content added in init()
-    ]
+    static var storageBackends: [any PrefsStorage & PrefsStorageExportable] {
+        [
+            .dictionary(unsafe: TestContent.Basic.Root.dictionary),
+            .userDefaults(suite: UserDefaults(suiteName: domain)!) // content added in init()
+        ]
+    }
     
     typealias Key1 = TestContent.Basic.Root.Key1
     typealias Key2 = TestContent.Basic.Root.Key2
@@ -49,9 +51,16 @@ struct PrefsStorageJSONPListExportableTests {
     // MARK: - JSON Tests
     
     @Test(arguments: Self.storageBackends)
-    func exportJSONData(storage: any PrefsStorageJSONExportable) async throws {
+    func exportJSONData(storage: any PrefsStorageExportable) async throws {
         try await TestContent.Basic.checkContent(in: storage)
-        let data = try storage.exportJSONData(options: [])
+        let data = try storage.exportData(
+            format: .json(
+                strategy: .json(
+                    data: { keyPath, data in data.base64EncodedString() },
+                    date: { keyPath, date in date.ISO8601Format() }
+                )
+            )
+        )
         
         let json = try JSONSerialization.jsonObject(with: data)
         var dict = try #require(json as? [String: Any])
@@ -71,10 +80,18 @@ struct PrefsStorageJSONPListExportableTests {
     
     @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
     @Test(arguments: Self.storageBackends)
-    func exportJSON(storage: any PrefsStorageJSONExportable) async throws {
+    func exportJSON(storage: any PrefsStorageExportable) async throws {
         try await TestContent.Basic.checkContent(in: storage)
         let url = URL.temporaryDirectory.appendingPathComponent("\(UUID().uuidString).plist")
-        try storage.exportJSON(to: url, options: [])
+        try storage.export(
+            format: .json(
+                strategy: .json(
+                    data: { keyPath, data in data.base64EncodedString() },
+                    date: { keyPath, date in date.ISO8601Format() }
+                )
+            ),
+            to: url
+        )
         let data = try Data(contentsOf: url)
         
         let json = try JSONSerialization.jsonObject(with: data)
@@ -96,9 +113,9 @@ struct PrefsStorageJSONPListExportableTests {
     // MARK: - PList Tests
     
     @Test(arguments: Self.storageBackends)
-    func exportPListData(storage: any PrefsStoragePListExportable) async throws {
+    func exportPListData(storage: any PrefsStorageExportable) async throws {
         try await TestContent.Basic.checkContent(in: storage)
-        let data = try storage.exportPListData(format: .xml)
+        let data = try storage.exportData(format: .plist())
         
         let plist = try PropertyListSerialization.propertyList(from: data, format: nil)
         var dict = try #require(plist as? [String: Any])
@@ -118,10 +135,10 @@ struct PrefsStorageJSONPListExportableTests {
     
     @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
     @Test(arguments: Self.storageBackends)
-    func exportPList(storage: any PrefsStoragePListExportable) async throws {
+    func exportPList(storage: any PrefsStorageExportable) async throws {
         try await TestContent.Basic.checkContent(in: storage)
         let url = URL.temporaryDirectory.appendingPathComponent("\(UUID().uuidString).plist")
-        try storage.exportPList(to: url, format: .xml)
+        try storage.export(format: .plist(), to: url)
         let data = try Data(contentsOf: url)
         
         let plist = try PropertyListSerialization.propertyList(from: data, format: nil)
