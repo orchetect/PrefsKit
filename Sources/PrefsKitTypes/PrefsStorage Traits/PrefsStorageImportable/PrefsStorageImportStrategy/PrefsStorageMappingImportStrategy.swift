@@ -117,7 +117,7 @@ extension PrefsStorageImportStrategy {
     public func convert(_ number: NSNumber, typeEraseFloatingPoint: Bool) -> any PrefsStorageValue {
         switch number {
         case let v as Bool where number.potentialNumberType == .int8_bool
-            && number.className == "__NSCFBoolean":
+            && "\(type(of: number))" == "__NSCFBoolean":
             v
         case let v as Int where number.potentialNumberType == .int_uInt_uInt32_uInt64_uInt16:
             v

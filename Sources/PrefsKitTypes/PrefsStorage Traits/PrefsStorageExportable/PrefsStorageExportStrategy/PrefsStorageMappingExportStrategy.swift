@@ -77,7 +77,7 @@ extension PrefsStorageExportStrategy where Self: PrefsStorageMappingExportStrate
     ) throws -> Any {
         switch number {
         case let v as Bool where number.potentialNumberType == .int8_bool
-            && number.className == "__NSCFBoolean":
+            && "\(type(of: number))" == "__NSCFBoolean":
             try exportValue(forKeyPath: keyPath, value: v)
         case let v as Int where number.potentialNumberType == .int_uInt_uInt32_uInt64_uInt16:
             try exportValue(forKeyPath: keyPath, value: v)
