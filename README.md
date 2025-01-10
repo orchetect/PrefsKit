@@ -535,7 +535,6 @@ let prefs = Prefs()
 
 ```swift
 // load plist file content from a file on disk
-let plistContent: [String: Any] = /* ... */
 try prefs.storage.load(from: URL(/* ... */), format: .plist(), by: .reinitializing)
 ```
 
@@ -572,7 +571,7 @@ let prefs = Prefs()
 ```swift
 // load stongly-typed content (safe)
 let newContent: [String: any PrefsStorageValue] = /* ... */
-try prefs.storage.load(from: plistContent, by: .updating)
+try prefs.storage.load(from: newContent, by: .updating)
 ```
 
 ```swift
