@@ -24,6 +24,8 @@ A modern Swift library for reading & writing app preferences:
   - [Dynamic Key Access](#Dynamic-Key-Access)
   - [Mixed Value Type Collections](#Mixed-Value-Type-Collections)
   - [Using Actors](#Using-Actors)
+  - [Importing and Exporting Storage](#Importing-and-Exporting-Storage)
+  - [Custom Storage Backend](#Custom-Storage-Backend)
 - [FAQ](#FAQ)
 
 ## Quick Start
@@ -470,6 +472,172 @@ Actors may, however, be attached to individual `@Pref` preference declarations.
 > [!NOTE]
 > 
 > This may be subject to change in future versions of PrefsKit.
+
+## Importing and Exporting Storage
+
+All prefs storage backends can import and export from various file and data formats.
+
+PrefsKit ships with support for two serialization formats:
+
+- plist (property list), which can convert 1:1 with `PrefsStorage` atomic value types
+- JSON, which can convert most value types with `PrefsStorage`, but requires custom implementation for some value types before they can be converted
+
+### Importing Storage
+
+Serialized data may be imported from three different overloads:
+
+- from a file `URL` on disk
+- file contents as `Data`
+- file contents as `String`
+
+There are two main mechanisms for importing data into a concrete `PrefsStorage`:
+
+#### 1. At time of storage initialization
+
+Certain prefs storage backends support importing through `init(from:format:)`.
+
+> [!NOTE]
+>
+> Dictionary prefs storage supports importing from an initializer, but UserDefaults prefs storage does not.
+
+```swift
+@PrefsSchema final class Prefs {
+    @Storage var storage: DictionaryPrefsStorage
+    @StorageMode var storageMode = .cachedReadStorageWrite
+    
+    init(plist file: URL) throws {
+        storage = try DictionaryPrefsStorage(from: file, format: .plist())
+    }
+    init(plist data: Data) throws {
+        storage = try DictionaryPrefsStorage(from: data, format: .plist())
+    }
+    init(plist xmlString: String) throws {
+        storage = try DictionaryPrefsStorage(from: xmlString, format: .plist())
+    }
+}
+```
+
+#### 2. During the storage object's lifetime
+
+The `load(from:format:by:)` method allows either replacing existing storage or merging its contents into existing storage.
+
+> [!WARNING]
+>
+> Loading data using these methods does not actively update the prefs schema's cache, and as such requires the use of `storageOnly` storage mode.
+
+```swift
+@PrefsSchema final class Prefs {
+    @Storage var storage = .dictionary
+    @StorageMode var storageMode = .storageOnly // ⚠️ important for load(...) methods
+}
+let prefs = Prefs()
+```
+
+```swift
+// load plist file content from a file on disk
+let plistContent: [String: Any] = /* ... */
+try prefs.storage.load(from: URL(/* ... */), format: .plist(), by: .replacingStorage)
+```
+
+```swift
+// load raw plist file content
+try prefs.storage.load(from: Data(/* ... */), format: .plist(), by: .replacingStorage)
+```
+
+```swift
+// load plist content in the form of XML string
+try prefs.storage.load(from: /* plist XML string */), format: .plist(), by: .replacingStorage)
+```
+
+### Importing Deserialized Storage
+
+The `load(from: [String: any PrefsStorageValue])` or `load(unsafe: [String: Any])` methods allow loading dictionary contents into existing storage.
+
+These methods allow either replacing existing storage or merging its contents into storage.
+
+Storage contents can be imported from a dictionary at any time during the storage object's lifetime.
+
+> [!WARNING]
+>
+> Loading data using these methods does not actively update the prefs schema's cache, and as such requires the use of `storageOnly` storage mode.
+
+```swift
+@PrefsSchema final class Prefs {
+    @Storage var storage = .dictionary
+    @StorageMode var storageMode = .storageOnly // ⚠️ important for load(...) methods
+}
+let prefs = Prefs()
+```
+
+```swift
+// load stongly-typed content (safe)
+let newContent: [String: any PrefsStorageValue] = /* ... */
+try prefs.storage.load(from: plistContent, by: .mergingWithStorage)
+```
+
+```swift
+// load dictionary content with values typed as Any if you have
+// prior knowledge they are valid prefs storage atomic value types,
+// such as if your codebase has an API that gives you plist dictionary contents
+// which is 1:1 compatible with `PrefsStorage`
+let plistContent: [String: Any] = /* ... */
+try prefs.storage.load(unsafe: plistContent, by: .mergingWithStorage)
+```
+
+### Exporting Storage
+
+Serialized data may be exported to any of three different overloads:
+
+- written to a file `URL` on disk via `export(format:, to: URL)`
+- file contents as `Data` via `exportData(format:)`
+- file contents as `String` via `exportString(format:)`
+
+Storage contents may be exported at any time during the storage object's lifetime.
+
+```swift
+@PrefsSchema final class Prefs {
+    @Storage var storage = .dictionary
+    @StorageMode var storageMode = .cachedReadStorageWrite
+}
+let prefs = Prefs()
+```
+
+```swift
+// export storage as plist file on disk
+try prefs.storage.export(format: .plist(), to: URL(/* ... */))
+```
+
+```swift
+// export storage as raw plist file data
+try prefs.storage.exportData(format: .plist())
+```
+
+```swift
+// export storage as plist file content in the form of XML string
+try prefs.storage.exportString(format: .plist())
+```
+
+### Custom Import/Export Formats
+
+PrefsKit offers plist (property list) and JSON import/export formats, but custom formats may be implemented.
+
+- Create an import type conforming to the `PrefsStorageImportFormat` protocol
+- Create an export type conforming to the `PrefsStorageExportFormat` protocol
+
+Formats employ a strategy for processing or converting value types. PrefsKit offers several basic strategies, but custom strategies may be implemented.
+
+- Create an import strategy type conforming to the `PrefsStorageImportStrategy` protocol
+- Create an export strategy type conforming to the `PrefsStorageExportStrategy` protocol
+
+## Custom Storage Backend
+
+While PrefsKit offers concrete storage backends that cover the vast majority of use cases (dictionary and UserDefaults), custom backends may be implemented by conforming to the `PrefsStorage` protocol.
+
+Additionally:
+
+- conforming to `PrefsStorageInitializable` allows the storage to initialize from other storage formats
+- conforming to `PrefsStorageImportable` allows storage contents to be imported or merged from other storage formats
+- conforming to `PrefsStorageExportable` allows storage contents to be exported to other storage formats
 
 ## FAQ
 
