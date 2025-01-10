@@ -15,60 +15,78 @@ import Foundation
 /// > data loads correctly.
 public protocol PrefsStorageImportable where Self: PrefsStorage {
     /// Load key/values into storage.
-    func load(from contents: [String: any PrefsStorageValue], by behavior: PrefsStorageUpdateStrategy) throws
+    ///
+    /// - Returns: Key names for key/value pairs that were imported.
+    @discardableResult
+    func load(from contents: [String: any PrefsStorageValue], by behavior: PrefsStorageUpdateStrategy) throws -> Set<String>
     
     /// Load key/values into storage.
-    func load(unsafe contents: [String: Any], by behavior: PrefsStorageUpdateStrategy) throws
+    ///
+    /// - Returns: Key names for key/value pairs that were imported.
+    @discardableResult
+    func load(unsafe contents: [String: Any], by behavior: PrefsStorageUpdateStrategy) throws -> Set<String>
     
     /// Import storage contents from a file on disk.
+    ///
+    /// - Returns: Key names for key/value pairs that were imported.
+    @discardableResult
     func load<Format: PrefsStorageImportFormat>(
         from file: URL,
         format: Format,
         by behavior: PrefsStorageUpdateStrategy
-    ) throws where Format: PrefsStorageImportFormatFileImportable
+    ) throws -> Set<String> where Format: PrefsStorageImportFormatFileImportable
     
     /// Import storage contents from a format's raw data.
+    ///
+    /// - Returns: Key names for key/value pairs that were imported.
+    @discardableResult
     func load<Format: PrefsStorageImportFormat>(
         from data: Data,
         format: Format,
         by behavior: PrefsStorageUpdateStrategy
-    ) throws where Format: PrefsStorageImportFormatDataImportable
+    ) throws -> Set<String> where Format: PrefsStorageImportFormatDataImportable
     
     /// Import storage contents from a format that supports string encoding/markup.
+    ///
+    /// - Returns: Key names for key/value pairs that were imported.
+    @discardableResult
     func load<Format: PrefsStorageImportFormat>(
         from string: String,
         format: Format,
         by behavior: PrefsStorageUpdateStrategy
-    ) throws where Format: PrefsStorageImportFormatStringImportable
+    ) throws -> Set<String> where Format: PrefsStorageImportFormatStringImportable
 }
 
 // MARK: - Default Implementation
 
 extension PrefsStorage where Self: PrefsStorageImportable {
+    @discardableResult
     public func load<Format: PrefsStorageImportFormat>(
         from file: URL,
         format: Format,
         by behavior: PrefsStorageUpdateStrategy
-    ) throws where Format: PrefsStorageImportFormatFileImportable {
+    ) throws -> Set<String> where Format: PrefsStorageImportFormatFileImportable {
         let loaded = try format.load(from: file)
-        try load(unsafe: loaded, by: behavior)
+        return try load(unsafe: loaded, by: behavior)
     }
     
+    @discardableResult
     public func load<Format: PrefsStorageImportFormat>(
         from data: Data,
         format: Format,
         by behavior: PrefsStorageUpdateStrategy
-    ) throws where Format: PrefsStorageImportFormatDataImportable {
+    ) throws -> Set<String> where Format: PrefsStorageImportFormatDataImportable {
         let loaded = try format.load(from: data)
-        try load(unsafe: loaded, by: behavior)
+        return try load(unsafe: loaded, by: behavior)
     }
     
+    @discardableResult
     public func load<Format: PrefsStorageImportFormat>(
         from string: String,
         format: Format,
         by behavior: PrefsStorageUpdateStrategy
-    ) throws where Format: PrefsStorageImportFormatStringImportable {
+    ) throws -> Set<String> where Format: PrefsStorageImportFormatStringImportable {
         let loaded = try format.load(from: string)
-        try load(unsafe: loaded, by: behavior)
+        return try load(unsafe: loaded, by: behavior)
     }
 }
