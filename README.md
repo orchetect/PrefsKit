@@ -587,9 +587,9 @@ try prefs.storage.load(unsafe: plistContent, by: .updating)
 
 Serialized data may be exported to any of three different overloads:
 
-- written to a file `URL` on disk via `export(format:, to: URL)`
-- file contents as `Data` via `exportData(format:)`
-- file contents as `String` via `exportString(format:)`
+- `export(format:, to: URL)`: write to a file `URL` on disk
+- `exportData(format:)` returns file contents as `Data` 
+- `exportString(format:)` returns file contents as `String` 
 
 Storage contents may be exported at any time during the storage object's lifetime.
 
