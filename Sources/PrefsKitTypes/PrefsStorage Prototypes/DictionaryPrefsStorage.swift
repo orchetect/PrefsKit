@@ -38,7 +38,7 @@ open class DictionaryPrefsStorage: PrefsStorageInitializable {
         format: Format
     ) throws where Format: PrefsStorageImportFormatFileImportable {
         self.init()
-        try load(from: url, format: format, by: .replacingStorage)
+        try load(from: url, format: format, by: .reinitializing)
     }
     
     required public convenience init<Format: PrefsStorageImportFormat>(
@@ -46,7 +46,7 @@ open class DictionaryPrefsStorage: PrefsStorageInitializable {
         format: Format
     ) throws where Format: PrefsStorageImportFormatDataImportable {
         self.init()
-        try load(from: data, format: format, by: .replacingStorage)
+        try load(from: data, format: format, by: .reinitializing)
     }
     
     required public convenience init<Format: PrefsStorageImportFormat>(
@@ -54,7 +54,7 @@ open class DictionaryPrefsStorage: PrefsStorageInitializable {
         format: Format
     ) throws where Format: PrefsStorageImportFormatStringImportable {
         self.init()
-        try load(from: string, format: format, by: .replacingStorage)
+        try load(from: string, format: format, by: .reinitializing)
     }
 }
 

@@ -18,13 +18,19 @@ public protocol PrefsStorageImportable where Self: PrefsStorage {
     ///
     /// - Returns: Key names for key/value pairs that were imported.
     @discardableResult
-    func load(from contents: [String: any PrefsStorageValue], by behavior: PrefsStorageUpdateStrategy) throws -> Set<String>
+    func load(
+        from contents: [String: any PrefsStorageValue],
+        by behavior: PrefsStorageUpdateStrategy
+    ) throws -> Set<String>
     
     /// Load key/values into storage.
     ///
     /// - Returns: Key names for key/value pairs that were imported.
     @discardableResult
-    func load(unsafe contents: [String: Any], by behavior: PrefsStorageUpdateStrategy) throws -> Set<String>
+    func load(
+        unsafe contents: [String: Any],
+        by behavior: PrefsStorageUpdateStrategy
+    ) throws -> Set<String>
     
     /// Import storage contents from a file on disk.
     ///
