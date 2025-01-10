@@ -31,69 +31,11 @@ extension [String: Any] {
     }
     
     package init(plist dictionary: NSDictionary) throws {
-        let mappedDict = try convertToPrefDict(plist: dictionary)
+        // let mappedDict = try convertToPrefDict(plist: dictionary)
+        guard let mappedDict = dictionary as? [String: Any] else {
+            throw CocoaError(.coderReadCorrupt)
+        }
         self = mappedDict
-    }
-}
-
-package func convertToPrefDict(plist nsDict: NSDictionary) throws -> [String: Any] {
-    let dict: [String: Any] = try nsDict.reduce(into: [:]) { base, pair in
-        guard let key = pair.key as? String
-        else { throw CocoaError(.coderReadCorrupt) }
-        
-        switch pair.value {
-        case let v as String: base[key] = v
-        case let v as Bool: base[key] = v
-        case let v as Int: base[key] = v
-        case let v as Double: base[key] = v
-        case let v as Float: base[key] = v
-        case let v as Data: base[key] = v
-        case let v as Date: base[key] = v
-        case let v as NSArray: base[key] = try convertToPrefArray(plist: v)
-        case let v as NSDictionary: base[key] = try convertToPrefDict(plist: v)
-        default: throw CocoaError(.coderReadCorrupt)
-        }
-    }
-    
-    // return homogenous value type dictionary as-is, but type-erase mixed value type
-    switch dict {
-    case let v as [String: String]: return v
-    case let v as [String: Bool]: return v
-    case let v as [String: Int]: return v
-    case let v as [String: Double]: return v
-    case let v as [String: Float]: return v
-    case let v as [String: Data]: return v
-    case let v as [String: Date]: return v
-    default: return dict
-    }
-}
-
-package func convertToPrefArray(plist nsArray: NSArray) throws -> [Any] {
-    let array: [Any] = try nsArray.reduce(into: []) { base, element in
-        switch element {
-        case let v as String: base.append(v)
-        case let v as Bool: base.append(v)
-        case let v as Int: base.append(v)
-        case let v as Double: base.append(v)
-        case let v as Float: base.append(v)
-        case let v as Data: base.append(v)
-        case let v as Date: base.append(v)
-        case let v as NSArray: try base.append(convertToPrefArray(plist: v))
-        case let v as NSDictionary: try base.append(convertToPrefDict(plist: v))
-        default: throw CocoaError(.coderReadCorrupt)
-        }
-    }
-    
-    // return homogenous type arrays as-is, but type-erase mixed type arrays
-    switch array {
-    case let v as [String]: return v
-    case let v as [Bool]: return v
-    case let v as [Int]: return v
-    case let v as [Double]: return v
-    case let v as [Float]: return v
-    case let v as [Data]: return v
-    case let v as [Date]: return v
-    default: return array
     }
 }
 

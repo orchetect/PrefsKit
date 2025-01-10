@@ -38,7 +38,7 @@ extension TestContent.Basic {
             <key>key7</key>
             <array>
                 <string>string</string>
-                <integer>456</integer>
+                <real>123.5</real>
                 <false/>
             </array>
             <key>key8</key>
@@ -65,7 +65,7 @@ extension TestContent.Basic {
                 <key>keyA</key>
                 <string>string</string>
                 <key>keyB</key>
-                <integer>789</integer>
+                <real>789.5</real>
                 <key>keyC</key>
                 <data>
                 AwQ=
@@ -102,7 +102,7 @@ extension TestContent.Basic {
           ],
           "key7": [
             "string",
-            456,
+            123.5,
             false
           ],
           "key8": [
@@ -120,7 +120,7 @@ extension TestContent.Basic {
           },
           "key10": {
             "keyA": "string",
-            "keyB": 789,
+            "keyB": 789.5,
             "keyC": "AwQ="
           },
           "key11": {
@@ -188,7 +188,7 @@ extension TestContent.Basic {
             static let key: String = "key7"
             static let value: [any PrefsStorageValue] = [valueIndex0, valueIndex1, valueIndex2]
             static let valueIndex0: String = "string"
-            static let valueIndex1: Int = 456
+            static let valueIndex1: Float = 123.5
             static let valueIndex2: Bool = false
         }
         
@@ -234,7 +234,7 @@ extension TestContent.Basic {
             }
             enum KeyB {
                 static let key: String = "keyB"
-                static let value: Int = 789
+                static let value: Double = 789.5
             }
             enum KeyC {
                 static let key: String = "keyC"
@@ -271,8 +271,10 @@ extension TestContent.Basic {
 }
 
 extension TestContent.Basic {
-    struct JSONPrefsStorageImportStrategy: PrefsStorageImportStrategy {
-        public func importValue(forKeyPath keyPath: [String], value: String) throws -> any PrefsStorageValue {
+    struct JSONPrefsStorageImportStrategy: PrefsStorageMappingImportStrategy {
+        var typeEraseAmbiguousFloatingPoint: Bool = true
+        
+        func importValue(forKeyPath keyPath: [String], value: String) throws -> any PrefsStorageValue {
             // `String`, `Data`, and `Date` are all encoded as `String` in `JSONPrefsStorageImportStrategy`.
             // we can convert types at this stage if we know the structure of the file.
             
@@ -320,16 +322,16 @@ extension TestContent.Basic {
             value
         }
         
+        func exportValue(forKeyPath keyPath: [String], value: NSNumber) throws -> Any {
+            value
+        }
+        
         func exportValue(forKeyPath keyPath: [String], value: Data) throws -> Any {
             value.base64EncodedString()
         }
         
         func exportValue(forKeyPath keyPath: [String], value: Date) throws -> Any {
             ISO8601DateFormatter().string(from: value)
-        }
-        
-        func exportValue(forKeyPath keyPath: [String], value: NSNumber) throws -> Any {
-            value
         }
     }
 }
@@ -363,7 +365,7 @@ extension TestContent.Basic {
         let key7: [Any] = try #require(storage.storageValue(forKey: Key7.key))
         try #require(key7.count == 3)
         #expect(try #require(key7[0] as? String) == Key7.valueIndex0)
-        #expect(try #require(key7[1] as? Int) == Key7.valueIndex1)
+        #expect(try #require(key7[1] as? Float) == Key7.valueIndex1)
         #expect(try #require(key7[2] as? Bool) == Key7.valueIndex2)
         
         let key8: [Any] = try #require(storage.storageValue(forKey: Key8.key))
@@ -383,7 +385,7 @@ extension TestContent.Basic {
         let key10: [String: Any] = try #require(storage.storageValue(forKey: Key10.key))
         try #require(key10.count == 3)
         #expect(key10[Key10.KeyA.key] as? String == Key10.KeyA.value)
-        #expect(key10[Key10.KeyB.key] as? Int == Key10.KeyB.value)
+        #expect(key10[Key10.KeyB.key] as? Double == Key10.KeyB.value)
         #expect(key10[Key10.KeyC.key] as? Data == Key10.KeyC.value)
         
         let key11: [String: Any] = try #require(storage.storageValue(forKey: Key11.key))

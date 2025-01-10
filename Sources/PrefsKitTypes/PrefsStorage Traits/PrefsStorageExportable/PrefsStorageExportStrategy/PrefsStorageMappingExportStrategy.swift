@@ -7,18 +7,14 @@
 import Foundation
 
 public protocol PrefsStorageMappingExportStrategy: PrefsStorageExportStrategy {
-    // MARK: - Atomic Types
     func exportValue(forKeyPath keyPath: [String], value: Int) throws -> Any
     func exportValue(forKeyPath keyPath: [String], value: String) throws -> Any
     func exportValue(forKeyPath keyPath: [String], value: Bool) throws -> Any
     func exportValue(forKeyPath keyPath: [String], value: Double) throws -> Any
     func exportValue(forKeyPath keyPath: [String], value: Float) throws -> Any
+    func exportValue(forKeyPath keyPath: [String], value: NSNumber) throws -> Any
     func exportValue(forKeyPath keyPath: [String], value: Data) throws -> Any
     func exportValue(forKeyPath keyPath: [String], value: Date) throws -> Any
-    
-    // MARK: - Additional Types
-    
-    func exportValue(forKeyPath keyPath: [String], value: NSNumber) throws -> Any
 }
 
 // MARK: - Default Implementation
@@ -49,8 +45,8 @@ extension PrefsStorageExportStrategy where Self: PrefsStorageMappingExportStrate
         switch element {
         case let v as String:
             try exportValue(forKeyPath: keyPath, value: v)
-        case let v as Bool where "\(type(of: element))" == "__NSCFBoolean":
-            try exportValue(forKeyPath: keyPath, value: v)
+        case let v as NSNumber where ["__NSCFNumber", "__NSCFBoolean"].contains("\(type(of: element))"):
+            try prepareForExport(keyPath: keyPath, number: v)
         case let v as Int:
             try exportValue(forKeyPath: keyPath, value: v)
         case let v as Bool:
@@ -58,6 +54,8 @@ extension PrefsStorageExportStrategy where Self: PrefsStorageMappingExportStrate
         case let v as Double:
             try exportValue(forKeyPath: keyPath, value: v)
         case let v as Float:
+            try exportValue(forKeyPath: keyPath, value: v)
+        case let v as Bool:
             try exportValue(forKeyPath: keyPath, value: v)
         case let v as Data:
             try exportValue(forKeyPath: keyPath, value: v)
@@ -67,10 +65,32 @@ extension PrefsStorageExportStrategy where Self: PrefsStorageMappingExportStrate
             try prepareForExport(keyPath: keyPath, array: v)
         case let v as [String: Any]:
             try prepareForExport(keyPath: keyPath, dict: v)
-        case let v as NSNumber:
-            try exportValue(forKeyPath: keyPath, value: v)
         default:
             element
+        }
+    }
+    
+    func prepareForExport(
+        keyPath: [String],
+        number: NSNumber,
+        typeEraseFloatingPoint: Bool = false
+    ) throws -> Any {
+        switch number {
+        case let v as Bool where number.potentialNumberType == .int8_bool
+            && number.className == "__NSCFBoolean":
+            try exportValue(forKeyPath: keyPath, value: v)
+        case let v as Int where number.potentialNumberType == .int_uInt_uInt32_uInt64_uInt16:
+            try exportValue(forKeyPath: keyPath, value: v)
+        case let v as Double where number.potentialNumberType == .double:
+            typeEraseFloatingPoint
+                ? try exportValue(forKeyPath: keyPath, value: number)
+                : try exportValue(forKeyPath: keyPath, value: v)
+        case let v as Float where number.potentialNumberType == .float:
+            typeEraseFloatingPoint
+                ? try exportValue(forKeyPath: keyPath, value: number)
+                : try exportValue(forKeyPath: keyPath, value: v)
+        default:
+            number
         }
     }
 }

@@ -11,7 +11,7 @@ public struct PrefsStoragePassthroughImportStrategy {
 }
 
 extension PrefsStoragePassthroughImportStrategy: PrefsStorageImportStrategy {
-    public func prepareForImport(storage: [String : Any]) throws -> [String : Any] {
+    public func prepareForImport(storage: [String: Any]) throws -> [String: Any] {
         // pass storage through as-is, no casting or conversions necessary
         storage
     }

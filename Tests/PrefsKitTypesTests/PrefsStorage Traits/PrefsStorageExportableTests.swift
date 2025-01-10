@@ -126,7 +126,10 @@ struct PrefsStorageExportableTests {
         #expect(dict.count == 11)
         #expect(keys.allSatisfy(dict.keys.contains(_:)))
         
-        let newStorage = DictionaryPrefsStorage(unsafe: dict)
+        let newStorage = try DictionaryPrefsStorage(
+            from: data,
+            format: .plist()
+        )
         try await TestContent.Basic.checkContent(in: newStorage)
     }
     
@@ -150,7 +153,10 @@ struct PrefsStorageExportableTests {
         
         #expect(dict.count == 11)
         
-        let newStorage = DictionaryPrefsStorage(unsafe: dict)
+        let newStorage = try DictionaryPrefsStorage(
+            from: data,
+            format: .plist()
+        )
         try await TestContent.Basic.checkContent(in: newStorage)
     }
 }
