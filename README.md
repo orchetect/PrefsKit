@@ -608,12 +608,12 @@ try prefs.storage.export(format: .plist(), to: URL(/* ... */))
 
 ```swift
 // export storage as raw plist file data
-try prefs.storage.exportData(format: .plist())
+let data = try prefs.storage.exportData(format: .plist())
 ```
 
 ```swift
 // export storage as plist file content in the form of XML string
-try prefs.storage.exportString(format: .plist())
+let xmlString = try prefs.storage.exportString(format: .plist())
 ```
 
 ### Custom Import/Export Formats
