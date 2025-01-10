@@ -1,5 +1,5 @@
 //
-//  Utilities.swift
+//  UserDefaults Outsourced.swift
 //  PrefsKit • https://github.com/orchetect/PrefsKit
 //  © 2025 Steffan Andrews • Licensed under MIT License
 //
@@ -56,22 +56,5 @@ extension UserDefaults {
     @_disfavoredOverload
     func exists(key: String) -> Bool {
         object(forKey: key) != nil
-    }
-}
-
-// MARK: - Package Utilities
-
-extension UserDefaults {
-    func removeAllKeys() {
-        let keys = dictionaryRepresentation().keys
-        for key in keys {
-            removeObject(forKey: key)
-        }
-    }
-    
-    func merge(_ contents: [String: Any]) {
-        for element in contents {
-            set(element.value, forKey: element.key)
-        }
     }
 }
