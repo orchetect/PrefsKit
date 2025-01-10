@@ -46,14 +46,16 @@ struct PrefsStorageImportableLoadTests {
     // MARK: - Tests
     
     @Test(arguments: Self.storageBackends)
-    func loadRawReplacing(storage: AnyPrefsStorage) async throws {
+    func loadRawReinitializing(storage: AnyPrefsStorage) async throws {
         let newContent: [String: any PrefsStorageValue] = [
             "foo": "new string", // key exists, new value of same type
             "bar": Data([0x01, 0x02]), // key exists, new value of different type incompatible with old type
             "boo": true // new key that doesn't exist
         ]
         
-        try storage.load(from: newContent, by: .replacingStorage)
+        let updatedKeys = try storage.load(from: newContent, by: .reinitializing)
+        
+        #expect(updatedKeys == ["foo", "bar", "boo"])
         
         #expect(storage.storageValue(forKey: "foo") == "new string")
         #expect(storage.storageValue(forKey: "bar") == Data([0x01, 0x02]))
@@ -62,14 +64,16 @@ struct PrefsStorageImportableLoadTests {
     }
     
     @Test(arguments: Self.storageBackends)
-    func loadRawMerging(storage: AnyPrefsStorage) async throws {
+    func loadRawUpdating(storage: AnyPrefsStorage) async throws {
         let newContent: [String: any PrefsStorageValue] = [
             "foo": "new string", // key exists, new value of same type
             "bar": Data([0x01, 0x02]), // key exists, new value of different type incompatible with old type
             "boo": true // new key that doesn't exist
         ]
         
-        try storage.load(from: newContent, by: .mergingWithStorage)
+        let updatedKeys = try storage.load(from: newContent, by: .updating)
+        
+        #expect(updatedKeys == ["foo", "bar", "boo"])
         
         #expect(storage.storageValue(forKey: "foo") == "new string")
         #expect(storage.storageValue(forKey: "bar") == Data([0x01, 0x02]))
@@ -78,14 +82,50 @@ struct PrefsStorageImportableLoadTests {
     }
     
     @Test(arguments: Self.storageBackends)
-    func loadUnsafeReplacing(storage: AnyPrefsStorage) async throws {
+    func loadRawUpdatingWithPredicate(storage: AnyPrefsStorage) async throws {
         let newContent: [String: any PrefsStorageValue] = [
             "foo": "new string", // key exists, new value of same type
             "bar": Data([0x01, 0x02]), // key exists, new value of different type incompatible with old type
             "boo": true // new key that doesn't exist
         ]
         
-        try storage.load(unsafe: newContent, by: .replacingStorage)
+        let updatedKeys = try storage.load(
+            from: newContent,
+            by: .updatingWithPredicate { key, oldValue, newValue in
+                switch key {
+                case "foo":
+                    .takeNewValue
+                case "bar":
+                    .preserveOldValue
+                case "boo":
+                    Issue.record("Predicate should not be called for a new key that does already exist in storage.")
+                    throw CocoaError(.featureUnsupported)
+                default:
+                    Issue.record("All relevant key collision cases are handled here. There should not be a default fallthrough event.")
+                    throw CocoaError(.featureUnsupported)
+                }
+            }
+        )
+        
+        #expect(updatedKeys == ["foo", "boo"])
+        
+        #expect(storage.storageValue(forKey: "foo") == "new string")
+        #expect(storage.storageValue(forKey: "bar") == 123) // old value preserved via predicate
+        #expect(storage.storageValue(forKey: "baz") == 3.14 as Double) // key not contained in new content; old value
+        #expect(storage.storageValue(forKey: "boo") == true)
+    }
+    
+    @Test(arguments: Self.storageBackends)
+    func loadUnsafeReinitializing(storage: AnyPrefsStorage) async throws {
+        let newContent: [String: any PrefsStorageValue] = [
+            "foo": "new string", // key exists, new value of same type
+            "bar": Data([0x01, 0x02]), // key exists, new value of different type incompatible with old type
+            "boo": true // new key that doesn't exist
+        ]
+        
+        let updatedKeys = try storage.load(unsafe: newContent, by: .reinitializing)
+        
+        #expect(updatedKeys == ["foo", "bar", "boo"])
         
         #expect(storage.storageValue(forKey: "foo") == "new string")
         #expect(storage.storageValue(forKey: "bar") == Data([0x01, 0x02]))
@@ -94,14 +134,16 @@ struct PrefsStorageImportableLoadTests {
     }
     
     @Test(arguments: Self.storageBackends)
-    func loadUnsafeMerging(storage: AnyPrefsStorage) async throws {
+    func loadUnsafeUpdating(storage: AnyPrefsStorage) async throws {
         let newContent: [String: any PrefsStorageValue] = [
             "foo": "new string", // key exists, new value of same type
             "bar": Data([0x01, 0x02]), // key exists, new value of different type incompatible with old type
             "boo": true // new key that doesn't exist
         ]
         
-        try storage.load(unsafe: newContent, by: .mergingWithStorage)
+        let updatedKeys = try storage.load(unsafe: newContent, by: .updating)
+        
+        #expect(updatedKeys == ["foo", "bar", "boo"])
         
         #expect(storage.storageValue(forKey: "foo") == "new string")
         #expect(storage.storageValue(forKey: "bar") == Data([0x01, 0x02]))

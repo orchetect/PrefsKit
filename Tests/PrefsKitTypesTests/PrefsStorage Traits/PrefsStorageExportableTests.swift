@@ -32,7 +32,7 @@ struct PrefsStorageExportableTests {
     typealias Key10 = TestContent.Basic.Root.Key10
     typealias Key11 = TestContent.Basic.Root.Key11
     
-    let keys = [Key1.key, Key2.key, Key3.key, Key4.key, Key5.key, Key6.key, Key7.key, Key8.key, Key9.key, Key10.key, Key11.key]
+    let keys: Set<String> = [Key1.key, Key2.key, Key3.key, Key4.key, Key5.key, Key6.key, Key7.key, Key8.key, Key9.key, Key10.key, Key11.key]
     
     // MARK: - Init
     

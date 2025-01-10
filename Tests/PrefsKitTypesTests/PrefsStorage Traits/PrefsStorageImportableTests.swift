@@ -40,6 +40,8 @@ struct PrefsStorageImportableTests {
     typealias Key10 = TestContent.Basic.Root.Key10
     typealias Key11 = TestContent.Basic.Root.Key11
     
+    let keys: Set<String> = [Key1.key, Key2.key, Key3.key, Key4.key, Key5.key, Key6.key, Key7.key, Key8.key, Key9.key, Key10.key, Key11.key]
+    
     // MARK: - Init
     
     init() async throws {
@@ -67,13 +69,15 @@ struct PrefsStorageImportableTests {
     // MARK: - JSON Tests
     
     @Test(arguments: Self.storageBackends)
-    func loadJSONDataReplacing(storage: any PrefsStorage & PrefsStorageImportable) async throws {
+    func loadJSONDataReinitializing(storage: any PrefsStorage & PrefsStorageImportable) async throws {
         let data = try #require(TestContent.Basic.jsonString.data(using: .utf8))
-        try storage.load(
+        let updatedKeys = try storage.load(
             from: data,
             format: .json(strategy: TestContent.Basic.JSONPrefsStorageImportStrategy()),
-            by: .replacingStorage
+            by: .reinitializing
         )
+        
+        #expect(updatedKeys == keys)
         
         // check new content
         try await TestContent.Basic.checkContent(in: storage)
@@ -83,13 +87,15 @@ struct PrefsStorageImportableTests {
     }
     
     @Test(arguments: Self.storageBackends)
-    func loadJSONDataMerging(storage: any PrefsStorage & PrefsStorageImportable) async throws {
+    func loadJSONDataUpdating(storage: any PrefsStorage & PrefsStorageImportable) async throws {
         let data = try #require(TestContent.Basic.jsonString.data(using: .utf8))
-        try storage.load(
+        let updatedKeys = try storage.load(
             from: data,
             format: .json(strategy: TestContent.Basic.JSONPrefsStorageImportStrategy()),
-            by: .mergingWithStorage
+            by: .updating
         )
+        
+        #expect(updatedKeys == keys)
         
         // check new content
         try await TestContent.Basic.checkContent(in: storage)
@@ -101,9 +107,11 @@ struct PrefsStorageImportableTests {
     // MARK: - PList Tests
     
     @Test(arguments: Self.storageBackends)
-    func loadPListDataReplacing(storage: any PrefsStorage & PrefsStorageImportable) async throws {
+    func loadPListDataReinitializing(storage: any PrefsStorage & PrefsStorageImportable) async throws {
         let data = try #require(TestContent.Basic.plistString.data(using: .utf8))
-        try storage.load(from: data, format: .plist(), by: .replacingStorage)
+        let updatedKeys = try storage.load(from: data, format: .plist(), by: .reinitializing)
+        
+        #expect(updatedKeys == keys)
         
         // check new content
         try await TestContent.Basic.checkContent(in: storage)
@@ -113,9 +121,11 @@ struct PrefsStorageImportableTests {
     }
     
     @Test(arguments: Self.storageBackends)
-    func loadPListDataMerging(storage: any PrefsStorage & PrefsStorageImportable) async throws {
+    func loadPListDataUpdating(storage: any PrefsStorage & PrefsStorageImportable) async throws {
         let data = try #require(TestContent.Basic.plistString.data(using: .utf8))
-        try storage.load(from: data, format: .plist(), by: .mergingWithStorage)
+        let updatedKeys = try storage.load(from: data, format: .plist(), by: .updating)
+        
+        #expect(updatedKeys == keys)
         
         // check new content
         try await TestContent.Basic.checkContent(in: storage)
