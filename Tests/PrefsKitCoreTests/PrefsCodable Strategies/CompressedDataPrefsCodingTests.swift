@@ -26,9 +26,10 @@ struct CompressedDataPrefsCodingTests {
         
         // MARK: - Chaining Constructor
         
-        @Pref(coding: MyType
-            .jsonDataPrefsCoding
-            .compressedData(algorithm: .zlib)
+        @Pref(
+            coding: MyType
+                .jsonDataPrefsCoding
+                .compressedData(algorithm: .zlib)
         ) var myTypeChained: MyType?
     }
     

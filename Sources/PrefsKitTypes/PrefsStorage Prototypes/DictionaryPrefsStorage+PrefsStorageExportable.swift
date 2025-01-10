@@ -7,7 +7,7 @@
 import Foundation
 
 extension DictionaryPrefsStorage: PrefsStorageExportable {
-    public func dictionaryRepresentation() throws -> [String : Any] {
+    public func dictionaryRepresentation() throws -> [String: Any] {
         storage
     }
 }

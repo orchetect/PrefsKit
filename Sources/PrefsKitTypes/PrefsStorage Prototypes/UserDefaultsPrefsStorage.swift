@@ -82,7 +82,7 @@ extension UserDefaultsPrefsStorage: PrefsStorage {
         return typedArray
     }
     
-    public func storageValue(forKey key: String) -> [String : Any]? {
+    public func storageValue(forKey key: String) -> [String: Any]? {
         guard let rawDict = suite.dictionary(forKey: key) else { return nil }
         let typedDict = rawDict.mapValues(UserDefaults.castAsPrefsStorageCompatible(value:))
         return typedDict

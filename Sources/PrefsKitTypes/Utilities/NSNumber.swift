@@ -104,17 +104,17 @@ extension NSNumber {
             
             self = switch typeEncoding {
             case .char: // "c"
-                    .int8_bool
+                .int8_bool
             case .short: // "s"
-                    .uInt8_int16
+                .uInt8_int16
             case .longLong: // "q"
-                    .int_uInt_uInt32_uInt64_uInt16
+                .int_uInt_uInt32_uInt64_uInt16
             case .double: // "d"
-                    .double
+                .double
             case .float: // "f"
-                    .float
+                .float
             default:
-                    .unknown
+                .unknown
             }
         }
     }

@@ -1,5 +1,5 @@
 //
-//  TestContent.swift
+//  TestContent Basic.swift
 //  PrefsKit • https://github.com/orchetect/PrefsKit
 //  © 2025 Steffan Andrews • Licensed under MIT License
 //
@@ -90,50 +90,50 @@ extension TestContent.Basic {
         """
     
     static let jsonString: String = #"""
+    {
+      "key1": "string",
+      "key2": 123,
+      "key3": true,
+      "key4": "AQI=",
+      "key5": "2025-01-07T05:32:03Z",
+      "key6": [
+        "string1",
+        "string2"
+      ],
+      "key7": [
+        "string",
+        123.5,
+        false
+      ],
+      "key8": [
+        [
+          "string"
+        ],
         {
-          "key1": "string",
-          "key2": 123,
-          "key3": true,
-          "key4": "AQI=",
-          "key5": "2025-01-07T05:32:03Z",
-          "key6": [
-            "string1",
-            "string2"
-          ],
-          "key7": [
-            "string",
-            123.5,
-            false
-          ],
-          "key8": [
-            [
-              "string"
-            ],
-            {
-              "keyA": "stringA",
-              "keyB": 234
-            }
-          ],
-          "key9": {
-            "keyA": "stringA",
-            "keyB": "stringB"
-          },
-          "key10": {
-            "keyA": "string",
-            "keyB": 789.5,
-            "keyC": "AwQ="
-          },
-          "key11": {
-            "keyB": {
-              "keyI": "string",
-              "keyII": 567
-            },
-            "keyA": [
-              "string"
-            ]
-          }
+          "keyA": "stringA",
+          "keyB": 234
         }
-        """#
+      ],
+      "key9": {
+        "keyA": "stringA",
+        "keyB": "stringB"
+      },
+      "key10": {
+        "keyA": "string",
+        "keyB": 789.5,
+        "keyC": "AwQ="
+      },
+      "key11": {
+        "keyB": {
+          "keyI": "string",
+          "keyII": 567
+        },
+        "keyA": [
+          "string"
+        ]
+      }
+    }
+    """#
 }
 
 extension TestContent.Basic {
@@ -171,7 +171,7 @@ extension TestContent.Basic {
         
         enum Key4 {
             static let key: String = "key4"
-            static let value: Data = Data([0x01, 0x02])
+            static let value: Data = .init([0x01, 0x02])
         }
         
         enum Key5 {
@@ -202,6 +202,7 @@ extension TestContent.Basic {
                 static let key: String = "keyA"
                 static let value: String = "stringA"
             }
+
             enum KeyB {
                 static let key: String = "keyB"
                 static let value: Int = 234
@@ -215,6 +216,7 @@ extension TestContent.Basic {
                 static let key: String = "keyA"
                 static let value: String = "stringA"
             }
+
             enum KeyB {
                 static let key: String = "keyB"
                 static let value: String = "stringB"
@@ -232,13 +234,15 @@ extension TestContent.Basic {
                 static let key: String = "keyA"
                 static let value: String = "string"
             }
+
             enum KeyB {
                 static let key: String = "keyB"
                 static let value: Double = 789.5
             }
+
             enum KeyC {
                 static let key: String = "keyC"
-                static let value: Data = Data([0x03, 0x04])
+                static let value: Data = .init([0x03, 0x04])
             }
         }
         
@@ -250,10 +254,12 @@ extension TestContent.Basic {
                     KeyB.key: KeyB.value
                 ]
             }
+
             enum KeyA {
                 static let key: String = "keyA"
                 static let value: [String] = ["string"]
             }
+
             enum KeyB {
                 static let key: String = "keyB"
                 static var value: [String: Any] { [KeyI.key: KeyI.value, KeyII.key: KeyII.value] }
@@ -261,6 +267,7 @@ extension TestContent.Basic {
                     static let key: String = "keyI"
                     static let value: String = "string"
                 }
+
                 enum KeyII {
                     static let key: String = "keyII"
                     static let value: Int = 567

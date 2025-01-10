@@ -7,7 +7,7 @@
 import Foundation
 
 extension AnyPrefsStorage: PrefsStorageExportable {
-    public func dictionaryRepresentation() throws -> [String : Any] {
+    public func dictionaryRepresentation() throws -> [String: Any] {
         guard let wrapped = wrapped as? PrefsStorageExportable else {
             throw PrefsStorageError.contentExportingNotSupported
         }

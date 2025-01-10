@@ -14,7 +14,7 @@ extension UserDefaults {
         // the user to conditionally cast it as the number type they desire.
         
         switch value {
-            // MARK: Atomic
+        // MARK: Atomic
         case let value as NSString:
             return value as String
         case let value as Bool where "\(type(of: value))" == "__NSCFBoolean":
@@ -25,11 +25,10 @@ extension UserDefaults {
             return value as Data
         case let value as NSDate:
             return value as Date
-            
-            // MARK: Arrays
+        // MARK: Arrays
         case let value as [NSString]:
             return value as [String]
-        case let value as [Bool] where value.allSatisfy({"\(type(of: $0))" == "__NSCFBoolean"}):
+        case let value as [Bool] where value.allSatisfy { "\(type(of: $0))" == "__NSCFBoolean" }:
             return value
         case let value as [NSNumber]:
             return value
@@ -39,11 +38,10 @@ extension UserDefaults {
             return value as [Date]
         case let value as [Any]:
             return value.map(castAsPrefsStorageCompatible(value:))
-            
-            // MARK: Dictionaries
+        // MARK: Dictionaries
         case let value as [NSString: NSString]:
             return value as [String: String]
-        case let value as [NSString: Bool] where value.values.allSatisfy({"\(type(of: $0))" == "__NSCFBoolean"}):
+        case let value as [NSString: Bool] where value.values.allSatisfy { "\(type(of: $0))" == "__NSCFBoolean" }:
             return value as [String: Bool]
         case let value as [NSString: NSNumber]:
             return value as [String: NSNumber]
@@ -53,8 +51,7 @@ extension UserDefaults {
             return value as [String: Date]
         case let value as [String: Any]:
             return value.mapValues(castAsPrefsStorageCompatible(value:))
-            
-            // MARK: Default
+        // MARK: Default
         default:
             assertionFailure("Unhandled UserDefaults pref storage value type: \(type(of: value))")
             return value

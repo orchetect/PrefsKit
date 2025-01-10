@@ -841,7 +841,7 @@ struct UserDefaultsPrefsSchemaTests {
     //     #expect(schema.anyDictDefaulted.count == 2)
     //     #expect(schema.anyDictDefaulted["foo"]?.unwrapped as? Int == 123)
     //     #expect(schema.anyDictDefaulted["bar"]?.unwrapped as? String == "a string")
-    // 
+    //
     //     schema.anyDictDefaulted = ["abc": 456].asAnyPrefsStorageValues
     //     #expect(schema.anyDictDefaulted.count == 1)
     //     #expect(schema.anyDictDefaulted["abc"]?.unwrapped as? Int == 456)

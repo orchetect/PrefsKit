@@ -61,7 +61,9 @@ struct PrefsStorageExportableTests {
         let dict = try #require(json as? [String: Any])
         
         if dict.count > 11 {
-            withKnownIssue("UserDefaults suite includes all search lists when requesting its `dictionaryRepresentation()`, which means a lot more keys than expected may be included.") {
+            withKnownIssue(
+                "UserDefaults suite includes all search lists when requesting its `dictionaryRepresentation()`, which means a lot more keys than expected may be included."
+            ) {
                 #expect(dict.count == 11)
                 // dict = dict.filter { keys.contains($0.key) }
             }
@@ -91,7 +93,9 @@ struct PrefsStorageExportableTests {
         let dict = try #require(json as? [String: Any])
         
         if dict.count > 11 {
-            withKnownIssue("UserDefaults suite includes all search lists when requesting its `dictionaryRepresentation()`, which means a lot more keys than expected may be included.") {
+            withKnownIssue(
+                "UserDefaults suite includes all search lists when requesting its `dictionaryRepresentation()`, which means a lot more keys than expected may be included."
+            ) {
                 #expect(dict.count == 11)
                 // dict = dict.filter { keys.contains($0.key) }
             }
@@ -117,7 +121,9 @@ struct PrefsStorageExportableTests {
         var dict = try #require(plist as? [String: Any])
         
         if dict.count > 11 {
-            withKnownIssue("UserDefaults suite includes all search lists when requesting its `dictionaryRepresentation()`, which means a lot more keys than expected may be included.") {
+            withKnownIssue(
+                "UserDefaults suite includes all search lists when requesting its `dictionaryRepresentation()`, which means a lot more keys than expected may be included."
+            ) {
                 #expect(dict.count == 11)
                 dict = dict.filter { keys.contains($0.key) }
             }
@@ -145,7 +151,9 @@ struct PrefsStorageExportableTests {
         var dict = try #require(plist as? [String: Any])
         
         if dict.count > 11 {
-            withKnownIssue("UserDefaults suite includes all search lists when requesting its `dictionaryRepresentation()`, which means a lot more keys than expected may be included.") {
+            withKnownIssue(
+                "UserDefaults suite includes all search lists when requesting its `dictionaryRepresentation()`, which means a lot more keys than expected may be included."
+            ) {
                 #expect(dict.count == 11)
                 dict = dict.filter { keys.contains($0.key) }
             }
