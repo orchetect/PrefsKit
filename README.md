@@ -536,17 +536,17 @@ let prefs = Prefs()
 ```swift
 // load plist file content from a file on disk
 let plistContent: [String: Any] = /* ... */
-try prefs.storage.load(from: URL(/* ... */), format: .plist(), by: .replacingStorage)
+try prefs.storage.load(from: URL(/* ... */), format: .plist(), by: .reinitializing)
 ```
 
 ```swift
 // load raw plist file content
-try prefs.storage.load(from: Data(/* ... */), format: .plist(), by: .replacingStorage)
+try prefs.storage.load(from: Data(/* ... */), format: .plist(), by: .reinitializing)
 ```
 
 ```swift
 // load plist content in the form of XML string
-try prefs.storage.load(from: /* plist XML string */), format: .plist(), by: .replacingStorage)
+try prefs.storage.load(from: /* plist XML string */), format: .plist(), by: .reinitializing)
 ```
 
 ### Importing Deserialized Storage
@@ -572,7 +572,7 @@ let prefs = Prefs()
 ```swift
 // load stongly-typed content (safe)
 let newContent: [String: any PrefsStorageValue] = /* ... */
-try prefs.storage.load(from: plistContent, by: .mergingWithStorage)
+try prefs.storage.load(from: plistContent, by: .updating)
 ```
 
 ```swift
@@ -581,7 +581,7 @@ try prefs.storage.load(from: plistContent, by: .mergingWithStorage)
 // such as if your codebase has an API that gives you plist dictionary contents
 // which is 1:1 compatible with `PrefsStorage`
 let plistContent: [String: Any] = /* ... */
-try prefs.storage.load(unsafe: plistContent, by: .mergingWithStorage)
+try prefs.storage.load(unsafe: plistContent, by: .updating)
 ```
 
 ### Exporting Storage
