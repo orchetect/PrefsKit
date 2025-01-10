@@ -6,7 +6,10 @@
 
 import Foundation
 
-/// Dictionary-backed ``PrefsStorage`` with internally-synchronized dictionary access.
+/// Dictionary-backed ``PrefsStorage`` for use in ``PrefsSchema`` with internally-synchronized local access.
+///
+/// This class may be used as-is, or subclassed to add additional functionality to dictionary-backed storage as an
+/// alternative to implementing a custom ``PrefsStorage`` type.
 open class DictionaryPrefsStorage: PrefsStorageInitializable {
     @SynchronizedLock
     var storage: [String: Any]

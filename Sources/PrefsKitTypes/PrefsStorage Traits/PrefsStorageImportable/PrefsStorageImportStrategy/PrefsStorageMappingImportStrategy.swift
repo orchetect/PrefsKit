@@ -6,6 +6,9 @@
 
 import Foundation
 
+/// Prefs import strategy that provides a framework for mapping/converting value types.
+/// Default implementation is provided and `importValue` methods may be overridden to provide custom behavior for any
+/// atomic storage value type.
 public protocol PrefsStorageMappingImportStrategy: PrefsStorageImportStrategy {
     /// When `true`, ambiguous floating-point values will be type-erased as `NSNumber`.
     ///

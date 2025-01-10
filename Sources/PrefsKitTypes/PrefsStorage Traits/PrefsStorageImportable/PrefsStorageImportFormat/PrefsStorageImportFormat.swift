@@ -6,19 +6,27 @@
 
 import Foundation
 
+/// Protocol that allows creating a type that implements storage content importing from a particular data serialization
+/// format.
 public protocol PrefsStorageImportFormat { }
 
 // MARK: - Format Traits
 
-public protocol PrefsStorageImportFormatDataImportable where Self: PrefsStorageImportFormat {
-    func load(from data: Data) throws -> [String: Any]
-}
-
+/// Trait for ``PrefsStorageImportFormat`` that enables importing serialized storage content from a file on disk.
 public protocol PrefsStorageImportFormatFileImportable where Self: PrefsStorageImportFormat {
+    /// Read data into a raw dictionary, ready to be processed by the import strategy.
     func load(from file: URL) throws -> [String: Any]
 }
 
+/// Trait for ``PrefsStorageImportFormat`` that enables importing serialized storage content from raw data.
+public protocol PrefsStorageImportFormatDataImportable where Self: PrefsStorageImportFormat {
+    /// Read data into a raw dictionary, ready to be processed by the import strategy.
+    func load(from data: Data) throws -> [String: Any]
+}
+
+/// Trait for ``PrefsStorageImportFormat`` that enables importing serialized storage content from string encoding/markup.
 public protocol PrefsStorageImportFormatStringImportable where Self: PrefsStorageImportFormat {
+    /// Read data into a raw dictionary, ready to be processed by the import strategy.
     func load(from string: String) throws -> [String: Any]
 }
 

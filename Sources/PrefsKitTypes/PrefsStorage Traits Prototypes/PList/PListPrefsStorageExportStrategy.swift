@@ -6,6 +6,7 @@
 
 import Foundation
 
+/// Prefs storage export strategy to export storage as plist (property list).
 public struct PListPrefsStorageExportStrategy {
     public init() { }
 }
@@ -20,6 +21,7 @@ extension PListPrefsStorageExportStrategy: PrefsStorageExportStrategy {
 // MARK: - Static Constructor
 
 extension PrefsStorageExportStrategy where Self == PListPrefsStorageExportStrategy {
+    /// Prefs storage export strategy to export storage as plist (property list).
     public static var plist: PListPrefsStorageExportStrategy {
         PListPrefsStorageExportStrategy()
     }

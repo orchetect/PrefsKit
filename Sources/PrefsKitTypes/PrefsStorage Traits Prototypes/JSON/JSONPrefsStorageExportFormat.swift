@@ -6,6 +6,10 @@
 
 import Foundation
 
+/// Prefs storage export format to export storage as JSON.
+///
+/// Since JSON is a does not support all atomic types that ``PrefsStorage`` supports, it is required that you create and
+/// supply your own export strategy.
 public struct JSONPrefsStorageExportFormat: PrefsStorageExportFormat {
     public var options: JSONSerialization.WritingOptions
     public var strategy: any PrefsStorageExportStrategy
@@ -22,6 +26,10 @@ public struct JSONPrefsStorageExportFormat: PrefsStorageExportFormat {
 // MARK: - Static Constructor
 
 extension PrefsStorageExportFormat where Self == JSONPrefsStorageExportFormat {
+    /// Prefs storage export format to export storage as JSON.
+    ///
+    /// Since JSON is a does not support all atomic types that ``PrefsStorage`` supports, it is required that you create
+    /// and supply your own export strategy.
     public static func json(
         options: JSONSerialization.WritingOptions = [],
         strategy: any PrefsStorageExportStrategy

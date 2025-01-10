@@ -6,6 +6,7 @@
 
 import Foundation
 
+/// UserDefaults-backed ``PrefsStorage`` for use in ``PrefsSchema``.
 open class UserDefaultsPrefsStorage {
     public let suite: UserDefaults
     

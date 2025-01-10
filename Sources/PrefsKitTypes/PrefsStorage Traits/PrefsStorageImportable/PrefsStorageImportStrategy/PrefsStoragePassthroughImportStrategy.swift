@@ -6,6 +6,8 @@
 
 import Foundation
 
+/// A prefs storage import strategy that passes imported data through without any modification, conversion, or
+/// casting.
 public struct PrefsStoragePassthroughImportStrategy {
     public init() { }
 }
@@ -20,6 +22,8 @@ extension PrefsStoragePassthroughImportStrategy: PrefsStorageImportStrategy {
 // MARK: - Static Constructor
 
 extension PrefsStorageImportStrategy where Self == PrefsStoragePassthroughImportStrategy {
+    /// A prefs storage import strategy that passes imported data through without any modification, conversion, or
+    /// casting.
     public static var passthrough: PrefsStoragePassthroughImportStrategy {
         PrefsStoragePassthroughImportStrategy()
     }

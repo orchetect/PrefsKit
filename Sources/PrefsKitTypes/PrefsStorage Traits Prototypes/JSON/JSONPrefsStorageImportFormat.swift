@@ -6,6 +6,10 @@
 
 import Foundation
 
+/// Prefs storage import format to import JSON contents.
+///
+/// Since JSON is a does not support all atomic types that ``PrefsStorage`` supports, it is required that you create and
+/// supply your own import strategy.
 public struct JSONPrefsStorageImportFormat: PrefsStorageImportFormat {
     public var options: JSONSerialization.ReadingOptions
     
@@ -23,6 +27,10 @@ public struct JSONPrefsStorageImportFormat: PrefsStorageImportFormat {
 // MARK: - Static Constructor
 
 extension PrefsStorageImportFormat where Self == JSONPrefsStorageImportFormat {
+    /// Prefs storage import format to import JSON contents.
+    ///
+    /// Since JSON is a does not support all atomic types that ``PrefsStorage`` supports, it is required that you create
+    /// and supply your own import strategy.
     public static func json(
         options: JSONSerialization.ReadingOptions = [],
         strategy: any PrefsStorageImportStrategy

@@ -20,18 +20,21 @@ public protocol PrefsStorageImportable where Self: PrefsStorage {
     /// Load key/values into storage.
     func load(unsafe contents: [String: Any], by behavior: PrefsStorageUpdateStrategy) throws
     
+    /// Import storage contents from a file on disk.
     func load<Format: PrefsStorageImportFormat>(
         from file: URL,
         format: Format,
         by behavior: PrefsStorageUpdateStrategy
     ) throws where Format: PrefsStorageImportFormatFileImportable
     
+    /// Import storage contents from a format's raw data.
     func load<Format: PrefsStorageImportFormat>(
         from data: Data,
         format: Format,
         by behavior: PrefsStorageUpdateStrategy
     ) throws where Format: PrefsStorageImportFormatDataImportable
     
+    /// Import storage contents from a format that supports string encoding/markup.
     func load<Format: PrefsStorageImportFormat>(
         from string: String,
         format: Format,

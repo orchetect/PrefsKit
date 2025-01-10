@@ -6,6 +6,7 @@
 
 import Foundation
 
+/// Prefs storage import format to import plist (property list) contents.
 public struct PListPrefsStorageImportFormat: PrefsStorageImportFormat {
     public var strategy: any PrefsStorageImportStrategy
     
@@ -19,6 +20,7 @@ public struct PListPrefsStorageImportFormat: PrefsStorageImportFormat {
 // MARK: - Static Constructor
 
 extension PrefsStorageImportFormat where Self == PListPrefsStorageImportFormat {
+    /// Prefs storage import format to import plist (property list) contents.
     public static func plist(
         strategy: any PrefsStorageImportStrategy = .plist
     ) -> PListPrefsStorageImportFormat {

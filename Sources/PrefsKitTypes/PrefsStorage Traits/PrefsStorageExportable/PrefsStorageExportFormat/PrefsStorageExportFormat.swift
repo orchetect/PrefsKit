@@ -6,18 +6,23 @@
 
 import Foundation
 
+/// Protocol that allows creating a type that implements storage content exporting to a particular data serialization
+/// format.
 public protocol PrefsStorageExportFormat { }
 
 // MARK: - Format Traits
 
-public protocol PrefsStorageExportFormatDataExportable where Self: PrefsStorageExportFormat {
-    func exportData(storage: [String: Any]) throws -> Data
-}
-
+/// Trait for ``PrefsStorageExportFormat`` that enables exporting storage to a file on disk.
 public protocol PrefsStorageExportFormatFileExportable where Self: PrefsStorageExportFormat {
     func export(storage: [String: Any], to file: URL) throws
 }
 
+/// Trait for ``PrefsStorageExportFormat`` that enables exporting storage as raw data.
+public protocol PrefsStorageExportFormatDataExportable where Self: PrefsStorageExportFormat {
+    func exportData(storage: [String: Any]) throws -> Data
+}
+
+/// Trait for ``PrefsStorageExportFormat`` that enables exporting storage as string encoding/markup.
 public protocol PrefsStorageExportFormatStringExportable where Self: PrefsStorageExportFormat {
     func exportString(storage: [String: Any]) throws -> String
 }

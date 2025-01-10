@@ -6,6 +6,7 @@
 
 import Foundation
 
+/// Prefs storage export format to export storage as plist (property list).
 public struct PListPrefsStorageExportFormat: PrefsStorageExportFormat {
     public var format: PropertyListSerialization.PropertyListFormat
     public var strategy: any PrefsStorageExportStrategy
@@ -22,6 +23,7 @@ public struct PListPrefsStorageExportFormat: PrefsStorageExportFormat {
 // MARK: - Static Constructor
 
 extension PrefsStorageExportFormat where Self == PListPrefsStorageExportFormat {
+    /// Prefs storage export format to export storage as plist (property list).
     public static func plist(
         format: PropertyListSerialization.PropertyListFormat = .xml,
         strategy: some PrefsStorageExportStrategy = .plist

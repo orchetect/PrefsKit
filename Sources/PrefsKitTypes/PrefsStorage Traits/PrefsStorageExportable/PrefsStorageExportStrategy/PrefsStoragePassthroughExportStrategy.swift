@@ -4,6 +4,8 @@
 //  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
+/// A prefs storage export strategy that passes local storage data through without any modification, conversion, or
+/// casting.
 public struct PrefsStoragePassthroughExportStrategy {
     public init() { }
 }
@@ -18,6 +20,8 @@ extension PrefsStoragePassthroughExportStrategy: PrefsStorageExportStrategy {
 // MARK: - Static Constructor
 
 extension PrefsStorageExportStrategy where Self == PrefsStoragePassthroughExportStrategy {
+    /// A prefs storage export strategy that passes local storage data through without any modification, conversion,
+    /// or casting.
     public static var passthrough: PrefsStoragePassthroughExportStrategy {
         PrefsStoragePassthroughExportStrategy()
     }
