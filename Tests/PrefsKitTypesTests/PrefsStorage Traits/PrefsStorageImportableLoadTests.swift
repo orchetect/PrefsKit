@@ -53,7 +53,7 @@ struct PrefsStorageImportableLoadTests {
             "boo": true // new key that doesn't exist
         ]
         
-        try storage.load(raw: newContent, by: .replacingStorage)
+        try storage.load(from: newContent, by: .replacingStorage)
         
         #expect(storage.storageValue(forKey: "foo") == "new string")
         #expect(storage.storageValue(forKey: "bar") == Data([0x01, 0x02]))
@@ -69,7 +69,7 @@ struct PrefsStorageImportableLoadTests {
             "boo": true // new key that doesn't exist
         ]
         
-        try storage.load(raw: newContent, by: .mergingWithStorage)
+        try storage.load(from: newContent, by: .mergingWithStorage)
         
         #expect(storage.storageValue(forKey: "foo") == "new string")
         #expect(storage.storageValue(forKey: "bar") == Data([0x01, 0x02]))

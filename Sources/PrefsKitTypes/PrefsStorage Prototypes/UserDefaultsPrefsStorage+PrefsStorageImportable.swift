@@ -7,7 +7,7 @@
 import Foundation
 
 extension UserDefaultsPrefsStorage: PrefsStorageImportable {
-    public func load(raw contents: [String: any PrefsStorageValue], by behavior: PrefsStorageUpdateStrategy) throws {
+    public func load(from contents: [String: any PrefsStorageValue], by behavior: PrefsStorageUpdateStrategy) throws {
         switch behavior {
         case .replacingStorage:
             suite.removeAllKeys()

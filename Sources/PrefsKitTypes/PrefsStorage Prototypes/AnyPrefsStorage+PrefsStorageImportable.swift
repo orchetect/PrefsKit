@@ -7,11 +7,11 @@
 import Foundation
 
 extension AnyPrefsStorage: PrefsStorageImportable {
-    public func load(raw contents: [String: any PrefsStorageValue], by behavior: PrefsStorageUpdateStrategy) throws {
+    public func load(from contents: [String: any PrefsStorageValue], by behavior: PrefsStorageUpdateStrategy) throws {
         guard let wrapped = wrapped as? PrefsStorageImportable else {
             throw PrefsStorageError.contentLoadingNotSupported
         }
-        try wrapped.load(raw: contents, by: behavior)
+        try wrapped.load(from: contents, by: behavior)
     }
     
     public func load(unsafe contents: [String: Any], by behavior: PrefsStorageUpdateStrategy) throws {
