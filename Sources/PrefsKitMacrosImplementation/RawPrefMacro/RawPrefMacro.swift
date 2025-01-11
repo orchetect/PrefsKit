@@ -53,7 +53,7 @@ extension RawPrefMacro /* : AccessorMacro */ {
         )
         
         let typeName = typeInfo.typeName
-        let optionalTypeName = typeInfo.typeName + (typeInfo.isOptional ? "?" : "")
+        // let optionalTypeName = typeInfo.typeName + (typeInfo.isOptional ? "?" : "")
         
         return [
             """
