@@ -80,15 +80,25 @@ extension UserDefaultsPrefsStorage: PrefsStorage {
         }
     }
     
-    public func storageValue(forKey key: String) -> [Any]? {
+    public func unsafeStorageValue(forKey key: String) -> Any? {
+        suite.object(forKey: key)
+    }
+}
+
+// MARK: - Additional Storage Access Methods
+
+extension UserDefaultsPrefsStorage {
+    public func unsafeStorageValue(forKey key: String) -> [Any]? {
         guard let rawArray = suite.array(forKey: key) else { return nil }
-        let typedArray = rawArray.map(UserDefaults.castAsPrefsStorageCompatible(value:))
+        let typedArray = rawArray
+            .map(UserDefaults.castAsPrefsStorageCompatible(value:)) // TODO: may not be necessary
         return typedArray
     }
     
-    public func storageValue(forKey key: String) -> [String: Any]? {
+    public func unsafeStorageValue(forKey key: String) -> [String: Any]? {
         guard let rawDict = suite.dictionary(forKey: key) else { return nil }
-        let typedDict = rawDict.mapValues(UserDefaults.castAsPrefsStorageCompatible(value:))
+        let typedDict = rawDict
+            .mapValues(UserDefaults.castAsPrefsStorageCompatible(value:)) // TODO: may not be necessary
         return typedDict
     }
 }

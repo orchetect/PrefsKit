@@ -52,6 +52,9 @@ extension RawPrefMacro /* : AccessorMacro */ {
             customCodingDecl: "" // not used
         )
         
+        let typeName = typeInfo.typeName
+        let optionalTypeName = typeInfo.typeName + (typeInfo.isOptional ? "?" : "")
+        
         return [
             """
             get {
@@ -59,11 +62,11 @@ extension RawPrefMacro /* : AccessorMacro */ {
                 switch storageMode {
                 case .cachedReadStorageWrite:
                     if \(raw: privateValueVarName) == nil {
-                        \(raw: privateValueVarName) = storage.storageValue(forKey: \(raw: keyName))
+                        \(raw: privateValueVarName) = storage.unsafeStorageValue(forKey: \(raw: keyName)) as? \(raw: typeName)
                     }
                     return \(raw: privateValueVarName)\(raw: defaultValue != nil ? " ?? \(defaultValue!)" : "")
                 case .storageOnly: 
-                    return storage.storageValue(forKey: \(raw: keyName))\(raw: defaultValue != nil ? " ?? \(defaultValue!)" : "")
+                    return (storage.unsafeStorageValue(forKey: \(raw: keyName)) as? \(raw: typeName))\(raw: defaultValue != nil ? " ?? \(defaultValue!)" : "")
                 }
             }
             """,
@@ -87,12 +90,12 @@ extension RawPrefMacro /* : AccessorMacro */ {
                 switch storageMode {
                 case .cachedReadStorageWrite:
                     if \(raw: privateValueVarName) == nil {
-                        \(raw: privateValueVarName) = storage.storageValue(forKey: \(raw: keyName))\(raw: defaultValue != nil ? " ?? \(defaultValue!)" : "")
+                        \(raw: privateValueVarName) = (storage.unsafeStorageValue(forKey: \(raw: keyName)) as? \(raw: typeName))\(raw: defaultValue != nil ? " ?? \(defaultValue!)" : "")
                     }
                     yield &\(raw: privateValueVarName)\(raw: defaultValue != nil ? "!" : "")
                     storage.setUnsafeStorageValue(forKey: \(raw: keyName), to: \(raw: privateValueVarName))
                 case .storageOnly:
-                    var val: \(raw: typeInfo.typeName)\(raw: typeInfo.isOptional ? "?" : "") = storage.storageValue(forKey: \(raw: keyName))\(raw: defaultValue != nil ? " ?? \(defaultValue!)" : "")
+                    var val = (storage.unsafeStorageValue(forKey: \(raw: keyName)) as? \(raw: typeName))\(raw: defaultValue != nil ? " ?? \(defaultValue!)" : "")
                     yield &val
                     storage.setUnsafeStorageValue(forKey: \(raw: keyName), to: val)
                 }

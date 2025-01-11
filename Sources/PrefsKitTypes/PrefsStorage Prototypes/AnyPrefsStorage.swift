@@ -64,11 +64,7 @@ extension AnyPrefsStorage {
         wrapped.storageValue(forKey: key)
     }
     
-    public func storageValue(forKey key: String) -> [Any]? {
-        wrapped.storageValue(forKey: key)
-    }
-    
-    public func storageValue(forKey key: String) -> [String: Any]? {
-        wrapped.storageValue(forKey: key)
+    public func unsafeStorageValue(forKey key: String) -> Any? {
+        wrapped.unsafeStorageValue(forKey: key)
     }
 }

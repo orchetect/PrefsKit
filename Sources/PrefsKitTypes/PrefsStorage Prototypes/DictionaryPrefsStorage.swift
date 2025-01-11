@@ -109,11 +109,7 @@ extension DictionaryPrefsStorage: PrefsStorage {
         storage[key] as? [String: Element]
     }
     
-    public func storageValue(forKey key: String) -> [Any]? {
-        storage[key] as? [Any]
-    }
-    
-    public func storageValue(forKey key: String) -> [String: Any]? {
-        storage[key] as? [String: Any]
+    public func unsafeStorageValue(forKey key: String) -> Any? {
+        storage[key]
     }
 }
