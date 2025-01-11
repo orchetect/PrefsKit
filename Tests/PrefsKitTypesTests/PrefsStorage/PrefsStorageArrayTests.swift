@@ -96,9 +96,7 @@ struct PrefsStorageArrayTests {
     @Test(arguments: Self.storageBackends)
     func anyPrefsArrayArray(storage: AnyPrefsStorage) async throws {
         let array: [Any] = [1, 2, "string", true]
-        storage.setStorageValue(forKey: "foo", to: array)
-        
-        // TODO: test a new key type to accommodate `[Any]`?
+        storage.setUnsafeStorageValue(forKey: "foo", to: array)
         
         let value: [Any] = try #require(storage.storageValue(forKey: "foo"))
         try #require(value.count == 4)
@@ -125,9 +123,7 @@ struct PrefsStorageArrayTests {
     @Test(arguments: Self.storageBackends)
     func nestedAnyArray(storage: AnyPrefsStorage) async throws {
         let array: [Any] = [["a", 2], [true]]
-        storage.setStorageValue(forKey: "foo", to: array)
-        
-        // TODO: test a new key type to accommodate `[Any]`?
+        storage.setUnsafeStorageValue(forKey: "foo", to: array)
         
         let value: [Any] = try #require(storage.storageValue(forKey: "foo"))
         try #require(value.count == 2)

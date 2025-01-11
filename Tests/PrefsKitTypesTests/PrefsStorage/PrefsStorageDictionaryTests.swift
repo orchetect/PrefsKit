@@ -102,7 +102,7 @@ struct PrefsStorageDictionaryTests {
     @Test(arguments: Self.storageBackends)
     func anyDictionaryArray(storage: AnyPrefsStorage) async throws {
         let valueDict: [String: Any] = ["one": 1, "two": 2, "string": "string", "bool": true]
-        storage.setStorageValue(forKey: "foo", to: valueDict)
+        storage.setUnsafeStorageValue(forKey: "foo", to: valueDict)
         
         // TODO: test a new key type to accommodate `[String: Any]`?
         
@@ -121,7 +121,7 @@ struct PrefsStorageDictionaryTests {
     func nestedAnyDictionaryArray(storage: AnyPrefsStorage) async throws {
         let valueDictInner: [String: Any] = ["one": 1, "two": 2, "string": "string", "bool": true]
         let valueDictOuter = ["bar": valueDictInner]
-        storage.setStorageValue(forKey: "foo", to: valueDictOuter)
+        storage.setUnsafeStorageValue(forKey: "foo", to: valueDictOuter)
         
         // TODO: test a new key type to accommodate `[String: Any]`?
         
