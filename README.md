@@ -414,7 +414,9 @@ The storage property may be accessed directly using `value(forKey:)` and `setVal
 
 ### Mixed Value Type Collections
 
-To ensure type safety, mixed value types in arrays (aka `[Any]`) or dictionaries (aka `[String: Any]`) are treated differently in a prefs schema, using the `@RawPref` type declaration. PrefsKit typically restricts types to safe atomic types to ensure compatibility between different storage backends (UserDefaults, plist, etc.).
+To ensure type safety, mixed value types in arrays (aka `[Any]`) or dictionaries (aka `[String: Any]`) are treated differently in a prefs schema, using the `@RawPref` type declaration.
+
+PrefsKit typically restricts types to safe atomic types to ensure compatibility between different storage backends (UserDefaults, plist, etc.) but these raw types may be used in edge cases where more flexibility is required with less safety.
 
 Raw access to preference keys can be used as an accommodation for migrating from an old prefs storage format to one that is compatible with PrefsKit's `@PrefsSchema`.
 
