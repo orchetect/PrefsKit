@@ -18,6 +18,7 @@ struct PrefsKitMacrosPlugin: CompilerPlugin {
         InlinePrefMacro.self,
         RawRepresentablePrefMacro.self,
         JSONDataCodablePrefMacro.self,
-        JSONStringCodablePrefMacro.self
+        JSONStringCodablePrefMacro.self,
+        RawPrefMacro.self
     ]
 }

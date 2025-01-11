@@ -1,5 +1,5 @@
 //
-//  PrefMacro.swift
+//  RawPrefMacro.swift
 //  PrefsKit • https://github.com/orchetect/PrefsKit
 //  © 2025 Steffan Andrews • Licensed under MIT License
 //
@@ -10,14 +10,14 @@ import SwiftSyntax
 import SwiftSyntaxBuilder
 import SwiftSyntaxMacros
 
-public protocol PrefMacro: AccessorMacro, PeerMacro {
-    static var keyStructName: String { get }
-    static var defaultedKeyStructName: String { get }
-    static var hasCustomCoding: Bool { get }
-    static var hasInlineCoding: Bool { get }
+public struct RawPrefMacro: PrefMacro, AccessorMacro, PeerMacro {
+    public static let keyStructName: String = "" // not used
+    public static let defaultedKeyStructName: String = "" // not used
+    public static let hasCustomCoding: Bool = false
+    public static let hasInlineCoding: Bool = false
 }
 
-extension PrefMacro /* : AccessorMacro */ {
+extension RawPrefMacro /* : AccessorMacro */ {
     public static func expansion(
         of node: AttributeSyntax,
         providingAccessorsOf declaration: some DeclSyntaxProtocol,
@@ -33,12 +33,24 @@ extension PrefMacro /* : AccessorMacro */ {
         }
         
         let varName = try PrefMacroUtils.varName(from: varDec)
-        let privateKeyVarName = "\(PrefMacroUtils.privateCodingVarPrefix)\(varName)"
         let privateValueVarName = "\(PrefMacroUtils.privateValueVarPrefix)\(varName)"
         
         let keyPath = #"\."# + varName.description
         
-        let hasDefault = (try? PrefMacroUtils.defaultValue(from: varDec)) != nil
+        let defaultValue = try? PrefMacroUtils.defaultValue(from: varDec)
+        
+        let (keyArg, _ /* codingArg */, _ /* encodeArg */, _ /* decodeArg */) = try PrefMacroUtils.args(from: node)
+        // use variable name as the key name if key was not supplied
+        let keyName = keyArg?.expression.description ?? "\"\(varName)\""
+        
+        let typeInfo = try TypeBindingInfo(
+            for: Self.self,
+            from: varDec,
+            keyName: keyName,
+            privateKeyVarName: "", // not used
+            privateValueVarName: privateValueVarName,
+            customCodingDecl: "" // not used
+        )
         
         return [
             """
@@ -47,18 +59,18 @@ extension PrefMacro /* : AccessorMacro */ {
                 switch storageMode {
                 case .cachedReadStorageWrite:
                     if \(raw: privateValueVarName) == nil {
-                        \(raw: privateValueVarName) = storage.value(forKey: \(raw: privateKeyVarName))
+                        \(raw: privateValueVarName) = storage.storageValue(forKey: \(raw: keyName))
                     }
-                    return \(raw: privateValueVarName)\(raw: hasDefault ? " ?? \(privateKeyVarName).defaultValue" : "")
-                case .storageOnly:
-                    return storage.value(forKey: \(raw: privateKeyVarName))
+                    return \(raw: privateValueVarName)\(raw: defaultValue != nil ? " ?? \(defaultValue!)" : "")
+                case .storageOnly: 
+                    return storage.storageValue(forKey: \(raw: keyName))\(raw: defaultValue != nil ? " ?? \(defaultValue!)" : "")
                 }
             }
             """,
             """
             set {
                 withMutation(keyPath: \(raw: keyPath)) {
-                    storage.setValue(forKey: \(raw: privateKeyVarName), to: newValue)
+                    storage.setUnsafeStorageValue(forKey: \(raw: keyName), to: newValue)
                     if storageMode == .cachedReadStorageWrite {
                         \(raw: privateValueVarName) = newValue
                     }
@@ -75,14 +87,14 @@ extension PrefMacro /* : AccessorMacro */ {
                 switch storageMode {
                 case .cachedReadStorageWrite:
                     if \(raw: privateValueVarName) == nil {
-                        \(raw: privateValueVarName) = storage.value(forKey: \(raw: privateKeyVarName))
+                        \(raw: privateValueVarName) = storage.storageValue(forKey: \(raw: keyName))\(raw: defaultValue != nil ? " ?? \(defaultValue!)" : "")
                     }
-                    yield &\(raw: privateValueVarName)\(raw: hasDefault ? "!" : "")
-                    storage.setValue(forKey: \(raw: privateKeyVarName), to: \(raw: privateValueVarName))
+                    yield &\(raw: privateValueVarName)\(raw: defaultValue != nil ? "!" : "")
+                    storage.setUnsafeStorageValue(forKey: \(raw: keyName), to: \(raw: privateValueVarName))
                 case .storageOnly:
-                    var val = storage.value(forKey: \(raw: privateKeyVarName))
+                    var val: \(raw: typeInfo.typeName)\(raw: typeInfo.isOptional ? "?" : "") = storage.storageValue(forKey: \(raw: keyName))\(raw: defaultValue != nil ? " ?? \(defaultValue!)" : "")
                     yield &val
-                    storage.setValue(forKey: \(raw: privateKeyVarName), to: val)
+                    storage.setUnsafeStorageValue(forKey: \(raw: keyName), to: val)
                 }
             }
             """
@@ -90,7 +102,7 @@ extension PrefMacro /* : AccessorMacro */ {
     }
 }
 
-extension PrefMacro /* : PeerMacro */ {
+extension RawPrefMacro /* : PeerMacro */ {
     public static func expansion(
         of node: AttributeSyntax,
         providingPeersOf declaration: some DeclSyntaxProtocol,
@@ -102,39 +114,22 @@ extension PrefMacro /* : PeerMacro */ {
         }
         
         let varName = try PrefMacroUtils.varName(from: varDec).description
-        let privateKeyVarName = "\(PrefMacroUtils.privateCodingVarPrefix)\(varName)"
         let privateValueVarName = "\(PrefMacroUtils.privateValueVarPrefix)\(varName)"
         
-        let (keyArg, codingArg, encodeArg, decodeArg) = try PrefMacroUtils.args(from: node)
+        let (keyArg, _ /* codingArg */, _ /* encodeArg */, _ /* decodeArg */) = try PrefMacroUtils.args(from: node)
         // use variable name as the key name if key was not supplied
         let keyName = keyArg?.expression.description ?? "\"\(varName)\""
-        
-        var customCodingDecl: String?
-        if hasCustomCoding {
-            guard let codingArg else {
-                throw PrefMacroError.missingCodingArgument
-            }
-            customCodingDecl = codingArg.expression.description
-        } else if hasInlineCoding {
-            guard let encodeArg, let decodeArg else {
-                throw PrefMacroError.missingCodingArgument
-            }
-            customCodingDecl = "PrefCoding(encode: \(encodeArg.expression.description), decode: \(decodeArg.expression.description))"
-        }
         
         let typeInfo = try TypeBindingInfo(
             for: Self.self,
             from: varDec,
             keyName: keyName,
-            privateKeyVarName: privateKeyVarName,
+            privateKeyVarName: "", // not used
             privateValueVarName: privateValueVarName,
-            customCodingDecl: customCodingDecl
+            customCodingDecl: "" // not used
         )
         
         return [
-            """
-            \(raw: typeInfo.privateKeyVarDeclaration)
-            """,
             """
             \(raw: typeInfo.privateValueVarDeclaration)
             """

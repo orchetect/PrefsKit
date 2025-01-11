@@ -55,3 +55,10 @@ public macro JSONDataCodablePref(key: String? = nil)
 @attached(peer, names: /* arbitrary */ prefixed(__PrefCoding_), prefixed(__PrefValue_))
 public macro JSONStringCodablePref(key: String? = nil)
     = #externalMacro(module: "PrefsKitMacrosImplementation", type: "JSONStringCodablePrefMacro")
+
+// MARK: - RawPref
+
+@attached(accessor, names: named(get), named(set), named(_modify))
+@attached(peer, names: /* arbitrary */ prefixed(__PrefValue_))
+public macro RawPref(key: String? = nil)
+    = #externalMacro(module: "PrefsKitMacrosImplementation", type: "RawPrefMacro")
