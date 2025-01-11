@@ -106,7 +106,7 @@ struct PrefsStorageDictionaryTests {
         
         // TODO: test a new key type to accommodate `[String: Any]`?
         
-        let value: [String: Any] = try #require(storage.storageValue(forKey: "foo"))
+        let value: [String: Any] = try #require(storage.unsafeStorageValue(forKey: "foo") as? [String: Any])
         
         try #require(value.count == 4)
         #expect(value["one"] as? Int == 1)
@@ -125,7 +125,7 @@ struct PrefsStorageDictionaryTests {
         
         // TODO: test a new key type to accommodate `[String: Any]`?
         
-        let value: [String: Any] = try #require(storage.storageValue(forKey: "foo"))
+        let value: [String: Any] = try #require(storage.unsafeStorageValue(forKey: "foo") as? [String: Any])
         
         try #require(value.count == 1)
         let subValue = try #require(value["bar"] as? [String: Any])

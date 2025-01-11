@@ -98,7 +98,7 @@ struct PrefsStorageArrayTests {
         let array: [Any] = [1, 2, "string", true]
         storage.setUnsafeStorageValue(forKey: "foo", to: array)
         
-        let value: [Any] = try #require(storage.storageValue(forKey: "foo"))
+        let value: [Any] = try #require(storage.unsafeStorageValue(forKey: "foo") as? [Any])
         try #require(value.count == 4)
         
         #expect(value[0] as? Int == 1)
@@ -125,7 +125,7 @@ struct PrefsStorageArrayTests {
         let array: [Any] = [["a", 2], [true]]
         storage.setUnsafeStorageValue(forKey: "foo", to: array)
         
-        let value: [Any] = try #require(storage.storageValue(forKey: "foo"))
+        let value: [Any] = try #require(storage.unsafeStorageValue(forKey: "foo") as? [Any])
         try #require(value.count == 2)
         
         let subArray1 = try #require(value[0] as? [Any])

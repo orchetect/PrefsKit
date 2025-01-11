@@ -138,7 +138,7 @@ struct RawPrefsKeyTests {
         
         prefs.array2 = ["new string", 500.5 as Double]
         
-        let readValue: [Any]? = prefs.storage.storageValue(forKey: "arrayB")
+        let readValue = prefs.storage.unsafeStorageValue(forKey: "arrayB") as? [Any]
         #expect(readValue?[0] as? String == "new string")
         #expect(readValue?[1] as? Double == 500.5)
     }

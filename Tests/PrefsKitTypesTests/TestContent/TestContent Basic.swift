@@ -369,13 +369,13 @@ extension TestContent.Basic {
         
         #expect(storage.storageValue(forKey: Key6.key) == Key6.value)
         
-        let key7: [Any] = try #require(storage.storageValue(forKey: Key7.key))
+        let key7: [Any] = try #require(storage.unsafeStorageValue(forKey: Key7.key) as? [Any])
         try #require(key7.count == 3)
         #expect(try #require(key7[0] as? String) == Key7.valueIndex0)
         #expect(try #require(key7[1] as? Float) == Key7.valueIndex1)
         #expect(try #require(key7[2] as? Bool) == Key7.valueIndex2)
         
-        let key8: [Any] = try #require(storage.storageValue(forKey: Key8.key))
+        let key8: [Any] = try #require(storage.unsafeStorageValue(forKey: Key8.key) as? [Any])
         try #require(key8.count == 2)
         // element 0
         let key8Element0 = try #require(key8[0] as? [String])
@@ -389,13 +389,13 @@ extension TestContent.Basic {
         
         #expect(storage.storageValue(forKey: Key9.key) == Key9.value)
         
-        let key10: [String: Any] = try #require(storage.storageValue(forKey: Key10.key))
+        let key10: [String: Any] = try #require(storage.unsafeStorageValue(forKey: Key10.key) as? [String: Any])
         try #require(key10.count == 3)
         #expect(key10[Key10.KeyA.key] as? String == Key10.KeyA.value)
         #expect(key10[Key10.KeyB.key] as? Double == Key10.KeyB.value)
         #expect(key10[Key10.KeyC.key] as? Data == Key10.KeyC.value)
         
-        let key11: [String: Any] = try #require(storage.storageValue(forKey: Key11.key))
+        let key11: [String: Any] = try #require(storage.unsafeStorageValue(forKey: Key11.key) as? [String: Any])
         try #require(key11.count == 2)
         // key A
         let key11A = try #require(key11[Key11.KeyA.key] as? [String])
