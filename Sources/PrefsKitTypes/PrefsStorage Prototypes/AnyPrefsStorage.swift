@@ -22,6 +22,10 @@ extension AnyPrefsStorage {
         wrapped.setStorageValue(forKey: key, to: value)
     }
     
+    public func setUnsafeStorageValue(forKey key: String, to value: Any?) {
+        wrapped.setUnsafeStorageValue(forKey: key, to: value)
+    }
+    
     // MARK: - Get
     
     public func storageValue(forKey key: String) -> Int? {
@@ -66,16 +70,5 @@ extension AnyPrefsStorage {
     
     public func storageValue(forKey key: String) -> [String: Any]? {
         wrapped.storageValue(forKey: key)
-    }
-}
-
-extension AnyPrefsStorage: _PrefsStorage {
-    @_disfavoredOverload
-    package func setStorageValue(forKey key: String, to value: Any) {
-        guard let wrapped = wrapped as? _PrefsStorage else {
-            assertionFailure("Could not cast \(type(of: wrapped)) as _PrefsStorage. Failed to set storage value for key \"\(key)\".")
-            return
-        }
-        wrapped.setStorageValue(forKey: key, to: value)
     }
 }

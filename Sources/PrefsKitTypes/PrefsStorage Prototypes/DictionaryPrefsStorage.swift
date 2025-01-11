@@ -67,6 +67,10 @@ extension DictionaryPrefsStorage: PrefsStorage {
         storage[key] = value
     }
     
+    public func setUnsafeStorageValue(forKey key: String, to value: Any?) {
+        storage[key] = value
+    }
+    
     // MARK: - Get
     
     public func storageValue(forKey key: String) -> Int? {
@@ -111,12 +115,5 @@ extension DictionaryPrefsStorage: PrefsStorage {
     
     public func storageValue(forKey key: String) -> [String: Any]? {
         storage[key] as? [String: Any]
-    }
-}
-
-extension DictionaryPrefsStorage: _PrefsStorage {
-    @_disfavoredOverload
-    package func setStorageValue(forKey key: String, to value: Any) {
-        storage[key] = value
     }
 }

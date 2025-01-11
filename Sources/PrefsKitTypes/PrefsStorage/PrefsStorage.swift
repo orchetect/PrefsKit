@@ -12,6 +12,7 @@ public protocol PrefsStorage: AnyObject where Self: Sendable {
     // MARK: - Set
     
     func setStorageValue<StorageValue: PrefsStorageValue>(forKey key: String, to value: StorageValue?)
+    func setUnsafeStorageValue(forKey key: String, to value: Any?)
     
     // MARK: - Get
     
@@ -26,9 +27,4 @@ public protocol PrefsStorage: AnyObject where Self: Sendable {
     func storageValue<Element: PrefsStorageValue>(forKey key: String) -> [String: Element]?
     func storageValue(forKey key: String) -> [Any]?
     func storageValue(forKey key: String) -> [String: Any]?
-}
-
-package protocol _PrefsStorage: PrefsStorage {
-    @_disfavoredOverload
-    func setStorageValue(forKey key: String, to value: Any)
 }

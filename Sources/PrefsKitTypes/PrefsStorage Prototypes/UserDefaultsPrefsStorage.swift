@@ -24,6 +24,10 @@ extension UserDefaultsPrefsStorage: PrefsStorage {
         suite.set(value, forKey: key)
     }
     
+    public func setUnsafeStorageValue(forKey key: String, to value: Any?) {
+        suite.set(value, forKey: key)
+    }
+    
     // MARK: - Get
     
     public func storageValue(forKey key: String) -> Int? {
@@ -86,12 +90,5 @@ extension UserDefaultsPrefsStorage: PrefsStorage {
         guard let rawDict = suite.dictionary(forKey: key) else { return nil }
         let typedDict = rawDict.mapValues(UserDefaults.castAsPrefsStorageCompatible(value:))
         return typedDict
-    }
-}
-
-extension UserDefaultsPrefsStorage: _PrefsStorage {
-    @_disfavoredOverload
-    package func setStorageValue(forKey key: String, to value: Any) {
-        suite.set(value, forKey: key)
     }
 }
