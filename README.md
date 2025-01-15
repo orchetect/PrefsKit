@@ -276,6 +276,16 @@ enum Fruit: String {
    }
    ```
 
+It is possible to store an array of a `RawRepresentable` type with a `RawValue` that is one of the supported atomic storage value types.
+
+Due to Swift macro type system limitations, the base coding strategy must be specified by using a static constructor on its concrete type:
+
+```swift
+@PrefsSchema final class Prefs {
+    @Pref(coding: [Fruit].rawRepresentableArrayPrefsCoding) var fruit: [Fruit]?
+}
+```
+
 #### Codable Types
 
 Several syntax options are available to encode and decode any `Codable` type as JSON using either `Data` or `String` raw storage.
@@ -310,6 +320,32 @@ struct Device: Codable {
        @Pref(coding: Device.jsonStringPrefsCoding) var device: Device?
    }
    ```
+
+It is possible to store an array of a `Codable` type as JSON using either `Data` or `String` raw storage.
+
+Due to Swift macro type system limitations, the base coding strategy must be specified by using a static constructor on its concrete type:
+
+```swift
+// option #1:
+// collection stored in storage as an array of encoded Data or String elements
+@PrefsSchema final class Prefs {
+    // encode a Device array as an array of JSON elements using Data storage
+    @Pref(coding: [Device].jsonDataDictionaryPrefsCoding) var device: [Device]?
+    
+    // encode a Device array as an array of JSON elements using String storage
+    @Pref(coding: [Device].jsonStringDictionaryPrefsCoding) var device: [Device]?
+}
+
+// option #2:
+// collection stored in storage as a single encoded Data blob or String
+@PrefsSchema final class Prefs {
+    // encode a Device array as an array of JSON elements using Data storage
+    @Pref(coding: [Device].jsonDataPrefsCoding) var device: [Device]?
+    
+    // encode a Device array as an array of JSON elements using String storage
+    @Pref(coding: [Device].jsonStringPrefsCoding) var device: [Device]?
+}
+```
 
 #### Implementing Custom Coding Strategies
 
