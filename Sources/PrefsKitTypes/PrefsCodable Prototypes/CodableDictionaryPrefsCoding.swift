@@ -33,35 +33,23 @@ public struct CodableDictionaryPrefsCoding<Element>: PrefsCodable where Element:
 
 extension Dictionary where Key == String, Value: Codable, Value: Sendable {
     /// A prefs value coding strategy that encodes and decodes a dictionary keyed by `String` and containing a `Codable`
+    /// value type to/from a dictionary of raw JSON `Data` value storage storage with default options.
+    public static var jsonDataDictionaryPrefsCoding: CodableDictionaryPrefsCoding<JSONDataCodablePrefsCoding<Value>> {
+        .init(element: JSONDataCodablePrefsCoding<Value>())
+    }
+    
+    /// A prefs value coding strategy that encodes and decodes a dictionary keyed by `String` and containing a `Codable`
     /// value type to/from a dictionary of raw JSON `String` (UTF-8) value storage storage with default options.
     public static var jsonStringDictionaryPrefsCoding: CodableDictionaryPrefsCoding<
         JSONStringCodablePrefsCoding<Value>
     > {
         .init(element: JSONStringCodablePrefsCoding<Value>())
     }
-    
-    /// A prefs value coding strategy that encodes and decodes a dictionary keyed by `String` and containing a `Codable`
-    /// value type to/from a dictionary of raw JSON `Data` value storage storage with default options.
-    public static var jsonDataDictionaryPrefsCoding: CodableDictionaryPrefsCoding<JSONDataCodablePrefsCoding<Value>> {
-        .init(element: JSONDataCodablePrefsCoding<Value>())
-    }
 }
 
 // MARK: - Chaining Constructor
 
 extension PrefsCodable where StorageValue == [String: JSONStringCodablePrefsCoding<Value>.Value] {
-    /// A prefs value coding strategy that encodes and decodes a dictionary keyed by `String` and containing a `Codable`
-    /// value type to/from a dictionary of raw JSON `String` (UTF-8) value storage storage with default options.
-    public var jsonStringDictionaryPrefsCoding: PrefsCodingTuple<
-        Self,
-        CodableDictionaryPrefsCoding<JSONStringCodablePrefsCoding<StorageValue.Value>>
-    > {
-        PrefsCodingTuple(
-            self,
-            .init(element: JSONStringCodablePrefsCoding<StorageValue.Value>())
-        )
-    }
-    
     /// A prefs value coding strategy that encodes and decodes a dictionary keyed by `String` and containing a `Codable`
     /// value type to/from a dictionary of raw JSON `Data` value storage storage with default options.
     public var jsonDataDictionaryPrefsCoding: PrefsCodingTuple<
@@ -71,6 +59,18 @@ extension PrefsCodable where StorageValue == [String: JSONStringCodablePrefsCodi
         PrefsCodingTuple(
             self,
             .init(element: JSONDataCodablePrefsCoding<StorageValue.Value>())
+        )
+    }
+    
+    /// A prefs value coding strategy that encodes and decodes a dictionary keyed by `String` and containing a `Codable`
+    /// value type to/from a dictionary of raw JSON `String` (UTF-8) value storage storage with default options.
+    public var jsonStringDictionaryPrefsCoding: PrefsCodingTuple<
+        Self,
+        CodableDictionaryPrefsCoding<JSONStringCodablePrefsCoding<StorageValue.Value>>
+    > {
+        PrefsCodingTuple(
+            self,
+            .init(element: JSONStringCodablePrefsCoding<StorageValue.Value>())
         )
     }
 }

@@ -32,33 +32,21 @@ public struct CodableArrayPrefsCoding<Element>: PrefsCodable where Element: Coda
 
 extension Array where Element: Codable, Element: Sendable {
     /// A prefs value coding strategy that encodes and decodes an array of a `Codable` type to/from an array of raw JSON
-    /// `String` (UTF-8) element storage with default options.
-    public static var jsonStringArrayPrefsCoding: CodableArrayPrefsCoding<JSONStringCodablePrefsCoding<Element>> {
-        .init(element: JSONStringCodablePrefsCoding<Element>())
-    }
-    
-    /// A prefs value coding strategy that encodes and decodes an array of a `Codable` type to/from an array of raw JSON
     /// `Data` element storage with default options.
     public static var jsonDataArrayPrefsCoding: CodableArrayPrefsCoding<JSONDataCodablePrefsCoding<Element>> {
         .init(element: JSONDataCodablePrefsCoding<Element>())
+    }
+    
+    /// A prefs value coding strategy that encodes and decodes an array of a `Codable` type to/from an array of raw JSON
+    /// `String` (UTF-8) element storage with default options.
+    public static var jsonStringArrayPrefsCoding: CodableArrayPrefsCoding<JSONStringCodablePrefsCoding<Element>> {
+        .init(element: JSONStringCodablePrefsCoding<Element>())
     }
 }
 
 // MARK: - Chaining Constructor
 
 extension PrefsCodable where StorageValue == [JSONStringCodablePrefsCoding<Value>.Value] {
-    /// A prefs value coding strategy that encodes and decodes an array of a `Codable` type to/from an array of raw JSON
-    /// `String` (UTF-8) element storage with default options.
-    public var jsonStringArrayPrefsCoding: PrefsCodingTuple<
-        Self,
-        CodableArrayPrefsCoding<JSONStringCodablePrefsCoding<StorageValue.Element>>
-    > {
-        PrefsCodingTuple(
-            self,
-            .init(element: JSONStringCodablePrefsCoding<StorageValue.Element>())
-        )
-    }
-    
     /// A prefs value coding strategy that encodes and decodes an array of a `Codable` type to/from an array of raw JSON
     /// `Data` element storage with default options.
     public var jsonDataArrayPrefsCoding: PrefsCodingTuple<
@@ -68,6 +56,18 @@ extension PrefsCodable where StorageValue == [JSONStringCodablePrefsCoding<Value
         PrefsCodingTuple(
             self,
             .init(element: JSONDataCodablePrefsCoding<StorageValue.Element>())
+        )
+    }
+    
+    /// A prefs value coding strategy that encodes and decodes an array of a `Codable` type to/from an array of raw JSON
+    /// `String` (UTF-8) element storage with default options.
+    public var jsonStringArrayPrefsCoding: PrefsCodingTuple<
+        Self,
+        CodableArrayPrefsCoding<JSONStringCodablePrefsCoding<StorageValue.Element>>
+    > {
+        PrefsCodingTuple(
+            self,
+            .init(element: JSONStringCodablePrefsCoding<StorageValue.Element>())
         )
     }
 }
