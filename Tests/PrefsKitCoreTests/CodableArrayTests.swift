@@ -44,21 +44,45 @@ struct CodableArrayTests {
         
         // encode array as a single JSON string
         // (this is possible since an array of a Codable type is implicitly Codable)
-        @Pref(coding: [CodableEnum].jsonStringPrefsCoding) var arrayA: [CodableEnum]?
-        @Pref(coding: [CodableEnum].jsonStringPrefsCoding) var arrayADefaulted: [CodableEnum] = [.one, .two]
+        @Pref(
+            key: Key.arrayA.rawValue,
+            coding: [CodableEnum].jsonStringPrefsCoding
+        ) var arrayA: [CodableEnum]?
+        @Pref(
+            key: Key.arrayADefaulted.rawValue,
+            coding: [CodableEnum].jsonStringPrefsCoding
+        ) var arrayADefaulted: [CodableEnum] = [.one, .two]
         
         // encode array as a single JSON data blob
         // (this is possible since an array of a Codable type is implicitly Codable)
-        @Pref(coding: [CodableEnum].jsonDataPrefsCoding) var arrayB: [CodableEnum]?
-        @Pref(coding: [CodableEnum].jsonDataPrefsCoding) var arrayBDefaulted: [CodableEnum] = [.one, .two]
+        @Pref(
+            key: Key.arrayB.rawValue,
+            coding: [CodableEnum].jsonDataPrefsCoding
+        ) var arrayB: [CodableEnum]?
+        @Pref(
+            key: Key.arrayBDefaulted.rawValue,
+            coding: [CodableEnum].jsonDataPrefsCoding
+        ) var arrayBDefaulted: [CodableEnum] = [.one, .two]
         
         // encode array as a an array of JSON string elements
-        @Pref(coding: [CodableEnum].jsonStringArrayPrefsCoding) var arrayC: [CodableEnum]?
-        @Pref(coding: [CodableEnum].jsonStringArrayPrefsCoding) var arrayCDefaulted: [CodableEnum] = [.one, .two]
+        @Pref(
+            key: Key.arrayC.rawValue,
+            coding: [CodableEnum].jsonStringArrayPrefsCoding
+        ) var arrayC: [CodableEnum]?
+        @Pref(
+            key: Key.arrayCDefaulted.rawValue,
+            coding: [CodableEnum].jsonStringArrayPrefsCoding
+        ) var arrayCDefaulted: [CodableEnum] = [.one, .two]
         
         // encode array as a an array of JSON data blob elements
-        @Pref(coding: [CodableEnum].jsonDataArrayPrefsCoding) var arrayD: [CodableEnum]?
-        @Pref(coding: [CodableEnum].jsonDataArrayPrefsCoding) var arrayDDefaulted: [CodableEnum] = [.one, .two]
+        @Pref(
+            key: Key.arrayD.rawValue,
+            coding: [CodableEnum].jsonDataArrayPrefsCoding
+        ) var arrayD: [CodableEnum]?
+        @Pref(
+            key: Key.arrayDDefaulted.rawValue,
+            coding: [CodableEnum].jsonDataArrayPrefsCoding
+        ) var arrayDDefaulted: [CodableEnum] = [.one, .two]
     }
     
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
@@ -91,8 +115,8 @@ struct CodableArrayTests {
         #expect(schema.arrayADefaulted == [.two, .two, .one])
         
         // check underlying storage is as expected
-        let _ = try #require(schema.storage.unsafeStorageValue(forKey: "arrayA") as? String)
-        let _ = try #require(schema.storage.unsafeStorageValue(forKey: "arrayADefaulted") as? String)
+        let _ = try #require(schema.storage.unsafeStorageValue(forKey: TestSchema.Key.arrayA.rawValue) as? String)
+        let _ = try #require(schema.storage.unsafeStorageValue(forKey: TestSchema.Key.arrayADefaulted.rawValue) as? String)
     }
     
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
@@ -107,8 +131,8 @@ struct CodableArrayTests {
         #expect(schema.arrayBDefaulted == [.two, .two, .one])
         
         // check underlying storage is as expected
-        let _ = try #require(schema.storage.unsafeStorageValue(forKey: "arrayB") as? Data)
-        let _ = try #require(schema.storage.unsafeStorageValue(forKey: "arrayBDefaulted") as? Data)
+        let _ = try #require(schema.storage.unsafeStorageValue(forKey: TestSchema.Key.arrayB.rawValue) as? Data)
+        let _ = try #require(schema.storage.unsafeStorageValue(forKey: TestSchema.Key.arrayBDefaulted.rawValue) as? Data)
     }
     
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
@@ -123,8 +147,8 @@ struct CodableArrayTests {
         #expect(schema.arrayCDefaulted == [.two, .two, .one])
         
         // check underlying storage is as expected
-        let _ = try #require(schema.storage.unsafeStorageValue(forKey: "arrayC") as? [String])
-        let _ = try #require(schema.storage.unsafeStorageValue(forKey: "arrayCDefaulted") as? [String])
+        let _ = try #require(schema.storage.unsafeStorageValue(forKey: TestSchema.Key.arrayC.rawValue) as? [String])
+        let _ = try #require(schema.storage.unsafeStorageValue(forKey: TestSchema.Key.arrayCDefaulted.rawValue) as? [String])
     }
     
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
@@ -139,7 +163,7 @@ struct CodableArrayTests {
         #expect(schema.arrayDDefaulted == [.two, .two, .one])
         
         // check underlying storage is as expected
-        let _ = try #require(schema.storage.unsafeStorageValue(forKey: "arrayD") as? [Data])
-        let _ = try #require(schema.storage.unsafeStorageValue(forKey: "arrayDDefaulted") as? [Data])
+        let _ = try #require(schema.storage.unsafeStorageValue(forKey: TestSchema.Key.arrayD.rawValue) as? [Data])
+        let _ = try #require(schema.storage.unsafeStorageValue(forKey: TestSchema.Key.arrayDDefaulted.rawValue) as? [Data])
     }
 }

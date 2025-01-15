@@ -44,21 +44,45 @@ struct CodableDictionaryTests {
         
         // encode dictionary as a single JSON string
         // (this is possible since a dictionary of Codable key & value types is implicitly Codable)
-        @Pref(coding: [String: CodableEnum].jsonStringPrefsCoding) var dictA: [String: CodableEnum]?
-        @Pref(coding: [String: CodableEnum].jsonStringPrefsCoding) var dictADefaulted: [String: CodableEnum] = ["a": .one, "b": .two]
+        @Pref(
+            key: Key.dictA.rawValue,
+            coding: [String: CodableEnum].jsonStringPrefsCoding
+        ) var dictA: [String: CodableEnum]?
+        @Pref(
+            key: Key.dictADefaulted.rawValue,
+            coding: [String: CodableEnum].jsonStringPrefsCoding
+        ) var dictADefaulted: [String: CodableEnum] = ["a": .one, "b": .two]
         
         // encode dictionary as a single JSON data blob
         // (this is possible since a dictionary of Codable key & value types is implicitly Codable)
-        @Pref(coding: [String: CodableEnum].jsonDataPrefsCoding) var dictB: [String: CodableEnum]?
-        @Pref(coding: [String: CodableEnum].jsonDataPrefsCoding) var dictBDefaulted: [String: CodableEnum] = ["a": .one, "b": .two]
+        @Pref(
+            key: Key.dictB.rawValue,
+            coding: [String: CodableEnum].jsonDataPrefsCoding
+        ) var dictB: [String: CodableEnum]?
+        @Pref(
+            key: Key.dictBDefaulted.rawValue,
+            coding: [String: CodableEnum].jsonDataPrefsCoding
+        ) var dictBDefaulted: [String: CodableEnum] = ["a": .one, "b": .two]
         
         // encode dictionary as a a dictionary of JSON string values
-        @Pref(coding: [String: CodableEnum].jsonStringDictionaryPrefsCoding) var dictC: [String: CodableEnum]?
-        @Pref(coding: [String: CodableEnum].jsonStringDictionaryPrefsCoding) var dictCDefaulted: [String: CodableEnum] = ["a": .one, "b": .two]
+        @Pref(
+            key: Key.dictC.rawValue,
+            coding: [String: CodableEnum].jsonStringDictionaryPrefsCoding
+        ) var dictC: [String: CodableEnum]?
+        @Pref(
+            key: Key.dictCDefaulted.rawValue,
+            coding: [String: CodableEnum].jsonStringDictionaryPrefsCoding
+        ) var dictCDefaulted: [String: CodableEnum] = ["a": .one, "b": .two]
         
         // encode dictionary as a a dictionary of JSON data blob values
-        @Pref(coding: [String: CodableEnum].jsonDataDictionaryPrefsCoding) var dictD: [String: CodableEnum]?
-        @Pref(coding: [String: CodableEnum].jsonDataDictionaryPrefsCoding) var dictDDefaulted: [String: CodableEnum] = ["a": .one, "b": .two]
+        @Pref(
+            key: Key.dictD.rawValue,
+            coding: [String: CodableEnum].jsonDataDictionaryPrefsCoding
+        ) var dictD: [String: CodableEnum]?
+        @Pref(
+            key: Key.dictDDefaulted.rawValue,
+            coding: [String: CodableEnum].jsonDataDictionaryPrefsCoding
+        ) var dictDDefaulted: [String: CodableEnum] = ["a": .one, "b": .two]
     }
     
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
@@ -91,8 +115,8 @@ struct CodableDictionaryTests {
         #expect(schema.dictADefaulted == ["a": .two, "b": .two, "c": .one])
         
         // check underlying storage is as expected
-        let _ = try #require(schema.storage.unsafeStorageValue(forKey: "dictA") as? String)
-        let _ = try #require(schema.storage.unsafeStorageValue(forKey: "dictADefaulted") as? String)
+        let _ = try #require(schema.storage.unsafeStorageValue(forKey: TestSchema.Key.dictA.rawValue) as? String)
+        let _ = try #require(schema.storage.unsafeStorageValue(forKey: TestSchema.Key.dictADefaulted.rawValue) as? String)
     }
     
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
@@ -107,8 +131,8 @@ struct CodableDictionaryTests {
         #expect(schema.dictBDefaulted == ["a": .two, "b": .two, "c": .one])
         
         // check underlying storage is as expected
-        let _ = try #require(schema.storage.unsafeStorageValue(forKey: "dictB") as? Data)
-        let _ = try #require(schema.storage.unsafeStorageValue(forKey: "dictBDefaulted") as? Data)
+        let _ = try #require(schema.storage.unsafeStorageValue(forKey: TestSchema.Key.dictB.rawValue) as? Data)
+        let _ = try #require(schema.storage.unsafeStorageValue(forKey: TestSchema.Key.dictBDefaulted.rawValue) as? Data)
     }
     
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
@@ -123,8 +147,8 @@ struct CodableDictionaryTests {
         #expect(schema.dictCDefaulted == ["a": .two, "b": .two, "c": .one])
         
         // check underlying storage is as expected
-        let _ = try #require(schema.storage.unsafeStorageValue(forKey: "dictC") as? [String: String])
-        let _ = try #require(schema.storage.unsafeStorageValue(forKey: "dictCDefaulted") as? [String: String])
+        let _ = try #require(schema.storage.unsafeStorageValue(forKey: TestSchema.Key.dictC.rawValue) as? [String: String])
+        let _ = try #require(schema.storage.unsafeStorageValue(forKey: TestSchema.Key.dictCDefaulted.rawValue) as? [String: String])
     }
     
     @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
@@ -139,7 +163,7 @@ struct CodableDictionaryTests {
         #expect(schema.dictDDefaulted == ["a": .two, "b": .two, "c": .one])
         
         // check underlying storage is as expected
-        let _ = try #require(schema.storage.unsafeStorageValue(forKey: "dictD") as? [String: Data])
-        let _ = try #require(schema.storage.unsafeStorageValue(forKey: "dictDDefaulted") as? [String: Data])
+        let _ = try #require(schema.storage.unsafeStorageValue(forKey: TestSchema.Key.dictD.rawValue) as? [String: Data])
+        let _ = try #require(schema.storage.unsafeStorageValue(forKey: TestSchema.Key.dictDDefaulted.rawValue) as? [String: Data])
     }
 }
