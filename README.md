@@ -250,7 +250,7 @@ Key names are synthesized from the var name unless specified:
 
 ### Custom Value Coding
 
-#### RawRepresentable Types
+#### `RawRepresentable`
 
 Allows using a `RawRepresentable` type with a `RawValue` that is one of the supported atomic storage value types.
 
@@ -276,6 +276,8 @@ enum Fruit: String {
    }
    ```
 
+##### `[RawRepresentable]`
+
 It is possible to store an array of a `RawRepresentable` type with a `RawValue` that is one of the supported atomic storage value types.
 
 Due to Swift macro type system limitations, the base coding strategy must be specified by using a static constructor on its concrete type:
@@ -286,7 +288,20 @@ Due to Swift macro type system limitations, the base coding strategy must be spe
 }
 ```
 
-#### Codable Types
+##### `[String: RawRepresentable]`
+
+It is possible to store a dictionary keyed by `String` with values of a `RawRepresentable` type with a `RawValue` that is one of the supported atomic storage value types.
+
+Due to Swift macro type system limitations, the base coding strategy must be specified by using a static constructor on its concrete type:
+
+```swift
+@PrefsSchema final class Prefs {
+    @Pref(coding: [String: Fruit].rawRepresentableDictionaryPrefsCoding)
+    var fruit: [String: Fruit]?
+}
+```
+
+#### `Codable`
 
 Several syntax options are available to encode and decode any `Codable` type as JSON using either `Data` or `String` raw storage.
 
@@ -321,6 +336,8 @@ struct Device: Codable {
    }
    ```
 
+##### `[Codable]`
+
 It is possible to store an array of a `Codable` type as JSON using either `Data` or `String` raw storage.
 
 Due to Swift macro type system limitations, the base coding strategy must be specified by using a static constructor on its concrete type:
@@ -330,10 +347,10 @@ Due to Swift macro type system limitations, the base coding strategy must be spe
 // collection stored in storage as an array of encoded Data or String elements
 @PrefsSchema final class Prefs {
     // encode a Device array as an array of JSON elements using Data storage
-    @Pref(coding: [Device].jsonDataDictionaryPrefsCoding) var device: [Device]?
+    @Pref(coding: [Device].jsonDataArrayPrefsCoding) var device: [Device]?
     
     // encode a Device array as an array of JSON elements using String storage
-    @Pref(coding: [Device].jsonStringDictionaryPrefsCoding) var device: [Device]?
+    @Pref(coding: [Device].jsonStringArrayPrefsCoding) var device: [Device]?
 }
 
 // option #2:
@@ -344,6 +361,24 @@ Due to Swift macro type system limitations, the base coding strategy must be spe
     
     // encode a Device array as an array of JSON elements using String storage
     @Pref(coding: [Device].jsonStringPrefsCoding) var device: [Device]?
+}
+```
+
+##### `[String: Codable]`
+
+It is possible to store a dictionary keyed by `String` with values of a `Codable` type as JSON using either `Data` or `String` raw storage.
+
+Due to Swift macro type system limitations, the base coding strategy must be specified by using a static constructor on its concrete type:
+
+```swift
+@PrefsSchema final class Prefs {
+    // encode a Device array as an array of JSON elements using Data storage
+    @Pref(coding: [String: Device].jsonDataDictionaryPrefsCoding)
+    var device: [String: Device]?
+    
+    // encode a Device array as an array of JSON elements using String storage
+    @Pref(coding: [String: Device].jsonStringDictionaryPrefsCoding)
+    var device: [String: Device]?
 }
 ```
 
