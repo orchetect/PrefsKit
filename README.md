@@ -6,7 +6,7 @@
 
 A modern Swift library for reading & writing app preferences:
 
-- simple but powerful declarative DSL
+- concise and powerful declarative DSL
 - swappable/mockable storage backend (UserDefaults, Dictionary, PList file, and more)
 - keys are implicitly `@Observable` and `@Bindable` for effortless integration in modern SwiftUI apps
 - composable, chainable encoding strategies
@@ -23,9 +23,9 @@ A modern Swift library for reading & writing app preferences:
   - [Composing Value Coding Strategies](#Composing-Value-Coding-Strategies)
   - [Dynamic Key Access](#Dynamic-Key-Access)
   - [Mixed Value Type Collections](#Mixed-Value-Type-Collections)
-  - [Using Actors](#Using-Actors)
   - [Importing and Exporting Storage](#Importing-and-Exporting-Storage)
   - [Custom Storage Backend](#Custom-Storage-Backend)
+  - [Using Actors](#Using-Actors)
 - [FAQ](#FAQ)
 
 ## Quick Start
@@ -434,7 +434,7 @@ struct MyType {
 > - when the type may have more than one possible encoding format, or
 > - a type whose encoding format has changed over time and generational formats need to be maintained (ie: for legacy preferences migration)
 >
-> If it is for a custom type that is one you own and there is only one encoding format for it, one alternative approach is to conform it to Swift's `Codable` instead and use `@JSONDataCodablePref` or `@JSONStringCodablePref` to store it.
+> If it is for a custom type that is one you own and there is only one encoding format for it, an alternative approach is to conform it to Swift's `Codable` instead and use `@JSONDataCodablePref` or `@JSONStringCodablePref` to store it.
 
 ### Composing Value Coding Strategies
 
@@ -509,34 +509,7 @@ Raw access to preference keys can be used as an accommodation for migrating from
 
 > [!TIP]
 >
-> As an alternative to directly accessing mixed type collections, consider creating a `Codable` type that can serialize them through [`@Pref`'s support for `Codable` types](#Codable-Types).
-
-### Using Actors
-
-Because of internal protocol requirements of `@PrefsSchema`, actors (such as `@MainActor`) cannot be directly attached to the class declaration.
-
-```swift
-@MainActor // <-- ❌ not possible
-@PrefsSchema final class Prefs { /* ... */ }
-```
-
-Actors may, however, be attached to individual `@Pref` preference declarations.
-
-```swift
-@PrefsSchema final class Prefs {
-    @Storage var storage = .userDefaults
-    @StorageMode var storageMode = .cachedReadStorageWrite
-    
-    @MainActor // <-- ✅ possible
-    @Pref var foo: Int?
-    
-    @Pref var bar: String?
-}
-```
-
-> [!NOTE]
-> 
-> This may be subject to change in future versions of PrefsKit.
+> As an alternative to directly accessing mixed type collections, consider creating a `Codable` type that can serialize them through [`@Pref`'s support for `Codable` types](#Codable).
 
 ## Importing and Exporting Storage
 
@@ -702,6 +675,33 @@ Additionally:
 - conforming to `PrefsStorageInitializable` allows the storage to initialize from other storage formats
 - conforming to `PrefsStorageImportable` allows storage contents to be imported or merged from other storage formats
 - conforming to `PrefsStorageExportable` allows storage contents to be exported to other storage formats
+
+### Using Actors
+
+Because of internal protocol requirements of `@PrefsSchema`, actors (such as `@MainActor`) cannot be directly attached to the class declaration.
+
+```swift
+@MainActor // <-- ❌ not possible
+@PrefsSchema final class Prefs { /* ... */ }
+```
+
+Actors may, however, be attached to individual `@Pref` preference declarations.
+
+```swift
+@PrefsSchema final class Prefs {
+    @Storage var storage = .userDefaults
+    @StorageMode var storageMode = .cachedReadStorageWrite
+    
+    @MainActor // <-- ✅ possible
+    @Pref var foo: Int?
+    
+    @Pref var bar: String?
+}
+```
+
+> [!NOTE]
+>
+> This may be subject to change in future versions of PrefsKit.
 
 ## FAQ
 
