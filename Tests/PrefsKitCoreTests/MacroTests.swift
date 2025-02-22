@@ -214,7 +214,7 @@ final class AtomicPrefMacroTests: XCTestCase {
                     switch storageMode {
                     case .cachedReadStorageWrite:
                         if __PrefValue_bar == nil {
-                            __PrefValue_bar = storage.value(forKey: __PrefCoding_bar)
+                            __PrefValue_bar = storage.value(forKey: __PrefCoding_bar) ?? __PrefCoding_bar.defaultValue
                         }
                         yield &__PrefValue_bar!
                         storage.setValue(forKey: __PrefCoding_bar, to: __PrefValue_bar)
@@ -270,7 +270,7 @@ final class AtomicPrefMacroTests: XCTestCase {
                     switch storageMode {
                     case .cachedReadStorageWrite:
                         if __PrefValue_bar == nil {
-                            __PrefValue_bar = storage.value(forKey: __PrefCoding_bar)
+                            __PrefValue_bar = storage.value(forKey: __PrefCoding_bar) ?? __PrefCoding_bar.defaultValue
                         }
                         yield &__PrefValue_bar!
                         storage.setValue(forKey: __PrefCoding_bar, to: __PrefValue_bar)

@@ -166,4 +166,12 @@ struct CodableDictionaryTests {
         let _ = try #require(schema.storage.unsafeStorageValue(forKey: TestSchema.Key.dictD.rawValue) as? [String: Data])
         let _ = try #require(schema.storage.unsafeStorageValue(forKey: TestSchema.Key.dictDDefaulted.rawValue) as? [String: Data])
     }
+    
+    /// Edge case test to ensure we don't run afoul of force-unwrap exceptions.
+    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
+    @Test(arguments: schemas)
+    func modifyNonExistentKey(schema: TestSchema) throws {
+        schema.dictADefaulted["newKey"] = .one
+        #expect(schema.dictADefaulted["newKey"] == .one)
+    }
 }
