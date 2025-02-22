@@ -75,7 +75,7 @@ extension PrefMacro /* : AccessorMacro */ {
                 switch storageMode {
                 case .cachedReadStorageWrite:
                     if \(raw: privateValueVarName) == nil {
-                        \(raw: privateValueVarName) = storage.value(forKey: \(raw: privateKeyVarName))
+                        \(raw: privateValueVarName) = storage.value(forKey: \(raw: privateKeyVarName))\(raw: hasDefault ? " ?? \(privateKeyVarName).defaultValue" : "")
                     }
                     yield &\(raw: privateValueVarName)\(raw: hasDefault ? "!" : "")
                     storage.setValue(forKey: \(raw: privateKeyVarName), to: \(raw: privateValueVarName))
