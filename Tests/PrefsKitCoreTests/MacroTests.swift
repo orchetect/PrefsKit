@@ -304,7 +304,125 @@ final class InlinePrefMacroTests: XCTestCase {
         "Pref": InlinePrefMacro.self
     ]
     
-    // TODO: Add unit tests
+    func testPrefMacro_KeyArgument_DefaultValue() {
+        assertMacroExpansion(
+            """
+            @Pref(key: KeyName.bar, encode: { MyType(rawValue: $0) }, decode: { $0.rawValue }) var bar: MyType = .foo
+            """,
+            expandedSource: """
+            var bar: MyType {
+                get {
+                    _$observationRegistrar.access(self, keyPath: \\.bar)
+                    switch storageMode {
+                    case .cachedReadStorageWrite:
+                        if __PrefValue_bar == nil {
+                            __PrefValue_bar = storage.value(forKey: __PrefCoding_bar)
+                        }
+                        return __PrefValue_bar ?? __PrefCoding_bar.defaultValue
+                    case .storageOnly:
+                        return storage.value(forKey: __PrefCoding_bar)
+                    }
+                }
+                set {
+                    withMutation(keyPath: \\.bar) {
+                        storage.setValue(forKey: __PrefCoding_bar, to: newValue)
+                        if storageMode == .cachedReadStorageWrite {
+                            __PrefValue_bar = newValue
+                        }
+                    }
+                }
+                _modify {
+                    access(keyPath: \\.bar)
+                    _$observationRegistrar.willSet(self, keyPath: \\.bar)
+                    defer {
+                        _$observationRegistrar.didSet(self, keyPath: \\.bar)
+                    }
+                    switch storageMode {
+                    case .cachedReadStorageWrite:
+                        if __PrefValue_bar == nil {
+                            __PrefValue_bar = storage.value(forKey: __PrefCoding_bar) ?? __PrefCoding_bar.defaultValue
+                        }
+                        yield &__PrefValue_bar!
+                        storage.setValue(forKey: __PrefCoding_bar, to: __PrefValue_bar)
+                    case .storageOnly:
+                        var val = storage.value(forKey: __PrefCoding_bar)
+                        yield &val
+                        storage.setValue(forKey: __PrefCoding_bar, to: val)
+                    }
+                }
+            }
+            
+            private let __PrefCoding_bar = PrefsKitTypes.AnyDefaultedPrefsKey(key: KeyName.bar, defaultValue: .foo, coding: PrefsKitTypes.PrefsCoding(encode: {
+                        MyType(rawValue: $0)
+                    }, decode: {
+                        $0.rawValue
+                    }))
+            
+            private var __PrefValue_bar: MyType?
+            """,
+            macros: testMacros
+        )
+    }
+    
+    func testPrefMacro_NoKeyArgument_DefaultValue() {
+        assertMacroExpansion(
+            """
+            @Pref(encode: { MyType(rawValue: $0) }, decode: { $0.rawValue }) var bar: String = "baz"
+            """,
+            expandedSource: """
+            var bar: String {
+                get {
+                    _$observationRegistrar.access(self, keyPath: \\.bar)
+                    switch storageMode {
+                    case .cachedReadStorageWrite:
+                        if __PrefValue_bar == nil {
+                            __PrefValue_bar = storage.value(forKey: __PrefCoding_bar)
+                        }
+                        return __PrefValue_bar ?? __PrefCoding_bar.defaultValue
+                    case .storageOnly:
+                        return storage.value(forKey: __PrefCoding_bar)
+                    }
+                }
+                set {
+                    withMutation(keyPath: \\.bar) {
+                        storage.setValue(forKey: __PrefCoding_bar, to: newValue)
+                        if storageMode == .cachedReadStorageWrite {
+                            __PrefValue_bar = newValue
+                        }
+                    }
+                }
+                _modify {
+                    access(keyPath: \\.bar)
+                    _$observationRegistrar.willSet(self, keyPath: \\.bar)
+                    defer {
+                        _$observationRegistrar.didSet(self, keyPath: \\.bar)
+                    }
+                    switch storageMode {
+                    case .cachedReadStorageWrite:
+                        if __PrefValue_bar == nil {
+                            __PrefValue_bar = storage.value(forKey: __PrefCoding_bar) ?? __PrefCoding_bar.defaultValue
+                        }
+                        yield &__PrefValue_bar!
+                        storage.setValue(forKey: __PrefCoding_bar, to: __PrefValue_bar)
+                    case .storageOnly:
+                        var val = storage.value(forKey: __PrefCoding_bar)
+                        yield &val
+                        storage.setValue(forKey: __PrefCoding_bar, to: val)
+                    }
+                }
+            }
+            
+            private let __PrefCoding_bar = PrefsKitTypes.AnyDefaultedPrefsKey(key: "bar", defaultValue: "baz", coding: PrefsKitTypes.PrefsCoding(encode: {
+                        MyType(rawValue: $0)
+                    }, decode: {
+                        $0.rawValue
+                    }))
+            
+            private var __PrefValue_bar: String?
+            """,
+            macros: testMacros
+        )
+    }
 }
 
 final class RawRepresentablePrefMacroTests: XCTestCase {
