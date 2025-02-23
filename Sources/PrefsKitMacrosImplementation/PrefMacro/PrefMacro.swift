@@ -119,7 +119,7 @@ extension PrefMacro /* : PeerMacro */ {
             guard let encodeArg, let decodeArg else {
                 throw PrefMacroError.missingCodingArgument
             }
-            customCodingDecl = "PrefCoding(encode: \(encodeArg.expression.description), decode: \(decodeArg.expression.description))"
+            customCodingDecl = "\(PrefMacroUtils.moduleNamePrefix)PrefsCoding(encode: \(encodeArg.expression.description), decode: \(decodeArg.expression.description))"
         }
         
         let typeInfo = try TypeBindingInfo(

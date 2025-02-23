@@ -70,24 +70,26 @@ struct TypeBindingInfo {
         let typeBinding = try PrefMacroUtils.typeBinding(from: varDec)
         typeName = typeBinding.description
         
+        let useCustomCodingDecl = macro.hasCustomCoding || macro.hasInlineCoding
+        
         isOptional = typeBinding.isOptional
         if isOptional {
             // must not have a default value
             guard (try? PrefMacroUtils.defaultValue(from: varDec)) == nil else {
                 throw PrefMacroError.noDefaultValueAllowed
             }
-            keyAndCodingStructName = "\(PrefMacroUtils.moduleNamePrefix)\(macro.keyStructName)\(macro.hasCustomCoding ? "" : "<\(typeName)>")"
+            keyAndCodingStructName = "\(PrefMacroUtils.moduleNamePrefix)\(macro.keyStructName)\(useCustomCodingDecl ? "" : "<\(typeName)>")"
             keyAndCodingStructDeclaration = keyAndCodingStructName +
-                "(key: \(keyName)\(macro.hasCustomCoding ? ", coding: \(customCodingDecl ?? "nil")" : ""))"
+                "(key: \(keyName)\(useCustomCodingDecl ? ", coding: \(customCodingDecl ?? "nil")" : ""))"
             privateKeyVarDeclaration = "private let \(privateKeyVarName) = \(keyAndCodingStructDeclaration)"
             privateValueVarDeclaration = "private var \(privateValueVarName): \(typeName)?"
         } else {
             // must have a default value
             let defaultValue = try PrefMacroUtils.defaultValue(from: varDec)
             keyAndCodingStructName =
-                "\(PrefMacroUtils.moduleNamePrefix)\(macro.defaultedKeyStructName)\(macro.hasCustomCoding ? "" : "<\(typeName)>")"
+                "\(PrefMacroUtils.moduleNamePrefix)\(macro.defaultedKeyStructName)\(useCustomCodingDecl ? "" : "<\(typeName)>")"
             keyAndCodingStructDeclaration = keyAndCodingStructName +
-                "(key: \(keyName), defaultValue: \(defaultValue)\(macro.hasCustomCoding ? ", coding: \(customCodingDecl ?? "nil")" : ""))"
+                "(key: \(keyName), defaultValue: \(defaultValue)\(useCustomCodingDecl ? ", coding: \(customCodingDecl ?? "nil")" : ""))"
             privateKeyVarDeclaration = "private let \(privateKeyVarName) = \(keyAndCodingStructDeclaration)"
             privateValueVarDeclaration = "private var \(privateValueVarName): \(typeName)?"
         }

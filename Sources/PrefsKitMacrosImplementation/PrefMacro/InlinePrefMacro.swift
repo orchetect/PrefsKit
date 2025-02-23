@@ -5,8 +5,8 @@
 //
 
 public struct InlinePrefMacro: PrefMacro {
-    public static let keyStructName: String = "AnyJSONDataCodablePrefsKey"
-    public static let defaultedKeyStructName: String = "AnyDefaultedJSONDataCodablePrefsKey"
+    public static let keyStructName: String = "AnyPrefsKey"
+    public static let defaultedKeyStructName: String = "AnyDefaultedPrefsKey"
     public static let hasCustomCoding: Bool = false
     public static let hasInlineCoding: Bool = true
 }
