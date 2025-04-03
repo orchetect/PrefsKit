@@ -30,7 +30,7 @@ struct ISO8601StringDatePrefsCodingTests {
         let testDate = Date(timeIntervalSinceReferenceDate: 757_493_476)
         
         schema.date = testDate
-        #expect(schema.storage.storageValue<String>(forKey: "date") == "2025-01-02T06:51:16Z")
+        #expect(schema.storage.storageValue(forKey: "date") as String? == "2025-01-02T06:51:16Z")
         #expect(schema.date == testDate)
     }
     

@@ -30,7 +30,7 @@ struct URLStringPrefsCodingTests {
         let testURL = try #require(URL(string: "https://www.example.com"))
         
         schema.url = testURL
-        #expect(schema.storage.storageValue<String>(forKey: "url") == "https://www.example.com")
+        #expect(schema.storage.storageValue(forKey: "url") as String? == "https://www.example.com")
         #expect(schema.url == testURL)
     }
 }

@@ -39,7 +39,8 @@ struct Base64StringDataPrefsCodingTests {
         let testData = Data([0x01, 0x02, 0x03])
         
         schema.data = testData
-        #expect(schema.storage.storageValue<String>(forKey: "data") == "AQID")
+        let getString: String = try #require(schema.storage.storageValue(forKey: "data"))
+        #expect(getString == "AQID")
         #expect(schema.data == testData)
     }
     
@@ -51,7 +52,7 @@ struct Base64StringDataPrefsCodingTests {
         let testType = MyType(id: 123, name: "foo")
         
         schema.myTypeChained = testType
-        let getString: String = try #require(schema.storage.storageValue<String>(forKey: "myTypeChained"))
+        let getString: String = try #require(schema.storage.storageValue(forKey: "myTypeChained"))
         // just check for non-empty content, we won't check actual content since it's not fully deterministic
         #expect(getString.count > 10)
         #expect(schema.myTypeChained == testType)

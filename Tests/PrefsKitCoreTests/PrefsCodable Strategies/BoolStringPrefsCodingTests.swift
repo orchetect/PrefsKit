@@ -62,11 +62,11 @@ struct BoolStringPrefsCodingTests {
         let schema = TestSchema()
         
         schema.boolStringTrueFalseCapitalized = true
-        #expect(schema.storage.storageValue<String>(forKey: "boolStringTrueFalseCapitalized") == "True")
+        #expect(schema.storage.storageValue(forKey: "boolStringTrueFalseCapitalized") as String? == "True")
         #expect(schema.boolStringTrueFalseCapitalized == true)
         
         schema.boolStringTrueFalseCapitalized = false
-        #expect(schema.storage.storageValue<String>(forKey: "boolStringTrueFalseCapitalized") == "False")
+        #expect(schema.storage.storageValue(forKey: "boolStringTrueFalseCapitalized") as String? == "False")
         #expect(schema.boolStringTrueFalseCapitalized == false)
     }
     
@@ -76,11 +76,11 @@ struct BoolStringPrefsCodingTests {
         let schema = TestSchema()
         
         schema.boolStringTrueFalseLowercase = true
-        #expect(schema.storage.storageValue<String>(forKey: "boolStringTrueFalseLowercase") == "true")
+        #expect(schema.storage.storageValue(forKey: "boolStringTrueFalseLowercase") as String? == "true")
         #expect(schema.boolStringTrueFalseLowercase == true)
         
         schema.boolStringTrueFalseLowercase = false
-        #expect(schema.storage.storageValue<String>(forKey: "boolStringTrueFalseLowercase") == "false")
+        #expect(schema.storage.storageValue(forKey: "boolStringTrueFalseLowercase") as String? == "false")
         #expect(schema.boolStringTrueFalseLowercase == false)
     }
     
@@ -90,11 +90,11 @@ struct BoolStringPrefsCodingTests {
         let schema = TestSchema()
         
         schema.boolStringTrueFalseUppercase = true
-        #expect(schema.storage.storageValue<String>(forKey: "boolStringTrueFalseUppercase") == "TRUE")
+        #expect(schema.storage.storageValue(forKey: "boolStringTrueFalseUppercase") as String? == "TRUE")
         #expect(schema.boolStringTrueFalseUppercase == true)
         
         schema.boolStringTrueFalseUppercase = false
-        #expect(schema.storage.storageValue<String>(forKey: "boolStringTrueFalseUppercase") == "FALSE")
+        #expect(schema.storage.storageValue(forKey: "boolStringTrueFalseUppercase") as String? == "FALSE")
         #expect(schema.boolStringTrueFalseUppercase == false)
     }
     
@@ -127,11 +127,11 @@ struct BoolStringPrefsCodingTests {
         let schema = TestSchema()
         
         schema.boolStringCustomCaseInsensitive = true
-        #expect(schema.storage.storageValue<String>(forKey: "boolStringCustomCaseInsensitive") == "Oui")
+        #expect(schema.storage.storageValue(forKey: "boolStringCustomCaseInsensitive") as String? == "Oui")
         #expect(schema.boolStringCustomCaseInsensitive == true)
         
         schema.boolStringCustomCaseInsensitive = false
-        #expect(schema.storage.storageValue<String>(forKey: "boolStringCustomCaseInsensitive") == "Non")
+        #expect(schema.storage.storageValue(forKey: "boolStringCustomCaseInsensitive") as String? == "Non")
         #expect(schema.boolStringCustomCaseInsensitive == false)
         
         schema.storage.setStorageValue(forKey: "boolStringCustomCaseInsensitive", to: "oui")
@@ -147,11 +147,11 @@ struct BoolStringPrefsCodingTests {
         let schema = TestSchema()
         
         schema.boolStringCustomNonCaseInsensitive = true
-        #expect(schema.storage.storageValue<String>(forKey: "boolStringCustomNonCaseInsensitive") == "Oui")
+        #expect(schema.storage.storageValue(forKey: "boolStringCustomNonCaseInsensitive") as String? == "Oui")
         #expect(schema.boolStringCustomNonCaseInsensitive == true)
         
         schema.boolStringCustomNonCaseInsensitive = false
-        #expect(schema.storage.storageValue<String>(forKey: "boolStringCustomNonCaseInsensitive") == "Non")
+        #expect(schema.storage.storageValue(forKey: "boolStringCustomNonCaseInsensitive") as String? == "Non")
         #expect(schema.boolStringCustomNonCaseInsensitive == false)
         
         schema.storage.setStorageValue(forKey: "boolStringCustomNonCaseInsensitive", to: "oui")
@@ -169,11 +169,11 @@ struct BoolStringPrefsCodingTests {
         let schema = TestSchema()
         
         schema.myTypeBoolStringChained = .yes
-        #expect(schema.storage.storageValue<String>(forKey: "myTypeBoolStringChained") == "true")
+        #expect(schema.storage.storageValue(forKey: "myTypeBoolStringChained") as String? == "true")
         #expect(schema.myTypeBoolStringChained == .yes)
         
         schema.myTypeBoolStringChained = .no
-        #expect(schema.storage.storageValue<String>(forKey: "myTypeBoolStringChained") == "false")
+        #expect(schema.storage.storageValue(forKey: "myTypeBoolStringChained") as String? == "false")
         #expect(schema.myTypeBoolStringChained == .no)
         
         schema.storage.setStorageValue(forKey: "myTypeBoolStringChained", to: "foobar")

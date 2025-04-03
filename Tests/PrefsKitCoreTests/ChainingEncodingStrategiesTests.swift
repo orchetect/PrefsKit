@@ -71,7 +71,7 @@ struct ChainingEncodingStrategiesTests {
         
         schema.fpsA = .plus
         
-        #expect(schema.storage.storageValue<Int>(forKey: "fpsA") == FloatingPointSign.plus.rawValue)
+        #expect(schema.storage.storageValue(forKey: "fpsA") as Int? == FloatingPointSign.plus.rawValue)
         #expect(schema.fpsA == .plus)
     }
     
@@ -82,7 +82,7 @@ struct ChainingEncodingStrategiesTests {
         
         schema.fpsB = .plus
         
-        #expect(schema.storage.storageValue<String>(forKey: "fpsB") == String(FloatingPointSign.plus.rawValue))
+        #expect(schema.storage.storageValue(forKey: "fpsB") as String? == String(FloatingPointSign.plus.rawValue))
         #expect(schema.fpsB == .plus)
     }
 }

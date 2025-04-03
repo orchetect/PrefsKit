@@ -41,7 +41,7 @@ struct IntegerPrefsCodingTests {
         
         // can't use UInt.max, would overflow Int. so we'll use Int.max
         schema.uInt_As_Int = 9223372036854775807 // Int.max
-        #expect(schema.storage.storageValue<Int>(forKey: "uInt_As_Int") == 9223372036854775807)
+        #expect(schema.storage.storageValue(forKey: "uInt_As_Int") as Int? == 9223372036854775807)
         #expect(schema.uInt_As_Int == 9223372036854775807)
     }
     
@@ -51,11 +51,11 @@ struct IntegerPrefsCodingTests {
         let schema = TestSchema()
         
         schema.int8_As_Int = 127 // Int8.max
-        #expect(schema.storage.storageValue<Int>(forKey: "int8_As_Int") == 127)
+        #expect(schema.storage.storageValue(forKey: "int8_As_Int") as Int? == 127)
         #expect(schema.int8_As_Int == 127)
         
         schema.int8_As_Int = -128 // Int8.min
-        #expect(schema.storage.storageValue<Int>(forKey: "int8_As_Int") == -128)
+        #expect(schema.storage.storageValue(forKey: "int8_As_Int") as Int? == -128)
         #expect(schema.int8_As_Int == -128)
     }
     
@@ -65,7 +65,7 @@ struct IntegerPrefsCodingTests {
         let schema = TestSchema()
         
         schema.uInt8_As_Int = 255 // UInt8.max
-        #expect(schema.storage.storageValue<Int>(forKey: "uInt8_As_Int") == 255)
+        #expect(schema.storage.storageValue(forKey: "uInt8_As_Int") as Int? == 255)
         #expect(schema.uInt8_As_Int == 255)
     }
     
@@ -75,11 +75,11 @@ struct IntegerPrefsCodingTests {
         let schema = TestSchema()
         
         schema.int16_As_Int = 32767 // Int16.max
-        #expect(schema.storage.storageValue<Int>(forKey: "int16_As_Int") == 32767)
+        #expect(schema.storage.storageValue(forKey: "int16_As_Int") as Int? == 32767)
         #expect(schema.int16_As_Int == 32767)
         
         schema.int16_As_Int = -32768 // Int16.min
-        #expect(schema.storage.storageValue<Int>(forKey: "int16_As_Int") == -32768)
+        #expect(schema.storage.storageValue(forKey: "int16_As_Int") as Int? == -32768)
         #expect(schema.int16_As_Int == -32768)
     }
     
@@ -89,7 +89,7 @@ struct IntegerPrefsCodingTests {
         let schema = TestSchema()
         
         schema.uInt16_As_Int = 65535 // UInt16.max
-        #expect(schema.storage.storageValue<Int>(forKey: "uInt16_As_Int") == 65535)
+        #expect(schema.storage.storageValue(forKey: "uInt16_As_Int") as Int? == 65535)
         #expect(schema.uInt16_As_Int == 65535)
     }
     
@@ -99,11 +99,11 @@ struct IntegerPrefsCodingTests {
         let schema = TestSchema()
         
         schema.int32_As_Int = 2147483647 // Int32.max
-        #expect(schema.storage.storageValue<Int>(forKey: "int32_As_Int") == 2147483647)
+        #expect(schema.storage.storageValue(forKey: "int32_As_Int") as Int? == 2147483647)
         #expect(schema.int32_As_Int == 2147483647)
         
         schema.int32_As_Int = -2147483648 // Int32.min
-        #expect(schema.storage.storageValue<Int>(forKey: "int32_As_Int") == -2147483648)
+        #expect(schema.storage.storageValue(forKey: "int32_As_Int") as Int? == -2147483648)
         #expect(schema.int32_As_Int == -2147483648)
     }
     
@@ -113,7 +113,7 @@ struct IntegerPrefsCodingTests {
         let schema = TestSchema()
         
         schema.uInt32_As_Int = 23456
-        #expect(schema.storage.storageValue<Int>(forKey: "uInt32_As_Int") == 23456)
+        #expect(schema.storage.storageValue(forKey: "uInt32_As_Int") as Int? == 23456)
         #expect(schema.uInt32_As_Int == 23456)
     }
     
@@ -123,11 +123,11 @@ struct IntegerPrefsCodingTests {
         let schema = TestSchema()
         
         schema.int64_As_Int = 9223372036854775807 // Int64.max
-        #expect(schema.storage.storageValue<Int>(forKey: "int64_As_Int") == 9223372036854775807)
+        #expect(schema.storage.storageValue(forKey: "int64_As_Int") as Int? == 9223372036854775807)
         #expect(schema.int64_As_Int == 9223372036854775807)
         
         schema.int64_As_Int = -9223372036854775808 // Int64.min
-        #expect(schema.storage.storageValue<Int>(forKey: "int64_As_Int") == -9223372036854775808)
+        #expect(schema.storage.storageValue(forKey: "int64_As_Int") as Int? == -9223372036854775808)
         #expect(schema.int64_As_Int == -9223372036854775808)
     }
     
@@ -138,7 +138,7 @@ struct IntegerPrefsCodingTests {
         
         // can't use UInt64.max, would overflow Int. so we'll use Int.max
         schema.uInt64_As_Int = 9223372036854775807 // Int.max
-        #expect(schema.storage.storageValue<Int>(forKey: "uInt64_As_Int") == 9223372036854775807)
+        #expect(schema.storage.storageValue(forKey: "uInt64_As_Int") as Int? == 9223372036854775807)
         #expect(schema.uInt64_As_Int == 9223372036854775807)
     }
 }

@@ -43,7 +43,7 @@ struct CompressedDataPrefsCodingTests {
         let testData = Data([0x01, 0x02, 0x03])
         
         schema.data = testData
-        #expect(schema.storage.storageValue<Data>(forKey: "data") == Data([0x63, 0x64, 0x62, 0x06, 0x00]))
+        #expect(schema.storage.storageValue(forKey: "data") as Data? == Data([0x63, 0x64, 0x62, 0x06, 0x00]))
         #expect(schema.data == testData)
     }
     
@@ -55,7 +55,7 @@ struct CompressedDataPrefsCodingTests {
         let testType = MyType(id: 123, name: "foo")
         
         schema.myTypeChained = testType
-        let getData: Data = try #require(schema.storage.storageValue<Data>(forKey: "myTypeChained"))
+        let getData: Data = try #require(schema.storage.storageValue(forKey: "myTypeChained"))
         // just check for non-empty content, we won't check actual content since it's not fully deterministic
         #expect(getData.count > 10)
         #expect(schema.myTypeChained == testType)
