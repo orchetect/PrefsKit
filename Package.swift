@@ -1,4 +1,5 @@
 // swift-tools-version: 6.0
+// (be sure to update the .swift-version file when this Swift version changes)
 
 import CompilerPluginSupport
 import PackageDescription
@@ -42,7 +43,9 @@ let package = Package(
             name: "PrefsKitCoreTests",
             dependencies: [
                 "PrefsKitCore",
-                .product(name: "SwiftSyntaxMacrosTestSupport", package: "swift-syntax")
+                .product(name: "SwiftSyntaxMacrosTestSupport", package: "swift-syntax"),
+                .product(name: "SwiftSyntaxMacros", package: "swift-syntax"), // Xcode 26 won't compile test target without this
+                .product(name: "SwiftCompilerPlugin", package: "swift-syntax") // Xcode 26 won't compile test target without this
             ]
         ),
         .testTarget(
