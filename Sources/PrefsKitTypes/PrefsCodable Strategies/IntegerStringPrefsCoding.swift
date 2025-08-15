@@ -71,6 +71,7 @@ extension PrefsCodable where Self == IntegerStringPrefsCoding<UInt64> {
     public static var uInt64AsString: Self { .init() }
 }
 
+#if compiler(>=6.1)
 @available(macOS 15.0, iOS 18.0, watchOS 11.0, tvOS 18.0, visionOS 2.0, *)
 extension PrefsCodable where Self == IntegerStringPrefsCoding<Int128> {
     /// Coding strategy for `Int128` using `String` as the encoded storage value.
@@ -82,6 +83,7 @@ extension PrefsCodable where Self == IntegerStringPrefsCoding<UInt128> {
     /// Coding strategy for `UInt128` using `String` as the encoded storage value.
     public static var uInt128AsString: Self { .init() }
 }
+#endif
 
 // MARK: - Chaining Constructor
 

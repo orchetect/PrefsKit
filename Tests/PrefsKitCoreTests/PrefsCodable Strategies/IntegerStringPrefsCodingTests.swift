@@ -32,10 +32,12 @@ struct IntegerStringPrefsCodingTests {
         @Pref(coding: .int64AsString) var int64_As_String: Int64?
         @Pref(coding: .uInt64AsString) var uInt64_As_String: UInt64?
         
+        #if compiler(>=6.1)
         @available(macOS 15.0, iOS 18.0, watchOS 11.0, tvOS 18.0, visionOS 2.0, *)
         @Pref(coding: .int128AsString) var int128_As_String: Int128?
         @available(macOS 15.0, iOS 18.0, watchOS 11.0, tvOS 18.0, visionOS 2.0, *)
         @Pref(coding: .uInt128AsString) var uInt128_As_String: UInt128?
+        #endif
         
         // MARK: - Chaining Constructor
         
@@ -165,6 +167,7 @@ struct IntegerStringPrefsCodingTests {
         #expect(schema.uInt64_As_String == 18446744073709551615)
     }
     
+    #if compiler(>=6.1)
     @available(macOS 15.0, iOS 18.0, watchOS 11.0, tvOS 18.0, visionOS 2.0, *)
     @Test
     func int128_As_String() async throws {
@@ -177,7 +180,9 @@ struct IntegerStringPrefsCodingTests {
         )
         #expect(schema.int128_As_String == 170141183460469231731687303715884105727)
     }
+    #endif
     
+    #if compiler(>=6.1)
     @available(macOS 15.0, iOS 18.0, watchOS 11.0, tvOS 18.0, visionOS 2.0, *)
     @Test
     func uInt128AsString() async throws {
@@ -190,10 +195,11 @@ struct IntegerStringPrefsCodingTests {
         )
         #expect(schema.uInt128_As_String == 340282366920938463463374607431768211455)
     }
+    #endif
     
     // MARK: - Chaining Constructor
     
-    @available(macOS 15.0, iOS 18.0, watchOS 11.0, tvOS 18.0, visionOS 2.0, *)
+    @available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
     @Test
     func fps_intAsString() async throws {
         let schema = TestSchema()
