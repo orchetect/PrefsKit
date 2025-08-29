@@ -678,13 +678,13 @@ Additionally:
 
 ### Using Actors
 
-If desired, `@MainActor` can be directly attached to the class declaration to make the class bound to the main actor.
+In Swift 6.2 (Xcode 26+), `@MainActor` can be directly attached to the class declaration to make the class bound to the main actor.
 
 ```swift
 @MainActor @PrefsSchema final class Prefs { /* ... */ }
 ```
 
-Alternatively, if you do not want the class to be bound to `@MainActor`, actors may be attached to individual `@Pref` preference declarations.
+Alternatively, if you do not want the class to be bound to `@MainActor`, actors may be attached to individual `@Pref` preference declarations. This is supported for older versions of Swift/Xcode.
 
 ```swift
 @PrefsSchema final class Prefs {

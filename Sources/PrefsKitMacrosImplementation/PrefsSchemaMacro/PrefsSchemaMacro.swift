@@ -49,6 +49,12 @@ extension PrefsSchemaMacro: ExtensionMacro {
         
         let isMainActor = attributes.contains("@MainActor")
         
+        #if compiler(<6.2)
+        guard !isMainActor else {
+            throw PrefsSchemaMacroError.mainActorNotSupported
+        }
+        #endif
+        
         let prefsSchemaExtension = try ExtensionDeclSyntax(
             "extension \(type.trimmed): \(raw: isMainActor ? "@MainActor " : "")PrefsSchema { }"
         )

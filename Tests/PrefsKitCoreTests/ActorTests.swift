@@ -30,6 +30,8 @@ struct MainActorMemberTests {
     }
 }
 
+// @MainActor is only supported in Swift 6.2+ / Xcode 26+
+#if compiler(>=6.2)
 /// Test `PrefsSchema` class bound to `@MainActor`.
 @Suite
 struct MainActorBoundTests {
@@ -50,3 +52,4 @@ struct MainActorBoundTests {
         prefs.foo = 1
     }
 }
+#endif

@@ -9,11 +9,14 @@ import Foundation
 extension PrefsSchemaMacro {
     public enum PrefsSchemaMacroError: LocalizedError {
         case incorrectSyntax
+        case mainActorNotSupported
         
         public var errorDescription: String? {
             switch self {
             case .incorrectSyntax:
                 "Incorrect syntax."
+            case .mainActorNotSupported:
+                "@MainActor is only supported in Swift 6.2 or later (Xcode 26 or later)."
             }
         }
     }
