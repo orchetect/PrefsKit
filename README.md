@@ -678,22 +678,20 @@ Additionally:
 
 ### Using Actors
 
-Because of internal protocol requirements of `@PrefsSchema`, actors (such as `@MainActor`) cannot be directly attached to the class declaration.
+If desired, `@MainActor` can be directly attached to the class declaration to make the class bound to the main actor.
 
 ```swift
-@MainActor // <-- ❌ not possible
-@PrefsSchema final class Prefs { /* ... */ }
+@MainActor @PrefsSchema final class Prefs { /* ... */ }
 ```
 
-Actors may, however, be attached to individual `@Pref` preference declarations.
+Alternatively, if you do not want the class to be bound to `@MainActor`, actors may be attached to individual `@Pref` preference declarations.
 
 ```swift
 @PrefsSchema final class Prefs {
     @Storage var storage = .userDefaults
     @StorageMode var storageMode = .cachedReadStorageWrite
     
-    @MainActor // <-- ✅ possible
-    @Pref var foo: Int?
+    @MainActor @Pref var foo: Int? // <-- access to this pref is bound to main actor
     
     @Pref var bar: String?
 }
