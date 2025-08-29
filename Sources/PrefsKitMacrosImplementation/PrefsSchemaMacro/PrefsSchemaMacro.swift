@@ -35,8 +35,22 @@ extension PrefsSchemaMacro: ExtensionMacro {
         conformingTo protocols: [SwiftSyntax.TypeSyntax],
         in context: some SwiftSyntaxMacros.MacroExpansionContext
     ) throws -> [SwiftSyntax.ExtensionDeclSyntax] {
+        guard let classDec = declaration.as(ClassDeclSyntax.self)
+        else {
+            throw PrefMacroError.incorrectSyntax
+        }
+        // - `classDec.attributes` includes all leading modifiers like @available(), @MainActor, as well as the macro @PrefsSchema
+        // - `classDec.modifiers` includes things like "public" and "final" but not actors like "@MainActor"
+        // - `classDec.leadingTrivia` does not include actors like `@MainActor`
+        let attributes = classDec
+            .attributes
+            .children(viewMode: .fixedUp)
+            .map(\.trimmedDescription) // .kind == attribute for all
+        
+        let isMainActor = attributes.contains("@MainActor")
+        
         let prefsSchemaExtension = try ExtensionDeclSyntax(
-            "extension \(type.trimmed): PrefsSchema { }"
+            "extension \(type.trimmed): \(raw: isMainActor ? "@MainActor " : "")PrefsSchema { }"
         )
         let observableExtension = try ExtensionDeclSyntax(
             """
