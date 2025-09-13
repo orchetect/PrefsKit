@@ -4,9 +4,9 @@
 //  © 2025 Steffan Andrews • Licensed under MIT License
 //
 
+#if canImport(SwiftCompilerPlugin)
+
 import SwiftCompilerPlugin
-import SwiftSyntax
-import SwiftSyntaxBuilder
 import SwiftSyntaxMacros
 
 @main
@@ -22,3 +22,5 @@ struct PrefsKitMacrosPlugin: CompilerPlugin {
         RawPrefMacro.self
     ]
 }
+
+#endif

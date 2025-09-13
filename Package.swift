@@ -6,7 +6,7 @@ import PackageDescription
 
 let package = Package(
     name: "PrefsKit",
-    platforms: [.macOS(.v10_15), .iOS(.v13), .tvOS(.v13), .watchOS(.v6)],
+    platforms: [.macOS(.v10_15), .macCatalyst(.v13), .iOS(.v13), .tvOS(.v13), .watchOS(.v6)],
     products: [
         .library(name: "PrefsKit", targets: ["PrefsKit"]),
         .library(name: "PrefsKitCore", targets: ["PrefsKitCore"]),
@@ -31,8 +31,9 @@ let package = Package(
         .macro(
             name: "PrefsKitMacrosImplementation",
             dependencies: [
-                .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
-                .product(name: "SwiftCompilerPlugin", package: "swift-syntax")
+                .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
+                .product(name: "SwiftSyntax", package: "swift-syntax"),
+                .product(name: "SwiftSyntaxMacros", package: "swift-syntax")
             ]
         ),
         .target(
@@ -43,9 +44,9 @@ let package = Package(
             name: "PrefsKitCoreTests",
             dependencies: [
                 "PrefsKitCore",
-                .product(name: "SwiftSyntaxMacrosTestSupport", package: "swift-syntax"),
-                .product(name: "SwiftSyntaxMacros", package: "swift-syntax"), // Xcode 26 won't compile test target without this
-                .product(name: "SwiftCompilerPlugin", package: "swift-syntax") // Xcode 26 won't compile test target without this
+                "PrefsKitMacrosImplementation",
+                .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
+                .product(name: "SwiftSyntaxMacrosTestSupport", package: "swift-syntax")
             ]
         ),
         .testTarget(

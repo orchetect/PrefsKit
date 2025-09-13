@@ -5,9 +5,7 @@
 //
 
 import Foundation
-import SwiftCompilerPlugin
 import SwiftSyntax
-import SwiftSyntaxBuilder
 import SwiftSyntaxMacros
 
 public struct RawPrefMacro: PrefMacro, AccessorMacro, PeerMacro {
