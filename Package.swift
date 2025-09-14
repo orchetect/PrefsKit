@@ -13,7 +13,7 @@ let package = Package(
         .library(name: "PrefsKitUI", targets: ["PrefsKitUI"])
     ],
     dependencies: [
-        .package(url: "https://github.com/swiftlang/swift-syntax.git", from: "601.0.1-latest")
+        .package(url: "https://github.com/swiftlang/swift-syntax.git", "600.0.0" ..< "99999999.999.999")
     ],
     targets: [
         .target(
